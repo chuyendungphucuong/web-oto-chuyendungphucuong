@@ -1,0 +1,101 @@
+[
+  {
+    "slug": "hino-fg8jt7a-gan-cau-unic-550",
+    "name": "Xe Tải Hino FG 8 Tấn Gắn Cẩu Unic URV554 (5 Tấn 4 Đốt)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Tải Gắn Cẩu",
+    "brand": "Hino",
+    "price": 1650000000,
+    "promo": "Tặng 100% phí trước bạ (2%) + Bảo hiểm vật chất + Phù hiệu & Định vị GPS",
+    "image": "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 7080000,
+    "insuranceTNDS": 3520000,
+    "chassisSpecs": {
+      "Model xe nền": "Hino FG8JT7A (Euro 4)",
+      "Tải trọng cho phép chở": "7.200 kg",
+      "Tổng tải trọng (GVW)": "16.000 kg",
+      "Kích thước lòng thùng": "7.200 x 2.350 x 600 mm",
+      "Động cơ": "Diesel J08E-WE, 6 xi-lanh thẳng hàng, 7.684 cc, 260 PS"
+    },
+    "specialSpecs": {
+      "Thiết bị chuyên dùng": "Cẩu tự hành Unic URV554 (Nhập khẩu Nhật Bản)",
+      "Sức nâng lớn nhất": "5.050 kg tại tầm với 2,2 mét",
+      "Số đốt cần": "4 đoạn (Bán kính làm việc tối đa 10,63 mét)",
+      "Chân chống": "Thủy lực mở rộng 2 bên, có chân chống phụ phía sau"
+    },
+    "faqs": [
+      {
+        "question": "Giá lăn bánh xe cẩu Hino FG 8 tấn tại TP.HCM, Tiền Giang và An Giang là bao nhiêu?",
+        "answer": "Giá lăn bánh xe tải gắn cẩu Hino FG 8 tấn bao gồm giá xe, lệ phí trước bạ 2% (33.000.000đ), phí bảo trì đường bộ 1 năm (7.080.000đ), bảo hiểm TNDS và phí thẩm định thiết bị nâng. Tổng chi phí lăn bánh ước tính khoảng 1,695 tỷ đồng."
+      },
+      {
+        "question": "Mua xe tải gắn cẩu tại Chuyên Dùng Phú Cường hỗ trợ trả góp tối đa bao nhiêu?",
+        "answer": "Chuyên Dùng Phú Cường hỗ trợ vay ngân hàng hoặc cho thuê tài chính từ 70% - 85% giá trị xe và thiết bị chuyên dùng, thời gian vay tối đa 7 năm với thủ tục nhanh gọn cho cả cá nhân và doanh nghiệp tại Miền Nam."
+      }
+    ]
+  },
+  {
+    "slug": "isuzu-frr650-ep-rac-9-khoi",
+    "name": "Xe Ép Rác Isuzu FRR650 9 Khối Chuyên Dùng Môi Trường",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Ép Rác",
+    "brand": "Isuzu",
+    "price": 1380000000,
+    "promo": "Hỗ trợ hồ sơ thầu + Giao xe tận nơi tại TP.HCM, Tiền Giang, An Giang",
+    "image": "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 2002000,
+    "chassisSpecs": {
+      "Model xe nền": "Isuzu FRR90NE4 (Euro 4)",
+      "Tải trọng rác cho phép": "4.500 kg (Thể tích thùng 9 m³)",
+      "Tổng tải trọng (GVW)": "11.000 kg",
+      "Động cơ": "Diesel 4HK1E4CC, 5.193 cc, công suất 190 PS"
+    },
+    "specialSpecs": {
+      "Vật liệu thùng chứa rác": "Thép chịu mài mòn chống ăn mòn Inox 304 / Perform 700",
+      "Cơ cấu nạp rác": "Càng gắp đa năng kết hợp máng xúc thủy lực",
+      "Hệ thống thủy lực": "Bơm và van điều khiển nhập khẩu Ý (Italy)"
+    },
+    "faqs": [
+      {
+        "question": "Thùng xe ép rác Isuzu 9 khối tại Chuyên Dùng Phú Cường bảo hành bao lâu?",
+        "answer": "Phần xe cơ sở Isuzu được bảo hành 3 năm hoặc 100.000 km trên toàn quốc. Phần thùng chuyên dùng ép rác và hệ thống thủy lực được Chuyên Dùng Phú Cường bảo hành trực tiếp 12 tháng tại 3 chi nhánh TP.HCM, Tiền Giang và An Giang."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-29-cho-thaco-meadow-tb87s",
+    "name": "Xe Khách 29 Chỗ Bầu Hơi Cao Cấp (Động Cơ Weichai Euro 5)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 29-34 Chỗ",
+    "brand": "Weichai",
+    "price": 1720000000,
+    "promo": "Tặng gói phủ gầm + Camera hành trình Nghị định 10 + Phù hiệu Hợp đồng",
+    "image": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3643000,
+    "chassisSpecs": {
+      "Số chỗ ngồi": "29 chỗ (Ghế Âu cao cấp ngả lưng)",
+      "Kích thước tổng thể": "8.730 x 2.300 x 3.220 mm",
+      "Hệ thống treo": "6 bầu hơi (Air Suspension) êm ái chuẩn du lịch",
+      "Động cơ": "Diesel Weichai WP5.220E51, 220 mã lực"
+    },
+    "specialSpecs": {
+      "Trang bị khoang hành khách": "Tủ lạnh mini, Màn hình LCD 32 inch, Dàn âm thanh, Cổng sạc USB từng ghế",
+      "Hệ thống an toàn": "Phanh ABS + Phanh điện từ Terca (hỗ trợ đổ đèo)",
+      "Hầm hành lý": "3 khoang rộng thông suốt thể tích 3.8 m³"
+    },
+    "faqs": [
+      {
+        "question": "Thủ tục mua xe khách 29 chỗ trả góp cho công ty du lịch/nhà xe cần những gì?",
+        "answer": "Đối với doanh nghiệp vận tải/du lịch, chỉ cần Giấy phép kinh doanh và báo cáo tài chính/sao kê ngân hàng. Chuyên Dùng Phú Cường hỗ trợ giải ngân đến 80% giá trị xe, hoàn thiện trọn gói biển số vàng, định vị Nghị định 10 và phù hiệu xe hợp đồng."
+      }
+    ]
+  }
+]

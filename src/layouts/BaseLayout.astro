@@ -1,0 +1,111 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  schema?: object;
+}
+
+const { title, description, schema } = Astro.props;
+
+const dealerSchema = {
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "name": "Ô Tô Chuyên Dùng Phú Cường",
+  "url": "https://chuyendungphucuong.com",
+  "description": "Chuyên phân phối xe tải chuyên dùng (xe cẩu, xe ben, xe bồn, xe ép rác) và ô tô khách chính hãng tại Miền Nam.",
+  "areaServed": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang", "Miền Nam Việt Nam"],
+  "department": [
+    {
+      "@type": "AutoDealer",
+      "name": "Chuyên Dùng Phú Cường - Showroom TP. Hồ Chí Minh",
+      "address": { "@type": "PostalAddress", "addressLocality": "TP. Hồ Chí Minh", "addressCountry": "VN" }
+    },
+    {
+      "@type": "AutoDealer",
+      "name": "Chuyên Dùng Phú Cường - Showroom Tiền Giang",
+      "address": { "@type": "PostalAddress", "addressLocality": "Tiền Giang", "addressCountry": "VN" }
+    },
+    {
+      "@type": "AutoDealer",
+      "name": "Chuyên Dùng Phú Cường - Showroom An Giang",
+      "address": { "@type": "PostalAddress", "addressLocality": "An Giang", "addressCountry": "VN" }
+    }
+  ]
+};
+---
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Chuyên Dùng Phú Cường</title>
+    <meta name="description" content={description} />
+    <script is:inline src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Schema AutoDealer Toàn trang cho AI Overviews -->
+    <script type="application/ld+json" set:html={JSON.stringify(dealerSchema)} />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  </head>
+  <body class="bg-slate-50 text-slate-900 font-sans pb-20 md:pb-0">
+    <!-- Top Bar 3 Showroom -->
+    <div class="bg-slate-900 text-amber-400 text-xs py-2 px-4">
+      <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+        <span>📍 Hệ thống Showroom: <strong>TP. Hồ Chí Minh</strong> | <strong>Tiền Giang</strong> | <strong>An Giang</strong></span>
+        <span class="text-white">Hỗ trợ trả góp 80% • Đóng thùng & Hồ sơ cải tạo trọn gói</span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <a href="/" class="text-2xl font-extrabold text-blue-900 tracking-tight">
+          PHÚ CƯỜNG <span class="text-red-600">AUTO</span>
+        </a>
+        <nav class="hidden md:flex space-x-6 font-semibold text-slate-700">
+          <a href="/" class="hover:text-red-600">Trang chủ</a>
+          <a href="/?cat=xe-tai-chuyen-dung" class="hover:text-red-600">Xe Tải Chuyên Dùng</a>
+          <a href="/?cat=xe-khach" class="hover:text-red-600">Ô Tô Khách</a>
+          <a href="#he-thong-showroom" class="hover:text-red-600">3 Showroom Miền Nam</a>
+        </nav>
+        <a href="tel:0900000000" data-gtm-event="click_call_header" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition">
+          📞 Hotline: 0900.000.000
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer Hệ thống 3 Showroom -->
+    <footer id="he-thong-showroom" class="bg-slate-900 text-slate-300 py-12 mt-16">
+      <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-white font-bold text-lg mb-3">Showroom 1: TP. Hồ Chí Minh</h3>
+          <p class="text-sm">Trụ sở trưng bày & Xưởng đóng thùng chuyên dùng khu vực Đông Nam Bộ & TP.HCM.</p>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-3">Showroom 2: Tiền Giang</h3>
+          <p class="text-sm">Trung tâm phân phối & Bảo hành xe tải chuyên dùng, xe khách khu vực cửa ngõ Miền Tây.</p>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-3">Showroom 3: An Giang</h3>
+          <p class="text-sm">Chi nhánh trưng bày, hỗ trợ đăng ký lăn bánh và bảo dưỡng tận nơi vùng ĐBSCL.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Thanh Sticky Mobile Bar (Tối ưu chuyển đổi Google Ads) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 grid grid-cols-3 md:hidden z-50 shadow-lg">
+      <a href="tel:0900000000" data-gtm-event="click_call_mobile" class="py-3 text-center bg-red-600 text-white font-bold text-sm">
+        📞 Gọi Ngay
+      </a>
+      <a href="https://zalo.me/0900000000" data-gtm-event="click_zalo_mobile" class="py-3 text-center bg-blue-600 text-white font-bold text-sm">
+        💬 Chat Zalo
+      </a>
+      <a href="#bao-gia" data-gtm-event="click_quote_mobile" class="py-3 text-center bg-amber-500 text-slate-900 font-bold text-sm">
+        🧮 Tính Lăn Bánh
+      </a>
+    </div>
+  </body>
+</html>
