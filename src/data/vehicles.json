@@ -1,69 +1,111 @@
 [
   {
-    "slug": "hino-fg8jt7a-gan-cau-unic-550",
-    "name": "Xe Tải Hino FG 8 Tấn Gắn Cẩu Unic URV554 (5 Tấn 4 Đốt)",
+    "slug": "xe-cau-tu-hanh-dongfeng-3-chan-palfinger-12-tan",
+    "name": "Xe Tải Dongfeng 3 Chân Gắn Cẩu Gập Palfinger 12 Tấn (SPK32080)",
     "category": "xe-tai-chuyen-dung",
     "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Xe Tải Gắn Cẩu",
-    "brand": "Hino",
-    "price": 1650000000,
-    "promo": "Tặng 100% phí trước bạ (2%) + Bảo hiểm vật chất + Phù hiệu & Định vị GPS",
-    "image": "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "brand": "Dongfeng",
+    "price": 2850000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng định vị GPS & Phù hiệu xe tải nặng",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
     "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
-    "roadTaxPerYear": 7080000,
-    "insuranceTNDS": 3520000,
+    "roadTaxPerYear": 8900000,
+    "insuranceTNDS": 4330000,
     "chassisSpecs": {
-      "Model xe nền": "Hino FG8JT7A (Euro 4)",
-      "Tải trọng cho phép chở": "7.200 kg",
-      "Tổng tải trọng (GVW)": "16.000 kg",
-      "Kích thước lòng thùng": "7.200 x 2.350 x 600 mm",
-      "Động cơ": "Diesel J08E-WE, 6 xi-lanh thẳng hàng, 7.684 cc, 260 PS"
+      "Model xe cơ sở": "Dongfeng 3 chân (6x4) nhập khẩu",
+      "Tải trọng cho phép": "8.700 kg",
+      "Tổng tải trọng": "24.000 kg",
+      "Động cơ": "Cummins ISD270-50, dung tích 6.690 cc, 270 Mã lực"
     },
     "specialSpecs": {
-      "Thiết bị chuyên dùng": "Cẩu tự hành Unic URV554 (Nhập khẩu Nhật Bản)",
-      "Sức nâng lớn nhất": "5.050 kg tại tầm với 2,2 mét",
-      "Số đốt cần": "4 đoạn (Bán kính làm việc tối đa 10,63 mét)",
-      "Chân chống": "Thủy lực mở rộng 2 bên, có chân chống phụ phía sau"
+      "Thiết bị cẩu gập": "Sany Palfinger SPK32080-C (Công nghệ Châu Âu)",
+      "Vị trí điều khiển": "Ghế ngồi trên cao (Topseat) quan sát tối ưu",
+      "Bơm thủy lực": "LEDUC (Pháp) lưu lượng 55-80 lít/phút",
+      "Chân chống thủy lực": "Độ mở rộng 6,0m (Chân chống sau 4,8m)"
     },
     "faqs": [
       {
-        "question": "Giá lăn bánh xe cẩu Hino FG 8 tấn tại TP.HCM, Tiền Giang và An Giang là bao nhiêu?",
-        "answer": "Giá lăn bánh xe tải gắn cẩu Hino FG 8 tấn bao gồm giá xe, lệ phí trước bạ 2% (33.000.000đ), phí bảo trì đường bộ 1 năm (7.080.000đ), bảo hiểm TNDS và phí thẩm định thiết bị nâng. Tổng chi phí lăn bánh ước tính khoảng 1,695 tỷ đồng."
+        "question": "Giá lăn bánh xe cẩu Dongfeng 3 chân gắn cẩu Palfinger 12 tấn tại miền Nam là bao nhiêu?",
+        "answer": "Giá lăn bánh tại TP.HCM, Tiền Giang và An Giang đã bao gồm giá xe, thuế trước bạ 2% ưu đãi, phí đường bộ, bảo hiểm TNDS và chi phí đăng kiểm thiết bị nâng cẩu chuyên dùng."
       },
       {
-        "question": "Mua xe tải gắn cẩu tại Chuyên Dùng Phú Cường hỗ trợ trả góp tối đa bao nhiêu?",
-        "answer": "Chuyên Dùng Phú Cường hỗ trợ vay ngân hàng hoặc cho thuê tài chính từ 70% - 85% giá trị xe và thiết bị chuyên dùng, thời gian vay tối đa 7 năm với thủ tục nhanh gọn cho cả cá nhân và doanh nghiệp tại Miền Nam."
+        "question": "Chuyên Dùng Phú Cường có hỗ trợ trả góp cho xe cẩu hạng nặng không?",
+        "answer": "Chúng tôi hỗ trợ vay vốn qua ngân hàng hoặc thuê tài chính lên đến 75% giá trị xe, thủ tục nhanh gọn, giải ngân nhanh chóng cho khách hàng doanh nghiệp vận tải."
       }
     ]
   },
   {
-    "slug": "isuzu-frr650-ep-rac-9-khoi",
-    "name": "Xe Ép Rác Isuzu FRR650 9 Khối Chuyên Dùng Môi Trường",
+    "slug": "xe-bon-hut-chat-thai-foton-9-khoi",
+    "name": "Xe Bồn Hút Chất Thải Foton 9 Khối Nhập Khẩu (Động Cơ Yuchai 6 Máy)",
     "category": "xe-tai-chuyen-dung",
     "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Xe Ép Rác",
-    "brand": "Isuzu",
-    "price": 1380000000,
-    "promo": "Hỗ trợ hồ sơ thầu + Giao xe tận nơi tại TP.HCM, Tiền Giang, An Giang",
-    "image": "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80",
+    "subCategory": "Xe Bồn Chuyên Dùng",
+    "brand": "Foton",
+    "price": 1520000000,
+    "promo": "Tặng bơm chân không dự phòng + Hỗ trợ đăng kiểm hồ sơ môi trường trọn gói",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
     "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
-    "roadTaxPerYear": 4680000,
-    "insuranceTNDS": 2002000,
+    "roadTaxPerYear": 7080000,
+    "insuranceTNDS": 3520000,
     "chassisSpecs": {
-      "Model xe nền": "Isuzu FRR90NE4 (Euro 4)",
-      "Tải trọng rác cho phép": "4.500 kg (Thể tích thùng 9 m³)",
-      "Tổng tải trọng (GVW)": "11.000 kg",
-      "Động cơ": "Diesel 4HK1E4CC, 5.193 cc, công suất 190 PS"
+      "Model xe cơ sở": "Foton nhập khẩu chuyên dụng môi trường",
+      "Tải trọng cho phép": "7.570 kg",
+      "Dung tích xi-lanh": "6.870 cc",
+      "Động cơ": "Yuchai YC6JA220-50 (6 máy khỏe khoắn)"
     },
     "specialSpecs": {
-      "Vật liệu thùng chứa rác": "Thép chịu mài mòn chống ăn mòn Inox 304 / Perform 700",
-      "Cơ cấu nạp rác": "Càng gắp đa năng kết hợp máng xúc thủy lực",
-      "Hệ thống thủy lực": "Bơm và van điều khiển nhập khẩu Ý (Italy)"
+      "Dung tích bồn chứa": "9 khối (9 m³) thép hợp kim dày 6 mm chống ăn mòn",
+      "Hệ thống bơm": "Bơm chân không vòng nước Model SK 12 lực hút cực mạnh",
+      "Cơ cấu xả thải": "Nâng hạ xi-téc ben thủy lực kết hợp xilanh mở nắp bồn tự động"
     },
     "faqs": [
       {
-        "question": "Thùng xe ép rác Isuzu 9 khối tại Chuyên Dùng Phú Cường bảo hành bao lâu?",
-        "answer": "Phần xe cơ sở Isuzu được bảo hành 3 năm hoặc 100.000 km trên toàn quốc. Phần thùng chuyên dùng ép rác và hệ thống thủy lực được Chuyên Dùng Phú Cường bảo hành trực tiếp 12 tháng tại 3 chi nhánh TP.HCM, Tiền Giang và An Giang."
+        "question": "Xe bồn hút chất thải Foton 9 khối có bảo hành thùng bồn không?",
+        "answer": "Toàn bộ phần bồn chứa và hệ thống bơm hút chân không được Chuyên Dùng Phú Cường bảo hành chuyên sâu 12 tháng tại 3 chi nhánh TP.HCM, Tiền Giang và An Giang."
+      }
+    ]
+  },
+  {
+    "slug": "xe-nang-dau-cang-keo-foton-5-3-tan",
+    "name": "Xe Nâng Đầu Chở Xe Tải Kết Hợp Càng Kéo Foton (Tải 5.3 Tấn)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Nâng Đầu Chở Xe",
+    "brand": "Foton",
+    "price": 1390000000,
+    "promo": "Tặng tời kéo thủy lực 8 tấn + Càng nâng phao sau miễn phí",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 2600000,
+    "chassisSpecs": {
+      "Model xe nền": "Foton Ollin / Auman cao cấp",
+      "Tải trọng cho phép": "5.300 kg",
+      "Hệ thống chuyên dụng": "S sàn trượt nâng đầu kết hợp càng kéo"
+    },
+    "specialSpecs": {
+      "Vật liệu chế tạo sàn": "Thép cường độ cao Q690D chịu lực chuyên biệt",
+      "Chân chống nâng đầu": "Chịu tải nâng tối đa lên đến 20 tấn",
+      "Tời kéo thủy lực": "Sức kéo tối đa 8 tấn, cáp dài chuyên dụng cứu hộ"
+    },
+    "faqs": [
+      {
+        "question": "Xe nâng đầu chở xe có được giao xe tận nơi ở các tỉnh miền Tây không?",
+        "answer": "Chuyên Dùng Phú Cường hỗ trợ giao xe tận nơi miễn phí tại TP.HCM, Tiền Giang, An Giang và toàn bộ các tỉnh thành miền Tây Nam Bộ."
       }
     ]
   },
@@ -76,7 +118,11 @@
     "brand": "Weichai",
     "price": 1720000000,
     "promo": "Tặng gói phủ gầm + Camera hành trình Nghị định 10 + Phù hiệu Hợp đồng",
-    "image": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
     "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
     "roadTaxPerYear": 4680000,
     "insuranceTNDS": 3643000,
@@ -93,8 +139,8 @@
     },
     "faqs": [
       {
-        "question": "Thủ tục mua xe khách 29 chỗ trả góp cho công ty du lịch/nhà xe cần những gì?",
-        "answer": "Đối với doanh nghiệp vận tải/du lịch, chỉ cần Giấy phép kinh doanh và báo cáo tài chính/sao kê ngân hàng. Chuyên Dùng Phú Cường hỗ trợ giải ngân đến 80% giá trị xe, hoàn thiện trọn gói biển số vàng, định vị Nghị định 10 và phù hiệu xe hợp đồng."
+        "question": "Thủ tục mua xe khách 29 chỗ trả góp cho công ty du lịch cần những gì?",
+        "answer": "Chỉ cần Giấy phép kinh doanh và báo cáo tài chính. Hỗ trợ vay ngân hàng đến 80%, hoàn thiện trọn gói biển số vàng và định vị vận tải."
       }
     ]
   }

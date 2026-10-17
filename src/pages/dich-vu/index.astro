@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Dịch Vụ Sửa Chữa, Cứu Hộ & Đóng Thùng Xe Chuyên Dùng Miền Nam"
+  description="Trung tâm dịch vụ kỹ thuật Ô Tô Chuyên Dùng Phú Cường: Cứu hộ 24/7, sửa chữa động cơ, gia cố thùng bồn cẩu và làm thủ tục cải tạo đăng kiểm trọn gói tại TP.HCM, Tiền Giang, An Giang."
+>
+  <div class="max-w-7xl mx-auto px-4 py-10">
+    <!-- Breadcrumb -->
+    <nav class="text-sm text-slate-500 mb-6">
+      <a href="/" class="hover:underline">Trang chủ</a> / <strong class="text-slate-800">Dịch Vụ Kỹ Thuật & Hậu Mãi</strong>
+    </nav>
+
+    <!-- Tiêu đề trang -->
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <span class="bg-red-100 text-red-700 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+        Hậu Mãi & Kỹ Thuật Chuyên Sâu
+      </span>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-blue-950 mt-3">
+        Dịch Vụ Sửa Chữa, Cứu Hộ & Đóng Thùng Chuyên Dùng Trọn Gói
+      </h1>
+      <p class="text-slate-600 mt-3 text-base">
+        Không chỉ phân phối xe chính hãng, Ô Tô Chuyên Dùng Phú Cường còn sở hữu xưởng dịch vụ cơ khí quy mô lớn, sẵn sàng hỗ trợ kỹ thuật và cứu hộ 24/7 cho các chủ xe tại Miền Nam.
+      </p>
+    </div>
+
+    <!-- Danh sách các dịch vụ chi tiết có gắn link bài viết con -->
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+      
+      <!-- Dịch vụ 1: Cứu hộ -->
+      <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 bg-red-100 text-red-600 rounded-lg flex items-center justify-center font-bold text-xl mb-4">🚨</div>
+          <h2 class="text-2xl font-bold text-slate-900 mb-3">
+            <a href="/dich-vu/cuu-ho-chuyen-dung" class="hover:text-red-600 transition">Cứu Hộ Chuyên Dùng 24/7</a>
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed mb-4">
+            Đội ngũ xe cứu hộ giao thông và kỹ thuật viên trực lưu động sẵn sàng hỗ trợ xử lý sự cố, kéo xe, cẩu xe gặp nạn hoặc chết máy dọc đường tại khu vực TP.HCM, Tiền Giang, An Giang và các tỉnh ĐBSCL.
+          </p>
+          <ul class="text-sm text-slate-700 space-y-2 mb-6">
+            <li>✓ Hỗ trợ khẩn cấp 24/7 mọi lúc mọi nơi</li>
+            <li>✓ Xe cứu hộ sàn trượt & cần cẩu hiện đại</li>
+            <li>✓ Xử lý nhanh gọn, đúng kỹ thuật an toàn</li>
+          </ul>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <a href="/dich-vu/cuu-ho-chuyen-dung" class="text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2.5 rounded-lg text-sm transition">Xem Chi Tiết</a>
+          <a href="tel:0922777703" class="text-center bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg text-sm transition">📞 Gọi Cứu Hộ</a>
+        </div>
+      </div>
+
+      <!-- Dịch vụ 2: Sửa xe chuyên dùng -->
+      <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold text-xl mb-4">⚙️</div>
+          <h2 class="text-2xl font-bold text-slate-900 mb-3">
+            <a href="/dich-vu/sua-xe-chuyen-dung" class="hover:text-blue-600 transition">Sửa Chữa Xe Chuyên Dùng & Động Cơ</a>
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed mb-4">
+            Chuyên chẩn đoán và khắc phục sự cố hệ thống động cơ (Cummins, Yuchai, Hino, Isuzu...), hệ thống thủy lực chuyên dụng, bơm van, tời kéo và hệ thống điện xe tải nặng, xe khách.
+          </p>
+          <ul class="text-sm text-slate-700 space-y-2 mb-6">
+            <li>✓ Chẩn đoán lỗi động cơ điện tử chính xác</li>
+            <li>✓ Sửa chữa, phục hồi bơm & xy-lanh thủy lực</li>
+            <li>✓ Phụ tùng thay thế chính hãng 100%</li>
+          </ul>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <a href="/dich-vu/sua-xe-chuyen-dung" class="text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2.5 rounded-lg text-sm transition">Xem Chi Tiết</a>
+          <a href="tel:0922777703" class="text-center bg-blue-900 hover:bg-blue-800 text-white font-bold py-2.5 rounded-lg text-sm transition">🛠️ Đặt Lịch</a>
+        </div>
+      </div>
+
+      <!-- Dịch vụ 3: Sửa thùng bồn -->
+      <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-lg flex items-center justify-center font-bold text-xl mb-4">🚛</div>
+          <h2 class="text-2xl font-bold text-slate-900 mb-3">
+            <a href="/dich-vu/sua-thung-bon" class="hover:text-amber-600 transition">Sửa Chữa & Gia Cố Thùng, Bồn Chuyên Dùng</a>
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed mb-4">
+            Xưởng cơ khí chuyên sâu nhận gia cố, nới dài thùng, sửa chữa bệ cẩu, bồn chở nước, bồn hút chất thải bị rò rỉ, thùng ép rác móp méo hoặc thay thế vật liệu inox chống ăn mòn.
+          </p>
+          <ul class="text-sm text-slate-700 space-y-2 mb-6">
+            <li>✓ Hàn cắt, gia cố kết cấu khung xương thùng</li>
+            <li>✓ Sửa chữa hệ thống ben nâng hạ & bồn xitec</li>
+            <li>✓ Nhận thiết kế đóng mới theo yêu cầu riêng</li>
+          </ul>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <a href="/dich-vu/sua-thung-bon" class="text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2.5 rounded-lg text-sm transition">Xem Chi Tiết</a>
+          <a href="tel:0922777703" class="text-center bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-lg text-sm transition">📞 Tư Vấn</a>
+        </div>
+      </div>
+
+      <!-- Dịch vụ 4: Cải tạo hồ sơ đăng kiểm -->
+      <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-lg flex items-center justify-center font-bold text-xl mb-4">📄</div>
+          <h2 class="text-2xl font-bold text-slate-900 mb-3">
+            <a href="/dich-vu/cai-tao-ho-so" class="hover:text-emerald-600 transition">Đăng Kiểm & Cải Tạo Hồ Sơ Thiết Kế</a>
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed mb-4">
+            Hỗ trợ trọn gói các thủ tục pháp lý liên quan đến xe chuyên dùng: lập hồ sơ thiết kế cải tạo xe, đăng kiểm lần đầu, đổi biển số vàng, đăng ký hợp tác xã và lắp định vị phù hiệu vận tải.
+          </p>
+          <ul class="text-sm text-slate-700 space-y-2 mb-6">
+            <li>✓ Hoàn thiện hồ sơ cải tạo xe chuyên dùng nhanh chóng</li>
+            <li>✓ Trọn gói đăng kiểm, nộp phí đường bộ</li>
+            <li>✓ Hỗ trợ pháp lý cho doanh nghiệp vận tải</li>
+          </ul>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <a href="/dich-vu/cai-tao-ho-so" class="text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2.5 rounded-lg text-sm transition">Xem Chi Tiết</a>
+          <a href="tel:0922777703" class="text-center bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-lg text-sm transition">📞 Hỗ Trợ Ngay</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Khối liên hệ hỗ trợ kỹ thuật tại 3 Showroom -->
+    <div class="bg-slate-900 text-white p-8 rounded-2xl text-center">
+      <h2 class="text-2xl font-bold mb-2">Cần Hỗ Trợ Kỹ Thuật Hoặc Cứu Hộ Gấp?</h2>
+      <p class="text-slate-300 max-w-xl mx-auto text-sm mb-6">
+        Quý khách hàng có thể liên hệ trực tiếp với trạm dịch vụ gần nhất tại Bình Chánh (TP.HCM), Nhị Quý (Tiền Giang) hoặc Bình Đức (An Giang) để được phục vụ ngay lập tức.
+      </p>
+      <a href="tel:0922777703" class="inline-block bg-red-600 hover:bg-red-700 text-white font-extrabold px-8 py-3 rounded-lg text-lg transition shadow-lg">
+        📞 Hotline Tổng Đài Kỹ Thuật: 0922 77 77 03
+      </a>
+    </div>
+  </div>
+</BaseLayout>
