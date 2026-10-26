@@ -1,0 +1,86 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import postsData from '../../../data/posts.json';
+
+const posts = Array.isArray(postsData) ? postsData : [];
+---
+
+<AdminLayout title="Quản Lý Bài Viết Tin Tức & Kiến Thức" activeTab="posts">
+  <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6 flex justify-between items-center">
+    <div class="text-sm font-bold text-slate-700">
+      Tổng số: <span class="text-blue-600">{posts.length}</span> bài viết
+    </div>
+    <a href="/admin/posts/edit" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-sm transition shadow-md">
+      + Viết Bài Mới
+    </a>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <table class="w-full text-left border-collapse text-sm">
+      <thead>
+        <tr class="bg-slate-800 text-white text-xs uppercase">
+          <th class="p-4">Ảnh</th>
+          <th class="p-4">Tiêu đề bài viết</th>
+          <th class="p-4">Chuyên mục</th>
+          <th class="p-4">Ngày đăng</th>
+          <th class="p-4 text-right">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200">
+        {posts.map((p: any) => (
+          <tr class="hover:bg-slate-50 post-row">
+            <td class="p-4 w-20">
+              <img src={p.image} alt={p.title} class="w-16 h-12 object-cover rounded-lg border" />
+            </td>
+            <td class="p-4 font-bold text-slate-900 max-w-md line-clamp-2">{p.title}</td>
+            <td class="p-4"><span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">{p.category}</span></td>
+            <td class="p-4 text-slate-500 whitespace-nowrap">{p.date}</td>
+            <td class="p-4 text-right whitespace-nowrap space-x-2">
+              <a href={`/tin-tuc/${p.slug}`} target="_blank" class="inline-block bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 font-bold px-3 py-1.5 rounded-lg text-xs transition">
+                👁️ Xem
+              </a>
+              <a href={`/admin/posts/edit?slug=${p.slug}`} class="inline-block bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 font-bold px-3 py-1.5 rounded-lg text-xs transition">
+                ✏️ Sửa
+              </a>
+              <button 
+                type="button" 
+                data-slug={p.slug}
+                class="btn-delete-post bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold px-3 py-1.5 rounded-lg text-xs transition cursor-pointer"
+              >
+                🗑️ Xóa
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <script is:inline>
+    document.querySelectorAll('.btn-delete-post').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const slug = e.currentTarget.getAttribute('data-slug');
+        if (!confirm('⚠️ Bạn có chắc chắn muốn xóa bài viết này? Tất cả hình ảnh liên quan trong bài cũng sẽ được tự động xóa khỏi máy chủ!')) {
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/delete-post', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug })
+          });
+          const result = await res.json();
+          if (result.success) {
+            alert('🎉 ' + result.message);
+            location.reload();
+          } else {
+            alert('❌ Lỗi: ' + result.message);
+          }
+        } catch (err) {
+          alert('❌ Lỗi kết nối đến máy chủ!');
+        }
+      });
+    });
+  </script>
+</AdminLayout>

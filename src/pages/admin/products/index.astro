@@ -1,0 +1,245 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { allVehicles } from '../../../data/vehicles.js';
+import navData from '../../../data/navigation.json';
+
+const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
+const hasAnyExplicitFeatured = vehicleList.some((v: any) => v.isFeatured !== undefined);
+
+const mainMenu = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
+const menuCategories: { title: string; subKey: string }[] = [];
+
+mainMenu.forEach((menu: any) => {
+  if (typeof menu.url === 'string' && menu.url.includes('/san-pham') && Array.isArray(menu.children)) {
+    menu.children.forEach((child: any) => {
+      let subKey = '';
+      if (typeof child.url === 'string' && child.url.includes('cat=')) {
+        subKey = child.url.split('cat=')[1].split('&')[0].trim();
+      }
+      menuCategories.push({ title: child.title, subKey });
+    });
+  }
+});
+---
+
+<AdminLayout title="Quản Lý Kho Xe Chuyên Dùng & Ô Tô Khách" activeTab="products">
+  <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6 flex flex-col lg:flex-row gap-4 justify-between items-center">
+    <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto flex-1">
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="🔍 Tìm nhanh theo tên xe, mã slug, hãng xe..." 
+        class="p-2.5 border border-slate-300 rounded-xl text-sm flex-1 outline-none focus:ring-2 focus:ring-blue-600"
+      />
+      <select id="filterCategory" class="p-2.5 border border-slate-300 rounded-xl text-sm bg-white outline-none font-semibold text-slate-700">
+        <option value="all">Tất cả danh mục ({vehicleList.length} xe)</option>
+        {menuCategories.map((cat) => (
+          <option value={cat.subKey || cat.title} data-title={cat.title}>
+            {cat.title}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <a href="/admin/products/edit" class="w-full lg:w-auto text-center bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-sm transition shadow-md">
+      + Thêm Xe Mới
+    </a>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr class="bg-slate-800 text-white text-xs uppercase">
+            <th class="p-4">Hình ảnh</th>
+            <th class="p-4">Tên sản phẩm & Hãng</th>
+            <th class="p-4">Danh mục</th>
+            <th class="p-4">Sửa nhanh Giá Niêm Yết (VNĐ)</th>
+            <th class="p-4 text-center">Hiện Trang Chủ</th>
+            <th class="p-4 text-right">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="productTableBody" class="divide-y divide-slate-200">
+          {vehicleList.map((v: any, idx: number) => {
+            const isChecked = hasAnyExplicitFeatured ? Boolean(v.isFeatured) : idx < 4;
+            return (
+              <tr 
+                class="hover:bg-slate-50 transition product-row" 
+                data-name={`${v.name || ''} ${v.slug || ''} ${v.brand || ''}`.toLowerCase()} 
+                data-cat={v.subCategory || ''}
+                data-subkey={v.subKey || ''}
+              >
+                <td class="p-4 w-20">
+                  <img src={v.images?.[0] || 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=300&q=80'} alt={v.name} class="w-16 h-12 object-cover rounded-lg border" />
+                </td>
+                <td class="p-4 max-w-xs">
+                  <span class="text-xs font-bold text-blue-600 uppercase">{v.brand}</span>
+                  <p class="font-bold text-slate-900 line-clamp-2">{v.name}</p>
+                  <span class="text-[10px] text-slate-400 font-mono">slug: {v.slug}</span>
+                </td>
+                <td class="p-4">
+                  <span class="bg-slate-100 text-slate-700 text-xs font-semibold px-2.5 py-1 rounded-md">{v.subCategory || 'Chuyên dùng'}</span>
+                </td>
+                <td class="p-4">
+                  <div class="flex items-center gap-2">
+                    <input 
+                      type="number" 
+                      value={v.price} 
+                      data-slug={v.slug}
+                      class="price-input p-2 border border-slate-300 rounded-lg w-40 font-bold text-red-600 focus:ring-2 focus:ring-blue-600 outline-none"
+                    />
+                    <button 
+                      type="button"
+                      data-slug={v.slug}
+                      class="btn-save-price bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-2 rounded-lg cursor-pointer transition"
+                    >
+                      Lưu
+                    </button>
+                  </div>
+                </td>
+                <td class="p-4 text-center">
+                  <input 
+                    type="checkbox" 
+                    data-slug={v.slug}
+                    checked={isChecked}
+                    class="toggle-featured w-5 h-5 accent-red-600 rounded cursor-pointer" 
+                    title="Tick chọn để trưng bày xe này ngoài Trang Chủ" 
+                  />
+                </td>
+                <td class="p-4 text-right space-x-1.5 whitespace-nowrap">
+                  <a href={`/san-pham/${v.slug}`} target="_blank" class="inline-block bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 font-bold px-3 py-1.5 rounded-lg text-xs transition">
+                    👁️ Xem
+                  </a>
+                  <a href={`/admin/products/edit?slug=${v.slug}`} class="inline-block bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 font-bold px-3 py-1.5 rounded-lg text-xs transition">
+                    ✏️ Sửa
+                  </a>
+                  <button 
+                    type="button"
+                    data-slug={v.slug}
+                    data-name={v.name}
+                    class="btn-delete-vehicle bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold px-3 py-1.5 rounded-lg text-xs transition cursor-pointer"
+                  >
+                    🗑️ Xóa
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script is:inline>
+    document.querySelectorAll('.btn-save-price').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const target = e.currentTarget;
+        const slug = target.getAttribute('data-slug');
+        const row = target.closest('tr');
+        const newPrice = row.querySelector('.price-input').value;
+
+        try {
+          const res = await fetch('/api/update-vehicle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug, price: newPrice })
+          });
+          const result = await res.json();
+          if (result.success) {
+            alert('🎉 Đã lưu giá mới thành công!');
+            location.reload();
+          } else {
+            alert('❌ Lỗi: ' + result.message);
+          }
+        } catch (err) {
+          alert('❌ Lỗi kết nối đến máy chủ!');
+        }
+      });
+    });
+
+    document.querySelectorAll('.toggle-featured').forEach(chk => {
+      chk.addEventListener('change', async (e) => {
+        const target = e.currentTarget;
+        const slug = target.getAttribute('data-slug');
+        const isFeatured = target.checked;
+
+        try {
+          const res = await fetch('/api/update-vehicle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug, isFeatured })
+          });
+          const result = await res.json();
+          if (!result.success) {
+            alert('❌ Lỗi: ' + result.message);
+            target.checked = !isFeatured;
+          }
+        } catch (err) {
+          alert('❌ Không thể cập nhật trạng thái hiển thị trang chủ!');
+          target.checked = !isFeatured;
+        }
+      });
+    });
+
+    document.querySelectorAll('.btn-delete-vehicle').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const target = e.currentTarget;
+        const slug = target.getAttribute('data-slug');
+        const name = target.getAttribute('data-name');
+
+        if (!confirm(`⚠️ Bạn có chắc chắn muốn xóa sản phẩm:\n"${name}"?\nToàn bộ dữ liệu của xe này sẽ bị xóa khỏi hệ thống!`)) {
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/delete-vehicle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug })
+          });
+          const result = await res.json();
+          if (result.success) {
+            alert('🎉 ' + result.message);
+            location.reload();
+          } else {
+            alert('❌ Lỗi: ' + result.message);
+          }
+        } catch (err) {
+          alert('❌ Lỗi kết nối đến máy chủ!');
+        }
+      });
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    const filterCat = document.getElementById('filterCategory');
+    const rows = document.querySelectorAll('.product-row');
+
+    function filterTable() {
+      const q = searchInput.value.toLowerCase().trim();
+      const selectedVal = filterCat.value;
+      const selectedOpt = filterCat.options[filterCat.selectedIndex];
+      const selectedTitle = (selectedOpt ? selectedOpt.getAttribute('data-title') || '' : '').toLowerCase();
+
+      rows.forEach(row => {
+        const matchName = row.getAttribute('data-name').includes(q);
+        const rowCat = (row.getAttribute('data-cat') || '').toLowerCase();
+        const rowSubKey = (row.getAttribute('data-subkey') || '').toLowerCase();
+
+        const matchCat = selectedVal === 'all' 
+          || rowSubKey === selectedVal.toLowerCase() 
+          || rowCat === selectedTitle
+          || (selectedVal === 'bon-thuc-pham' && rowCat.includes('bồn cám'))
+          || (selectedVal === 'bon-hut-chat-thai' && (rowCat.includes('hút chất thải') || rowCat.includes('bồn chuyên dùng')))
+          || (selectedVal === 'bon-nuoc' && (rowCat.includes('bồn nước') || rowCat.includes('bồn chuyên dùng')))
+          || (selectedVal === 'xe-cau' && rowCat.includes('cẩu'))
+          || (selectedVal === 'cuu-ho' && rowCat.includes('cứu hộ'))
+          || (selectedVal === 'nang-dau' && rowCat.includes('nâng đầu'));
+
+        row.style.display = (matchName && matchCat) ? '' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    filterCat.addEventListener('change', filterTable);
+  </script>
+</AdminLayout>

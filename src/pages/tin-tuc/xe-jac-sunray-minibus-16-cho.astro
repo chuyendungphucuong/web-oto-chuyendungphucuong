@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const post = {
+  title: "Đánh Giá Xe Khách JAC Sunray Minibus 16 Chỗ: Bền Bỉ, Tiết Kiệm & Nhanh Hồi Vốn",
+  category: "Đánh Giá & So Sánh",
+  publishedDate: "17/10/2026",
+  author: "Chuyên Gia Đánh Giá Xe Phú Cường",
+  image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80",
+  summary: "Khám phá chi tiết dòng xe khách JAC Sunray Minibus 16 chỗ thế hệ mới: Không gian rộng rãi, động cơ Cummins 2.8L mạnh mẽ, khung gầm thép cường lực và hiệu quả kinh tế vượt trội cho doanh nghiệp vận tải du lịch.",
+  content: `Dòng xe khách **JAC Sunray Minibus 16 chỗ** là thế hệ minibus mới nhất được thiết kế chuyên biệt nhằm đáp ứng nhu cầu vận tải hành khách ngày càng cao tại thị trường Việt Nam. Với sự kết hợp hoàn hảo giữa thiết kế hiện đại, động cơ tiết kiệm nhiên liệu và không gian nội thất đẳng cấp, đây là lựa chọn hàng đầu cho các doanh nghiệp du lịch, dịch vụ đưa đón nhân viên và tuyến cố định.
+
+1. Thiết kế ngoại thất hiện đại & tối ưu khí động học
+- JAC Sunray 16 chỗ sở hữu diện mạo cân đối, cản trước bề thế kết hợp lưới tản nhiệt hình thang lớn giúp giảm tối đa lực cản gió.
+- Cửa sổ lớn tạo tầm nhìn thoáng đãng cho hành khách, kết hợp lốp sau bánh đôi giúp xe tăng độ bám đường và vận hành ổn định trên mọi cung đường đèo dốc.
+- Kích thước tổng thể (DxRxC): 5.990 x 2.100 x 2.645 mm tối ưu không gian nội thất nhưng vẫn linh hoạt di chuyển trong đô thị.
+
+2. Không gian nội thất tiện nghi, rộng rãi hàng đầu phân khúc
+- Khoang hành khách bố trí khoa học, ghế ngồi ôm sát lưng mang lại cảm giác thoải mái tối đa trong các chuyến đi dài.
+- Hệ thống điều hòa công suất lớn (8000W) làm mát nhanh chóng, kết hợp hệ thống giải trí đa phương tiện (Radio, USB).
+- Thiết kế thông minh với nhiều hộc chứa đồ tiện lợi cho hành lý cá nhân của hành khách.
+
+3. Động cơ Cummins 2.8L mạnh mẽ & tiết kiệm nhiên liệu
+- Xe được trang bị khối động cơ Diesel Cummins dung tích 2.8L tích hợp turbo tăng áp và phun nhiên liệu trực tiếp, sản sinh công suất mạnh mẽ.
+- Khả năng leo dốc tốt lên tới 30%, tốc độ tối đa đạt 120 km/h, kết hợp hộp số sàn 6 cấp (6 tiến, 1 lùi) sang số mượt mà và tiết kiệm dầu hiệu quả.
+
+4. Khung gầm vững chãi & Hệ thống an toàn tiêu chuẩn
+- Khung gầm làm từ thép cường lực cao cấp, kết hợp hệ thống treo trước độc lập MacPherson và treo sau lò xo thép giúp xe vận hành êm ái.
+- Trang bị hệ thống chống bó cứng phanh ABS kết hợp phân bổ lực phanh điện tử EBD, phanh đĩa trước và cảm biến lùi hỗ trợ tối đa cho tài xế.`,
+  faqs: [
+    {
+      question: "Xe khách JAC Sunray 16 chỗ tiêu thụ nhiên liệu có tốn không?",
+      answer: "Nhờ ứng dụng động cơ Cummins 2.8L công nghệ mới phun nhiên liệu điện tử, JAC Sunray nổi tiếng với khả năng tiết kiệm nhiên liệu tối ưu, giúp giảm đáng kể chi phí vận hành cho doanh nghiệp."
+    },
+    {
+      question: "Mua xe JAC Sunray 16 chỗ trả góp tại Phú Cường cần trả trước bao nhiêu?",
+      answer: "Quý khách chỉ cần chuẩn bị khoảng từ 230 triệu đồng là có thể nhận xe ngay. Ô Tô Chuyên Dùng Phú Cường hỗ trợ vay trả góp từ 70% - 85% giá trị xe qua các ngân hàng lớn với thủ tục nhanh gọn."
+    }
+  ]
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": post.title,
+  "description": post.summary,
+  "image": post.image,
+  "datePublished": post.publishedDate,
+  "author": { "@type": "Person", "name": post.author }
+};
+---
+
+<BaseLayout title={post.title} description={post.summary} schema={articleSchema}>
+  <article class="max-w-4xl mx-auto px-4 py-10">
+    <nav class="text-sm text-slate-500 mb-6">
+      <a href="/" class="hover:underline">Trang chủ</a> / 
+      <a href="/tin-tuc" class="hover:underline">Kiến Thức & Tin Tức</a> / 
+      <strong class="text-slate-800">{post.category}</strong>
+    </nav>
+
+    <header class="mb-8">
+      <span class="bg-blue-100 text-blue-900 text-xs font-extrabold px-3 py-1 rounded uppercase">
+        {post.category}
+      </span>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-blue-950 mt-3 mb-4 leading-tight">
+        {post.title}
+      </h1>
+      <div class="flex items-center text-sm text-slate-500 space-x-4">
+        <span>📅 Ngày đăng: {post.publishedDate}</span>
+        <span>✍️ Tác giả: {post.author}</span>
+      </div>
+    </header>
+
+    <div class="mb-8">
+      <img src={post.image} alt={post.title} class="w-full h-96 object-cover rounded-xl shadow-sm border border-slate-200" />
+    </div>
+
+    <!-- Tóm tắt Answer-First cho AI Overviews -->
+    <div class="bg-blue-50 border-l-4 border-blue-900 p-5 rounded-r-lg mb-8 text-slate-700 leading-relaxed font-medium">
+      {post.summary}
+    </div>
+
+    <!-- Nội dung bài viết -->
+    <div class="prose max-w-none text-slate-700 space-y-6 text-base leading-relaxed whitespace-pre-line">
+      {post.content}
+    </div>
+
+    <!-- Khối Câu Hỏi Thường Gặp (FAQ) cho AI Overviews -->
+    <section class="mt-12 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+      <h2 class="text-xl font-extrabold text-blue-950 mb-4">Câu Hỏi Thường Gặp Về JAC Sunray 16 Chỗ</h2>
+      <div class="space-y-4 text-sm">
+        {post.faqs.map((faq) => (
+          <div class="border-b border-slate-100 pb-3">
+            <h3 class="font-bold text-slate-900">❓ {faq.question}</h3>
+            <p class="text-slate-600 mt-1">{faq.answer}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Khối liên hệ tư vấn cuối bài -->
+    <div class="mt-12 bg-slate-900 text-white p-8 rounded-2xl text-center">
+      <h3 class="text-2xl font-bold mb-2">Nhận Báo Giá & Đăng Ký Lái Thử JAC Sunray 16 Chỗ</h3>
+      <p class="text-slate-300 text-sm mb-6">Hỗ trợ trả góp 85%, giao xe tận nơi tại 3 showroom TP.HCM, Tiền Giang, An Giang.</p>
+      <a href="tel:0922777703" class="inline-block bg-red-600 hover:bg-red-700 text-white font-extrabold px-8 py-3 rounded-lg text-lg transition shadow">
+        📞 Hotline Tư Vấn: 0922 77 77 03
+      </a>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,707 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { allVehicles } from '../../../data/vehicles.js';
+import navData from '../../../data/navigation.json';
+
+const url = new URL(Astro.request.url);
+const slug = url.searchParams.get('slug');
+
+const vehicles = Array.isArray(allVehicles) ? allVehicles : [];
+const vehicle = vehicles.find((v: any) => v.slug === slug) || null;
+
+const mainMenu = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
+const dynamicCategories: { title: string; subKey: string; parentCat: string; groupTitle: string }[] = [];
+
+mainMenu.forEach((menu: any) => {
+  if (typeof menu.url === 'string' && menu.url.includes('/san-pham') && Array.isArray(menu.children)) {
+    const parentCat = menu.url.includes('xe-khach') ? 'xe-khach' : 'xe-tai-chuyen-dung';
+    menu.children.forEach((child: any) => {
+      let subKey = '';
+      if (typeof child.url === 'string' && child.url.includes('cat=')) {
+        subKey = child.url.split('cat=')[1].split('&')[0].trim();
+      }
+      dynamicCategories.push({
+        title: child.title,
+        subKey: subKey || 'xe-tai-chuyen-dung',
+        parentCat,
+        groupTitle: menu.title
+      });
+    });
+  }
+});
+
+const currentSubCat = vehicle?.subCategory || '';
+const currentSubKey = vehicle?.subKey || '';
+
+const isEditMode = !!vehicle;
+const specs = vehicle?.chassisSpecs || vehicle?.chassis_specs || {
+  "Khối lượng bản thân": "",
+  "Tải trọng cho phép chở": "",
+  "Tổng tải trọng": "",
+  "Kích thước xe (D x R x C)": "",
+  "Động cơ": ""
+};
+const specialSpecs = vehicle?.specialSpecs || vehicle?.special_specs || {
+  "Thể tích bồn / Kích thước sàn": "",
+  "Kích thước lòng thùng / xi-téc": "",
+  "Vật liệu chế tạo": "",
+  "Hệ thống chuyên dùng": ""
+};
+const images = Array.isArray(vehicle?.images) && vehicle.images.length > 0 ? vehicle.images : [];
+const faqs = Array.isArray(vehicle?.faqs) ? vehicle.faqs : [];
+
+const rawDesc = (vehicle?.description || vehicle?.summary || '')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>');
+---
+
+<AdminLayout title={isEditMode ? "Chỉnh Sửa Thông Tin Chi Tiết Sản Phẩm" : "Thêm Mới Mẫu Xe Chuyên Dùng"} activeTab="products">
+  <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+
+  <div class="max-w-5xl mx-auto space-y-6 pb-12">
+    <div class="flex items-center justify-between">
+      <a href="/admin/products" class="text-sm font-bold text-blue-600 hover:underline">&larr; Quay lại danh sách kho xe</a>
+      <button type="button" id="btnSaveAll" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-8 py-3 rounded-xl shadow-lg cursor-pointer transition text-sm">
+        💾 {isEditMode ? "LƯU THAY ĐỔI SẢN PHẨM" : "TẠO MỚI SẢN PHẨM"}
+      </button>
+    </div>
+
+    <input type="hidden" id="isEditMode" value={isEditMode ? "true" : "false"} />
+    <div id="initialDescription" class="hidden">{rawDesc}</div>
+
+    <!-- ========================================================================= -->
+    <!-- KHỐI TRỢ LÝ AI & NHẬP LIỆU NHANH 1-CLICK (KHÔNG CẦN COPY DÁN TỪNG MỤC) -->
+    <!-- ========================================================================= -->
+    <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-6 rounded-2xl shadow-lg border border-blue-800 space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-white/15 pb-3">
+        <div>
+          <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded uppercase tracking-wider">⚡ Trợ Lý Nhập Liệu Siêu Tốc</span>
+          <h2 class="text-base sm:text-lg font-extrabold mt-1">Tự Động Điền Toàn Bộ Thông Số & Bài Viết Chuẩn SEO / AI Overviews</h2>
+        </div>
+        <label class="flex items-center gap-2 text-xs bg-white/10 px-3 py-1.5 rounded-lg cursor-pointer">
+          <input type="checkbox" id="chkKeepCurrentPrice" checked={isEditMode} class="accent-amber-400 w-4 h-4 rounded cursor-pointer" />
+          <span class="font-bold text-amber-300">🔒 Giữ nguyên giá hiện tại (Chống đè giá)</span>
+        </label>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-sm">
+        <!-- Cột 1: Dán Gói JSON 1-Click hoặc Thông số thô -->
+        <div class="lg:col-span-8 space-y-2">
+          <label class="block text-xs font-bold text-blue-200">
+            Cách 1: Dán "Mã Nhập Liệu Nhanh (JSON)" từ trợ lý AI hoặc dán văn bản thông số thô vào đây:
+          </label>
+          <textarea 
+            id="aiQuickInput" 
+            rows="4" 
+            placeholder='Dán khối mã JSON 1-Click vào đây rồi bấm nút "🚀 Tự Động Điền Toàn Bộ" bên cạnh...'
+            class="w-full p-3 rounded-xl bg-slate-800/90 border border-slate-600 text-white font-mono text-xs focus:border-amber-400 outline-none"
+          ></textarea>
+        </div>
+
+        <!-- Cột 2: Nút bấm thực thi -->
+        <div class="lg:col-span-4 flex flex-col justify-end gap-2.5">
+          <button 
+            type="button" 
+            id="btnApplyQuickJson" 
+            class="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-3 px-4 rounded-xl shadow-md transition cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-2"
+          >
+            🚀 Tự Động Điền Toàn Bộ (1-Click)
+          </button>
+          <button 
+            type="button" 
+            id="btnGenerateFromSpecs" 
+            class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl transition cursor-pointer text-xs flex items-center justify-center gap-1.5"
+          >
+            ✍️ Tự Dựng Bài SEO Từ Các Ô Đã Nhập
+          </button>
+          <p id="aiQuickStatus" class="text-[11px] text-emerald-400 font-bold hidden"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- KHỐI 1: THÔNG TIN CHUNG & GIÁ BÁN -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <h2 class="text-base font-bold text-white bg-blue-700 p-3 rounded-xl">1. Thông Tin Chung & Giá Bán</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 text-sm">
+        <div class="md:col-span-2">
+          <label class="block font-bold text-slate-700 mb-1">Tên đầy đủ của xe (*):</label>
+          <input type="text" id="inputName" value={vehicle?.name || ''} placeholder="Nhập tên xe chuyên dùng..." class="w-full p-3 border rounded-xl font-bold text-slate-900" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Mã định danh URL & Thư mục ảnh (Slug) (*):</label>
+          <input type="text" id="inputSlug" value={vehicle?.slug || ''} placeholder="vd: xe-cuu-ho-giao-thong-foton" class={`w-full p-3 border rounded-xl font-mono text-xs ${isEditMode ? 'bg-slate-100' : ''}`} readonly={isEditMode} />
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="block font-bold text-slate-700">Danh mục chuyên dùng (Đồng bộ theo Menu):</label>
+            <a href="/admin/menu" class="text-[11px] font-bold text-blue-600 hover:underline">+ Thêm loại ở Menu</a>
+          </div>
+          <select id="inputSubCategory" class="w-full p-3 border rounded-xl bg-white font-semibold text-slate-800">
+            {dynamicCategories.map((cat) => {
+              const isSelected = (currentSubKey && currentSubKey === cat.subKey) || currentSubCat === cat.title;
+              return (
+                <option 
+                  value={cat.title} 
+                  data-subkey={cat.subKey} 
+                  data-parent={cat.parentCat}
+                  selected={isSelected}
+                >
+                  [{cat.groupTitle}] {cat.title}
+                </option>
+              );
+            })}
+            {currentSubCat && !dynamicCategories.some(c => c.title === currentSubCat || (currentSubKey && c.subKey === currentSubKey)) && (
+              <option value={currentSubCat} data-subkey={currentSubKey || 'xe-tai-chuyen-dung'} data-parent={vehicle?.category || 'xe-tai-chuyen-dung'} selected>
+                {currentSubCat} (Danh mục hiện tại)
+              </option>
+            )}
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Hãng sản xuất (Brand):</label>
+          <input type="text" id="inputBrand" value={vehicle?.brand || ''} placeholder="vd: Foton, Isuzu, FAW, Chenglong, Hino, GAZ..." class="w-full p-3 border rounded-xl" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Giá niêm yết (VNĐ) (Để 0 nếu Giá liên hệ):</label>
+          <input type="number" id="inputPrice" value={vehicle?.price ?? 0} class="w-full p-3 border rounded-xl font-bold text-red-600" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block font-bold text-slate-700 mb-1">Chương trình khuyến mãi:</label>
+          <input type="text" id="inputPromo" value={vehicle?.promo || 'Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm'} class="w-full p-3 border rounded-xl text-red-700 font-semibold" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block font-bold text-slate-700 mb-1">Tóm tắt ngắn chuẩn AI Overviews (Summary):</label>
+          <textarea id="inputSummary" rows="2" class="w-full p-3 border rounded-xl">{vehicle?.summary || ''}</textarea>
+        </div>
+        <div class="md:col-span-2 flex items-center gap-3 bg-blue-50 p-3.5 rounded-xl border border-blue-200">
+          <input type="checkbox" id="chkFeatured" checked={Boolean(vehicle?.isFeatured)} class="w-5 h-5 accent-red-600 rounded cursor-pointer" />
+          <label for="chkFeatured" class="font-bold text-blue-900 cursor-pointer">
+            🔥 Đánh dấu hiển thị sản phẩm này ở mục "Sản Phẩm Nổi Bật & Ưu Đãi Lớn" ngoài Trang Chủ
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- KHỐI 2: THƯ VIỆN HÌNH ẢNH SẢN PHẨM -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-blue-700 text-white p-3.5 rounded-xl">
+        <div>
+          <h2 class="text-base font-bold">2. Thư Viện Hình Ảnh Sản Phẩm (Tự động Resize 1200px & Nén WebP)</h2>
+          <p class="text-[11px] text-blue-100">Ảnh tải lên sẽ tự động lưu vào folder riêng của xe và đặt tên theo chuẩn SEO.</p>
+        </div>
+        <div class="flex gap-2">
+          <input type="file" id="fileUploadProductImages" accept="image/*" multiple class="hidden" />
+          <button type="button" id="btnTriggerUploadProduct" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-extrabold px-4 py-2 rounded-lg text-xs cursor-pointer shadow transition">
+            📤 Tải ảnh từ máy tính (Chọn nhiều ảnh)
+          </button>
+          <button type="button" id="btnAddImage" class="bg-white hover:bg-slate-100 text-blue-700 font-bold px-3 py-2 rounded-lg text-xs cursor-pointer transition">
+            + Dán link thủ công
+          </button>
+        </div>
+      </div>
+
+      <p id="uploadStatusMsg" class="text-xs font-bold text-emerald-600 hidden"></p>
+
+      <div id="imageListContainer" class="space-y-2.5 text-sm pt-2">
+        {images.map((img: string) => (
+          <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-xl border border-slate-200 img-row">
+            <img src={img} alt="Preview" class="w-16 h-12 object-cover rounded-lg border bg-white shrink-0" />
+            <input type="text" value={img} class="img-input flex-1 p-2 border bg-white rounded-lg font-mono text-xs" placeholder="Đường dẫn hình ảnh..." />
+            <button type="button" onclick="this.closest('.img-row').remove()" class="text-red-500 hover:text-red-700 font-bold px-3 py-1 cursor-pointer text-xs">🗑️ Xóa</button>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- KHỐI 3: MÔ TẢ CHI TIẾT TRỰC QUAN -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <h2 class="text-base font-bold text-white bg-blue-700 p-3 rounded-xl">3. Mô Tả Chi Tiết Sản Phẩm</h2>
+      <div>
+        <div id="editor-container" style="height: 380px; background: white; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem;"></div>
+      </div>
+    </div>
+
+    <!-- KHỐI 4: THÔNG SỐ XE CƠ SỞ -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <h2 class="text-base font-bold text-white bg-blue-700 p-3 rounded-xl">4. Thông Số Xe Cơ Sở (Chassis - Tải trọng, Tổng tải, Kích thước xe...)</h2>
+      <div id="chassisSpecsContainer" class="space-y-3 pt-2 text-sm">
+        {Object.entries(specs).map(([key, value]) => (
+          <div class="flex gap-2 chassis-row">
+            <input type="text" value={key} class="spec-key p-2.5 border rounded-xl w-1/3 font-semibold" placeholder="Tên thông số" />
+            <input type="text" value={String(value)} class="spec-val p-2.5 border rounded-xl flex-1" placeholder="Giá trị" />
+            <button type="button" onclick="this.parentElement.remove()" class="text-red-500 font-bold px-3 cursor-pointer">Xóa</button>
+          </div>
+        ))}
+      </div>
+      <button type="button" id="btnAddChassis" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">+ Thêm thông số cơ sở</button>
+    </div>
+
+    <!-- KHỐI 5: THIẾT BỊ CHUYÊN DÙNG -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <h2 class="text-base font-bold text-white bg-blue-700 p-3 rounded-xl">5. Thiết Bị Chuyên Dùng & Thùng / Bồn / Sàn Trượt</h2>
+      <div id="specialSpecsContainer" class="space-y-3 pt-2 text-sm">
+        {Object.entries(specialSpecs).map(([key, value]) => (
+          <div class="flex gap-2 special-row">
+            <input type="text" value={key} class="spec-key p-2.5 border rounded-xl w-1/3 font-semibold" placeholder="Tên thông số" />
+            <input type="text" value={String(value)} class="spec-val p-2.5 border rounded-xl flex-1" placeholder="Giá trị" />
+            <button type="button" onclick="this.parentElement.remove()" class="text-red-500 font-bold px-3 cursor-pointer">Xóa</button>
+          </div>
+        ))}
+      </div>
+      <button type="button" id="btnAddSpecial" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">+ Thêm thông số chuyên dùng</button>
+    </div>
+
+    <!-- KHỐI 6: CÂU HỎI THƯỜNG GẶP (FAQ MANAGER) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <div class="flex justify-between items-center bg-blue-700 text-white p-3 rounded-xl">
+        <h2 class="text-base font-bold">6. Quản Lý Câu Hỏi Thường Gặp (FAQ Chuẩn SEO)</h2>
+        <button type="button" id="btnAddFaq" class="bg-white text-blue-700 font-bold px-3 py-1 rounded-lg text-xs cursor-pointer">+ Thêm câu hỏi FAQ</button>
+      </div>
+      <div id="faqContainer" class="space-y-4 pt-2 text-sm">
+        {faqs.map((faq: any) => (
+          <div class="faq-row bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-slate-500 uppercase">Câu hỏi & Trả lời</span>
+              <button type="button" onclick="this.closest('.faq-row').remove()" class="text-red-500 font-bold text-xs cursor-pointer">🗑️ Xóa câu hỏi này</button>
+            </div>
+            <input type="text" value={faq.question} class="faq-q w-full p-2.5 border bg-white rounded-lg font-bold text-slate-900 text-sm" placeholder="Nhập câu hỏi..." />
+            <textarea rows="2" class="faq-a w-full p-2.5 border bg-white rounded-lg text-slate-700 text-sm" placeholder="Nhập câu trả lời chi tiết...">{faq.answer}</textarea>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <script is:inline src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+  <script is:inline>
+    const inputName = document.getElementById('inputName');
+    const inputSlug = document.getElementById('inputSlug');
+    const isEditMode = document.getElementById('isEditMode').value === 'true';
+
+    function makeSlug(str) {
+      return (str || '').toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[đĐ]/g, 'd')
+        .replace(/([^0-9a-z-\s])/g, '')
+        .trim()
+        .replace(/(\s+)/g, '-');
+    }
+
+    if (!isEditMode && inputName) {
+      inputName.addEventListener('input', () => {
+        inputSlug.value = makeSlug(inputName.value);
+      });
+    }
+
+    function appendImageRow(url) {
+      const container = document.getElementById('imageListContainer');
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-3 bg-slate-50 p-2 rounded-xl border border-slate-200 img-row';
+      div.innerHTML = `
+        <img src="${url || 'https://via.placeholder.com/150'}" alt="Preview" class="w-16 h-12 object-cover rounded-lg border bg-white shrink-0" />
+        <input type="text" value="${url}" class="img-input flex-1 p-2 border bg-white rounded-lg font-mono text-xs" placeholder="Đường dẫn hình ảnh..." />
+        <button type="button" onclick="this.closest('.img-row').remove()" class="text-red-500 hover:text-red-700 font-bold px-3 py-1 cursor-pointer text-xs">🗑️ Xóa</button>
+      `;
+      container.appendChild(div);
+    }
+
+    const fileInputProduct = document.getElementById('fileUploadProductImages');
+    const statusMsg = document.getElementById('uploadStatusMsg');
+
+    document.getElementById('btnTriggerUploadProduct')?.addEventListener('click', () => {
+      const currentSlug = inputSlug.value.trim();
+      const currentName = inputName.value.trim();
+      if (!currentSlug && !currentName) {
+        alert('⚠️ Vui lòng nhập Tên xe trước khi tải ảnh lên để hệ thống tự động đặt tên file và tạo folder chuẩn SEO!');
+        inputName.focus();
+        return;
+      }
+      fileInputProduct.click();
+    });
+
+    fileInputProduct?.addEventListener('change', async () => {
+      const files = fileInputProduct.files;
+      if (!files || files.length === 0) return;
+
+      const currentTitle = inputName.value.trim() || 'xe-chuyen-dung';
+      const currentSlug = inputSlug.value.trim() || makeSlug(currentTitle);
+
+      statusMsg.classList.remove('hidden');
+      statusMsg.innerText = `⏳ Đang xử lý chuẩn hóa kích thước & tải lên ${files.length} hình ảnh...`;
+
+      let successCount = 0;
+      for (let i = 0; i < files.length; i++) {
+        const formData = new FormData();
+        formData.append('image', files[i]);
+        formData.append('title', currentTitle);
+        formData.append('slug', currentSlug);
+        formData.append('type', 'products');
+
+        try {
+          const res = await fetch('/api/upload-image', {
+            method: 'POST',
+            body: formData
+          });
+          const result = await res.json();
+          if (result.success) {
+            appendImageRow(result.url);
+            successCount++;
+          }
+        } catch (err) {
+          console.error('Lỗi tải ảnh:', err);
+        }
+      }
+
+      statusMsg.innerText = `✅ Đã tự động nén WebP (1200px), đặt tên chuẩn SEO và tải lên thành công ${successCount}/${files.length} ảnh vào thư mục /images/products/${currentSlug}/`;
+      fileInputProduct.value = '';
+    });
+
+    document.getElementById('btnAddImage')?.addEventListener('click', () => {
+      appendImageRow('');
+    });
+
+    const quill = new Quill('#editor-container', {
+      theme: 'snow',
+      modules: {
+        toolbar: {
+          container: [
+            [{ header: [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ color: [] }, { background: [] }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image'],
+            ['clean']
+          ],
+          handlers: {
+            image: function() {
+              const input = document.createElement('input');
+              input.setAttribute('type', 'file');
+              input.setAttribute('accept', 'image/*');
+              input.click();
+
+              input.onchange = async () => {
+                const file = input.files[0];
+                const currentTitle = inputName.value.trim() || 'xe-phu-cuong';
+                const currentSlug = inputSlug.value.trim() || makeSlug(currentTitle);
+
+                if (file) {
+                  const formData = new FormData();
+                  formData.append('image', file);
+                  formData.append('title', currentTitle);
+                  formData.append('slug', currentSlug);
+                  formData.append('type', 'products');
+
+                  try {
+                    const res = await fetch('/api/upload-image', {
+                      method: 'POST',
+                      body: formData
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                      const range = quill.getSelection(true);
+                      quill.insertEmbed(range.index, 'image', result.url);
+                    } else {
+                      alert('❌ Tải ảnh lên thất bại: ' + result.message);
+                    }
+                  } catch (err) {
+                    alert('❌ Lỗi kết nối khi tải ảnh lên!');
+                  }
+                }
+              };
+            }
+          }
+        }
+      }
+    });
+
+    function decodeHtml(html) {
+      const txt = document.createElement('textarea');
+      txt.innerHTML = html;
+      return txt.value;
+    }
+
+    const rawDesc = document.getElementById('initialDescription').innerHTML;
+    if (rawDesc) {
+      quill.root.innerHTML = decodeHtml(rawDesc);
+    }
+
+    function renderSpecRows(containerId, rowClass, specsObj) {
+      const container = document.getElementById(containerId);
+      if (!container || !specsObj) return;
+      container.innerHTML = '';
+      Object.entries(specsObj).forEach(([k, v]) => {
+        const div = document.createElement('div');
+        div.className = `flex gap-2 ${rowClass}`;
+        div.innerHTML = `<input type="text" value="${k.replace(/"/g, '&quot;')}" class="spec-key p-2.5 border rounded-xl w-1/3 font-semibold" placeholder="Tên thông số" /><input type="text" value="${String(v).replace(/"/g, '&quot;')}" class="spec-val p-2.5 border rounded-xl flex-1" placeholder="Giá trị" /><button type="button" onclick="this.parentElement.remove()" class="text-red-500 font-bold px-3 cursor-pointer">Xóa</button>`;
+        container.appendChild(div);
+      });
+    }
+
+    function renderFaqRows(faqsList) {
+      const container = document.getElementById('faqContainer');
+      if (!container || !Array.isArray(faqsList)) return;
+      container.innerHTML = '';
+      faqsList.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'faq-row bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2';
+        div.innerHTML = `
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-slate-500 uppercase">Câu hỏi & Trả lời</span>
+            <button type="button" onclick="this.closest('.faq-row').remove()" class="text-red-500 font-bold text-xs cursor-pointer">🗑️ Xóa câu hỏi này</button>
+          </div>
+          <input type="text" value="${(item.question || '').replace(/"/g, '&quot;')}" class="faq-q w-full p-2.5 border bg-white rounded-lg font-bold text-slate-900 text-sm" placeholder="Nhập câu hỏi..." />
+          <textarea rows="2" class="faq-a w-full p-2.5 border bg-white rounded-lg text-slate-700 text-sm" placeholder="Nhập câu trả lời...">${item.answer || ''}</textarea>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // =========================================================================
+    // XỬ LÝ NÚT 1: TỰ ĐỘNG ĐIỀN TOÀN BỘ TỪ GÓI JSON 1-CLICK
+    // =========================================================================
+    document.getElementById('btnApplyQuickJson')?.addEventListener('click', () => {
+      const rawText = document.getElementById('aiQuickInput').value.trim();
+      const statusEl = document.getElementById('aiQuickStatus');
+      const keepPrice = document.getElementById('chkKeepCurrentPrice').checked;
+
+      if (!rawText) {
+        alert('⚠️ Vui lòng dán gói mã JSON 1-Click vào ô trước khi bấm!');
+        return;
+      }
+
+      try {
+        // Cho phép người dùng dán cả đoạn có lẫn ```json ... ```
+        const cleanedJson = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+        const data = JSON.parse(cleanedJson);
+
+        if (data.name) {
+          inputName.value = data.name;
+          if (!isEditMode) {
+            inputSlug.value = data.slug || makeSlug(data.name);
+          }
+        }
+        if (!isEditMode && data.slug) {
+          inputSlug.value = data.slug;
+        }
+        if (data.brand) {
+          document.getElementById('inputBrand').value = data.brand;
+        }
+        if (!keepPrice && data.price !== undefined) {
+          document.getElementById('inputPrice').value = data.price;
+        }
+        document.getElementById('inputPromo').value = data.promo || 'Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm';
+
+        if (data.summary) {
+          document.getElementById('inputSummary').value = data.summary;
+        }
+
+        // Chọn đúng Danh mục chuyên dùng trong dropdown
+        const selectSub = document.getElementById('inputSubCategory');
+        if (selectSub && (data.subKey || data.subCategory)) {
+          for (let i = 0; i < selectSub.options.length; i++) {
+            const opt = selectSub.options[i];
+            const optSubKey = opt.getAttribute('data-subkey');
+            if ((data.subKey && optSubKey === data.subKey) || (data.subCategory && opt.value.toLowerCase().includes(data.subCategory.toLowerCase()))) {
+              selectSub.selectedIndex = i;
+              break;
+            }
+          }
+        }
+
+        if (data.isFeatured !== undefined) {
+          document.getElementById('chkFeatured').checked = Boolean(data.isFeatured);
+        }
+
+        if (data.description) {
+          quill.root.innerHTML = data.description;
+        }
+
+        if (data.chassisSpecs && Object.keys(data.chassisSpecs).length > 0) {
+          renderSpecRows('chassisSpecsContainer', 'chassis-row', data.chassisSpecs);
+        }
+
+        if (data.specialSpecs && Object.keys(data.specialSpecs).length > 0) {
+          renderSpecRows('specialSpecsContainer', 'special-row', data.specialSpecs);
+        }
+
+        if (Array.isArray(data.faqs) && data.faqs.length > 0) {
+          renderFaqRows(data.faqs);
+        }
+
+        if (statusEl) {
+          statusEl.classList.remove('hidden');
+          statusEl.innerText = '✅ Đã điền tự động toàn bộ thông tin, bảng thông số & bài viết SEO! Anh kiểm tra lại rồi bấm Lưu nhé.';
+        }
+      } catch (e) {
+        alert('❌ Định dạng mã JSON chưa khớp. Anh hãy copy nguyên khối mã JSON trong khung code mà trợ lý gửi nhé!');
+      }
+    });
+
+    // =========================================================================
+    // XỬ LÝ NÚT 2: TỰ DỰNG BÀI VIẾT CHUẨN SEO TỪ CÁC Ô THÔNG SỐ ĐÃ NHẬP
+    // =========================================================================
+    document.getElementById('btnGenerateFromSpecs')?.addEventListener('click', () => {
+      const name = inputName.value.trim() || 'Xe Chuyên Dùng Phú Cường';
+      const brand = document.getElementById('inputBrand').value.trim() || 'Chính hãng';
+      const selectSub = document.getElementById('inputSubCategory');
+      const subCat = selectSub ? selectSub.value : 'Xe Chuyên Dùng';
+
+      const chassis = {};
+      document.querySelectorAll('.chassis-row').forEach(r => {
+        const k = r.querySelector('.spec-key').value.trim();
+        const v = r.querySelector('.spec-val').value.trim();
+        if (k && v) chassis[k] = v;
+      });
+
+      const special = {};
+      document.querySelectorAll('.special-row').forEach(r => {
+        const k = r.querySelector('.spec-key').value.trim();
+        const v = r.querySelector('.spec-val').value.trim();
+        if (k && v) special[k] = v;
+      });
+
+      const payloadVal = chassis['Tải trọng cho phép chở'] || chassis['Khối lượng hàng chuyên chở'] || 'tối ưu theo thiết kế';
+      const totalWeightVal = chassis['Tổng tải trọng'] || chassis['Khối lượng toàn bộ'] || 'đạt chuẩn đăng kiểm';
+      const dimVal = chassis['Kích thước xe (D x R x C)'] || chassis['Kích thước bao'] || 'tiêu chuẩn';
+      const engineVal = chassis['Động cơ'] || `Động cơ ${brand} bền bỉ, tiết kiệm nhiên liệu`;
+
+      document.getElementById('inputPromo').value = 'Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm';
+      document.getElementById('inputSummary').value = `${name} chính hãng thuộc phân khúc ${subCat}, trang bị ${engineVal}, tải trọng cho phép chở ${payloadVal}, tổng tải trọng ${totalWeightVal}, kích thước tổng thể ${dimVal}. Hỗ trợ vay trả góp lên đến 90% tại Ô Tô Phú Cường.`;
+
+      const chassisLi = Object.entries(chassis).map(([k, v]) => `<li><strong>${k}:</strong> ${v}</li>`).join('');
+      const specialLi = Object.entries(special).map(([k, v]) => `<li><strong>${k}:</strong> ${v}</li>`).join('');
+
+      quill.root.innerHTML = `
+        <h2>${name}: Đánh Giá Chi Tiết, Thông Số Đăng Kiểm & Báo Giá Lăn Bánh</h2>
+        <p><strong>${name}</strong> là một trong những dòng <strong>${subCat.toLowerCase()}</strong> chủ lực được phân phối và bảo hành chính hãng tại <strong>Ô Tô Phú Cường - Nhà Cung Cấp Và Sản Xuất Ô Tô Chuyên Dùng</strong>. Sở hữu nền tảng khung gầm <strong>${brand}</strong> vững chắc kết hợp hệ thống chuyên dùng đồng bộ, mẫu xe này mang lại hiệu quả khai thác kinh tế vượt trội và khả năng thu hồi vốn nhanh cho doanh nghiệp.</p>
+        <h3>1. Ưu Điểm Vượt Trội Về Khung Gầm, Động Cơ & Tải Trọng</h3>
+        <p>Xe được trang bị khối động cơ <strong>${engineVal}</strong> cho sức kéo mạnh mẽ, vận hành bền bỉ trên cả cung đường trường lẫn địa hình công trình phức tạp. Đặc biệt, thiết kế phân bổ tải trọng tối ưu với tải trọng hàng chuyên chở <strong>${payloadVal}</strong> và tổng tải trọng <strong>${totalWeightVal}</strong> (kích thước tổng thể <strong>${dimVal}</strong>), đáp ứng đầy đủ các quy chuẩn an toàn kỹ thuật hiện hành của Cục Đăng kiểm Việt Nam.</p>
+        ${chassisLi ? `<ul>${chassisLi}</ul>` : ''}
+        <h3>2. Thiết Kế Hệ Thống Chuyên Dùng Đạt Chuẩn</h3>
+        <p>Phần chuyên dùng trên <strong>${name}</strong> được tính toán kỹ lưỡng về kết cấu cơ khí và thủy lực, giúp thao tác vận hành an toàn, nhanh chóng và bền bỉ theo thời gian:</p>
+        ${specialLi ? `<ul>${specialLi}</ul>` : ''}
+        <h3>3. Chính Sách Giá Bán & Hỗ Trợ Trả Góp Lên Đến 90%</h3>
+        <p>Khi đầu tư <strong>${name}</strong> tại hệ thống Showroom <strong>Ô Tô Phú Cường</strong> (TP. Hồ Chí Minh, Tiền Giang, An Giang), quý khách hàng được hưởng gói ưu đãi đặc biệt: <strong>Tặng 100% Bảo hiểm Thân Vỏ</strong>, hỗ trợ vay ngân hàng từ <strong>50% đến 90% giá trị xe</strong> với lãi suất ưu đãi, cùng dịch vụ đăng ký – đăng kiểm trọn gói giao xe tận nơi toàn quốc. Liên hệ ngay Hotline/Zalo <strong>0922 77 77 03 (Mr. Hoàng Vũ)</strong> để nhận bảng tính lăn bánh chi tiết.</p>
+      `;
+
+      renderFaqRows([
+        {
+          question: `${name} có tải trọng cho phép chở và tổng tải trọng là bao nhiêu?`,
+          answer: `Theo thông số kỹ thuật thiết kế, ${name} có tải trọng cho phép chở là ${payloadVal}, tổng tải trọng toàn bộ đạt ${totalWeightVal} và kích thước tổng thể ${dimVal}.`
+        },
+        {
+          question: `Mua ${name} tại Ô Tô Phú Cường được hỗ trợ vay trả góp tối đa bao nhiêu phần trăm?`,
+          answer: `Ô Tô Phú Cường hỗ trợ khách hàng cá nhân và doanh nghiệp vay mua xe trả góp từ 50% đến 90% giá trị xe trong thời hạn 1 - 7 năm, thủ tục nhanh gọn và tặng kèm Bảo hiểm Thân Vỏ.`
+        },
+        {
+          question: `Chế độ bảo hành và giao xe đối với ${name} như thế nào?`,
+          answer: `Xe được bảo hành chính hãng tại hệ thống 3 Showroom & Trạm dịch vụ của Ô Tô Phú Cường tại TP.HCM, Tiền Giang, An Giang cùng đội ngũ cứu hộ - bảo dưỡng lưu động 24/7 trên toàn quốc.`
+        }
+      ]);
+
+      const statusEl = document.getElementById('aiQuickStatus');
+      if (statusEl) {
+        statusEl.classList.remove('hidden');
+        statusEl.innerText = '✅ Đã tự động dựng xong Bài viết chi tiết, Summary & FAQ chuẩn SEO từ thông số!';
+      }
+    });
+
+    document.getElementById('btnAddChassis')?.addEventListener('click', () => {
+      const container = document.getElementById('chassisSpecsContainer');
+      const div = document.createElement('div');
+      div.className = 'flex gap-2 chassis-row';
+      div.innerHTML = `<input type="text" class="spec-key p-2.5 border rounded-xl w-1/3 font-semibold" placeholder="Tên thông số" /><input type="text" class="spec-val p-2.5 border rounded-xl flex-1" placeholder="Giá trị" /><button type="button" onclick="this.parentElement.remove()" class="text-red-500 font-bold px-3 cursor-pointer">Xóa</button>`;
+      container.appendChild(div);
+    });
+
+    document.getElementById('btnAddSpecial')?.addEventListener('click', () => {
+      const container = document.getElementById('specialSpecsContainer');
+      const div = document.createElement('div');
+      div.className = 'flex gap-2 special-row';
+      div.innerHTML = `<input type="text" class="spec-key p-2.5 border rounded-xl w-1/3 font-semibold" placeholder="Tên thông số" /><input type="text" class="spec-val p-2.5 border rounded-xl flex-1" placeholder="Giá trị" /><button type="button" onclick="this.parentElement.remove()" class="text-red-500 font-bold px-3 cursor-pointer">Xóa</button>`;
+      container.appendChild(div);
+    });
+
+    document.getElementById('btnAddFaq')?.addEventListener('click', () => {
+      const container = document.getElementById('faqContainer');
+      const div = document.createElement('div');
+      div.className = 'faq-row bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2';
+      div.innerHTML = `
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-bold text-slate-500 uppercase">Câu hỏi & Trả lời mới</span>
+          <button type="button" onclick="this.closest('.faq-row').remove()" class="text-red-500 font-bold text-xs cursor-pointer">🗑️ Xóa câu hỏi này</button>
+        </div>
+        <input type="text" class="faq-q w-full p-2.5 border bg-white rounded-lg font-bold text-slate-900 text-sm" placeholder="Nhập câu hỏi..." />
+        <textarea rows="2" class="faq-a w-full p-2.5 border bg-white rounded-lg text-slate-700 text-sm" placeholder="Nhập câu trả lời..."></textarea>
+      `;
+      container.appendChild(div);
+    });
+
+    document.getElementById('btnSaveAll')?.addEventListener('click', async () => {
+      const slug = inputSlug.value.trim();
+      const name = inputName.value.trim();
+      const brand = document.getElementById('inputBrand').value.trim();
+      const price = document.getElementById('inputPrice').value;
+      const promo = document.getElementById('inputPromo').value.trim();
+      const summary = document.getElementById('inputSummary').value.trim();
+      
+      const selectSub = document.getElementById('inputSubCategory');
+      const selectedOpt = selectSub.options[selectSub.selectedIndex];
+      const subCategory = selectSub.value;
+      const subKey = selectedOpt ? selectedOpt.getAttribute('data-subkey') || '' : '';
+      const category = selectedOpt ? selectedOpt.getAttribute('data-parent') || 'xe-tai-chuyen-dung' : 'xe-tai-chuyen-dung';
+
+      const isFeatured = document.getElementById('chkFeatured').checked;
+      const description = quill.root.innerHTML;
+
+      if (!slug || !name) {
+        alert('❌ Vui lòng nhập đầy đủ Tên sản phẩm và Slug!');
+        return;
+      }
+
+      const images = Array.from(document.querySelectorAll('.img-input')).map(i => i.value).filter(v => v.trim() !== '');
+
+      const chassisSpecs = {};
+      document.querySelectorAll('.chassis-row').forEach(row => {
+        const k = row.querySelector('.spec-key').value.trim();
+        const v = row.querySelector('.spec-val').value.trim();
+        if (k) chassisSpecs[k] = v;
+      });
+
+      const specialSpecs = {};
+      document.querySelectorAll('.special-row').forEach(row => {
+        const k = row.querySelector('.spec-key').value.trim();
+        const v = row.querySelector('.spec-val').value.trim();
+        if (k) specialSpecs[k] = v;
+      });
+
+      const faqs = [];
+      document.querySelectorAll('.faq-row').forEach(row => {
+        const q = row.querySelector('.faq-q').value.trim();
+        const a = row.querySelector('.faq-a').value.trim();
+        if (q && a) {
+          faqs.push({ question: q, answer: a });
+        }
+      });
+
+      const payload = { slug, name, brand, price, promo, summary, description, images, chassisSpecs, specialSpecs, subCategory, subKey, category, isFeatured, faqs };
+
+      try {
+        const res = await fetch('/api/update-vehicle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.success) {
+          alert('🎉 ' + result.message);
+          window.location.href = '/admin/products';
+        } else {
+          alert('❌ Lỗi: ' + result.message);
+        }
+      } catch (err) {
+        alert('❌ Lỗi kết nối máy chủ!');
+      }
+    });
+  </script>
+</AdminLayout>

@@ -1,0 +1,132 @@
+{
+  "mainMenu": [
+    {
+      "title": "Trang chủ",
+      "url": "/"
+    },
+    {
+      "title": "Xe Tải Chuyên Dùng",
+      "url": "/san-pham?cat=xe-tai-chuyen-dung",
+      "children": [
+        {
+          "title": "Xe cứu hộ giao thông",
+          "url": "/san-pham?cat=cuu-ho"
+        },
+        {
+          "title": "Xe nâng đầu chở máy công trình",
+          "url": "/san-pham?cat=nang-dau"
+        },
+        {
+          "title": "Xe bồn cám thức ăn chăn nuôi",
+          "url": "/san-pham?cat=bon-thuc-pham"
+        },
+        {
+          "title": "Xe bồn chở nước tưới cây",
+          "url": "/san-pham?cat=bon-nuoc"
+        },
+        {
+          "title": "Xe bồn hút chất thải",
+          "url": "/san-pham?cat=bon-hut-chat-thai"
+        },
+        {
+          "title": "Xe tải gắn cẩu tự hành",
+          "url": "/san-pham?cat=xe-cau"
+        },
+        {
+          "title": "Xe cuốn ép rác môi trường",
+          "url": "/san-pham?cat=ep-rac"
+        },
+        {
+          "title": "Đầu kéo gắn cẩu & Chở gia cầm",
+          "url": "/san-pham?cat=xe-nang-khac"
+        },
+        {
+          "title": "Xe quét đường hút bụi",
+          "url": "/san-pham?cat=quet-duong-hut-bui"
+        }
+      ]
+    },
+    {
+      "title": "Ô Tô Khách",
+      "url": "/san-pham?cat=xe-khach",
+      "children": [
+        {
+          "title": "Xe khách 16 chỗ (Solati, Sunray)",
+          "url": "/san-pham?cat=16-cho"
+        },
+        {
+          "title": "Xe khách 29 chỗ (County, Kinglong, Thaco)",
+          "url": "/san-pham?cat=29-cho"
+        },
+        {
+          "title": "Xe khách 34 chỗ bóng hơi",
+          "url": "/san-pham?cat=34-cho"
+        },
+        {
+          "title": "Xe khách 47 chỗ & Giường nằm",
+          "url": "/san-pham?cat=47-cho"
+        }
+      ]
+    },
+    {
+      "title": "Dịch Vụ",
+      "url": "/dich-vu",
+      "children": [
+        {
+          "title": "Tổng quan dịch vụ",
+          "url": "/dich-vu"
+        },
+        {
+          "title": "Cứu hộ chuyên dùng 24/7",
+          "url": "/dich-vu/cuu-ho-chuyen-dung"
+        },
+        {
+          "title": "Sửa chữa xe chuyên dùng & động cơ",
+          "url": "/dich-vu/sua-xe-chuyen-dung"
+        },
+        {
+          "title": "Sửa chữa & gia cố thùng, bồn",
+          "url": "/dich-vu/sua-thung-bon"
+        },
+        {
+          "title": "Đăng kiểm & cải tạo hồ sơ thiết kế",
+          "url": "/dich-vu/cai-tao-ho-so"
+        }
+      ]
+    },
+    {
+      "title": "Kiến Thức & Tin Tức",
+      "url": "/tin-tuc",
+      "children": [
+        {
+          "title": "Xem tất cả bài viết",
+          "url": "/tin-tuc"
+        },
+        {
+          "title": "Đánh giá & So sánh xe",
+          "url": "/tin-tuc"
+        },
+        {
+          "title": "Thủ tục pháp lý & Đăng kiểm",
+          "url": "/tin-tuc"
+        },
+        {
+          "title": "Kinh nghiệm vận tải & Đầu tư",
+          "url": "/tin-tuc"
+        },
+        {
+          "title": "Tin tức & Bàn giao xe showroom",
+          "url": "/tin-tuc"
+        }
+      ]
+    },
+    {
+      "title": "Tính Lăn Bánh",
+      "url": "/tinh-lan-banh"
+    },
+    {
+      "title": "Liên Hệ",
+      "url": "/lien-he"
+    }
+  ]
+}

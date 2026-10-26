@@ -3,8 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout 
-  title="Hệ Thống 3 Showroom & Liên Hệ - Ô Tô Chuyên Dùng Phú Cường"
-  description="Thông tin liên hệ và địa chỉ 3 showroom Ô Tô Chuyên Dùng Phú Cường tại Bình Chánh (TP.HCM), Nhị Quý (Tiền Giang) và Bình Đức (An Giang). Hotline: 0922 77 77 03."
+  title="Hệ Thống 3 Showroom & Liên Hệ | Ô Tô Phú Cường"
+  description="Thông tin liên hệ và địa chỉ 3 showroom Ô Tô Phú Cường tại Bình Chánh (TP.HCM), Nhị Quý (Tiền Giang) và Bình Đức (An Giang). Hotline/Zalo: 0922 77 77 03."
 >
   <div class="max-w-7xl mx-auto px-4 py-10">
     <!-- Breadcrumb -->
@@ -18,10 +18,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         Mạng Lưới Phân Phối Toàn Miền Nam
       </span>
       <h1 class="text-3xl md:text-4xl font-extrabold text-blue-950 mt-3">
-        Hệ Thống 3 Showroom & Trạm Dịch Vụ Ô Tô Chuyên Dùng Phú Cường
+        Hệ Thống 3 Showroom & Trạm Dịch Vụ Ô Tô Phú Cường
       </h1>
       <p class="text-slate-600 mt-3 text-base">
-        Quý khách hàng có thể đến trực tiếp các showroom trưng bày xe sẵn giao ngay hoặc liên hệ tổng đài để được hỗ trợ kỹ thuật và nhận báo giá lăn bánh tốt nhất.
+        Quý khách hàng có thể đến trực tiếp các showroom trưng bày xe sẵn giao ngay hoặc liên hệ tổng đài/Zalo để được hỗ trợ kỹ thuật và nhận báo giá lăn bánh tốt nhất.
       </p>
     </div>
 
@@ -41,7 +41,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </p>
         </div>
         <div class="pt-4 border-t border-slate-100 space-y-2">
-          <p class="text-sm font-semibold text-slate-800">Hotline: <a href="tel:0922777703" class="text-red-600 font-bold">0922 77 77 03</a></p>
+          <p class="text-sm font-semibold text-slate-800">Hotline / Zalo: <a href="tel:0922777703" class="text-red-600 font-bold">0922 77 77 03</a></p>
           <a href="https://maps.google.com/?q=2466+Le+Kha+Phieu+Binh+Chanh+TPHCM" target="_blank" class="block text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2 rounded-lg text-sm transition">
             🗺️ Mở Bản Đồ Chỉ Đường
           </a>
@@ -61,7 +61,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </p>
         </div>
         <div class="pt-4 border-t border-slate-100 space-y-2">
-          <p class="text-sm font-semibold text-slate-800">Hotline: <a href="tel:0922777703" class="text-red-600 font-bold">0922 77 77 03</a></p>
+          <p class="text-sm font-semibold text-slate-800">Hotline / Zalo: <a href="tel:0922777703" class="text-red-600 font-bold">0922 77 77 03</a></p>
           <a href="https://maps.google.com/?q=95+Quoc+Lo+1A+Nhi+Quy+Tien+Giang" target="_blank" class="block text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2 rounded-lg text-sm transition">
             🗺️ Mở Bản Đồ Chỉ Đường
           </a>
@@ -81,7 +81,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </p>
         </div>
         <div class="pt-4 border-t border-slate-100 space-y-2">
-          <p class="text-sm font-semibold text-slate-800">Hotline: <a href="tel:0922777703" class="text-red-600 font-bold">0922 77 77 03</a></p>
+          <p class="text-sm font-semibold text-slate-800">Hotline / Zalo: <a href="tel:0922777703" class="text-red-600 font-bold">0922 77 77 03</a></p>
           <a href="https://maps.google.com/?q=26+Tran+Hung+Dao+Binh+Duc+An+Giang" target="_blank" class="block text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2 rounded-lg text-sm transition">
             🗺️ Mở Bản Đồ Chỉ Đường
           </a>
@@ -91,37 +91,94 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
 
     <!-- Form liên hệ tư vấn kết nối Web3Forms gửi về email -->
-    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-3xl mx-auto">
-      <h2 class="text-2xl font-bold text-blue-950 mb-2 text-center">Gửi Yêu Cầu Tư Vấn & Nhận Báo Giá</h2>
-      <p class="text-slate-600 text-sm text-center mb-6">Để lại thông tin, yêu cầu của bạn sẽ được gửi thẳng về email chuyendungphucuong@gmail.com.</p>
+    <div id="formBaoGia" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-3xl mx-auto">
+      <h2 class="text-2xl font-bold text-blue-950 mb-2 text-center">Gửi Yêu Cầu Tư Vấn & Nhận Báo Giá Lăn Bánh</h2>
+      <p class="text-slate-600 text-sm text-center mb-6">
+        Để lại thông tin, yêu cầu của quý khách sẽ được gửi thẳng về bộ phận Kinh doanh (Email: <strong>chuyendungphucuong@gmail.com</strong> & Hotline/Zalo: <strong>0922 77 77 03</strong>).
+      </p>
       
-      <form action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
-        <!-- Thay thế đoạn mã bên dưới bằng Access Key bạn nhận được trong email -->
-        <input type="hidden" name="apikey" value="3f9f6577-6ee2-4393-9651-7dbe59109431" />
-        <input type="hidden" name="redirect" value="https://web-oto-chuyendungphucuong.chuyendungphucuong.workers.dev/cam-on" />
+      <form id="contactForm" action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
+        <input type="hidden" name="access_key" value="3f9f6577-6ee2-4393-9651-7dbe59109431" />
+        <input type="hidden" name="from_name" value="Website Ô Tô Phú Cường" />
         
         <div class="grid md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Họ và tên</label>
-            <input type="text" name="name" required placeholder="Nhập họ tên của bạn" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-600" />
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Họ và tên *</label>
+            <input type="text" name="name" required placeholder="Nhập họ tên của quý khách" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-600" />
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Số điện thoại</label>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Số điện thoại / Zalo *</label>
             <input type="tel" name="phone" required placeholder="Nhập số điện thoại liên hệ" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-600" />
           </div>
         </div>
-        <div>
-          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Dòng xe hoặc dịch vụ quan tâm</label>
-          <input type="text" name="subject" placeholder="VD: Xe tải gắn cẩu Hino, Cứu hộ 24/7..." class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-600" />
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Dòng xe hoặc dịch vụ quan tâm</label>
+            <input type="text" id="inputSubjectVehicle" name="subject" placeholder="VD: Xe tải gắn cẩu Hino, Xe bồn cám, Cứu hộ..." class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm font-semibold text-blue-900 focus:outline-none focus:border-blue-600" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Hình thức mua dự kiến</label>
+            <select name="payment_method" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-blue-600">
+              <option value="Mua trả góp qua Ngân hàng (Vay 50% - 90%)">Mua trả góp qua Ngân hàng (Vay 50% - 90%)</option>
+              <option value="Mua trả thẳng 100% tiền mặt">Mua trả thẳng 100% tiền mặt</option>
+              <option value="Cần tư vấn đóng thùng / hoán cải / dịch vụ">Cần tư vấn đóng thùng / hoán cải / dịch vụ</option>
+            </select>
+          </div>
         </div>
+
         <div>
-          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Nội dung cần tư vấn</label>
-          <textarea name="message" rows="3" placeholder="Nhập yêu cầu chi tiết của bạn..." class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-600"></textarea>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Nội dung cần tư vấn thêm</label>
+          <textarea name="message" rows="3" placeholder="VD: Cần báo giá lăn bánh tại Tiền Giang, tư vấn thủ tục vay 80%..." class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-600"></textarea>
         </div>
-        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg text-base transition shadow cursor-pointer">
-          Gửi Yêu Cầu Tư Vấn Ngay
-        </button>
+
+        <div class="grid sm:grid-cols-2 gap-3 pt-2">
+          <button type="submit" id="btnSubmitContact" class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-3.5 rounded-xl text-sm transition shadow cursor-pointer">
+            📩 Gửi Yêu Cầu Báo Giá Ngay
+          </button>
+          <a href="https://zalo.me/0922777703" target="_blank" rel="noopener noreferrer" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 rounded-xl text-sm transition shadow text-center flex items-center justify-center gap-2">
+            💬 Chat Trực Tiếp Qua Zalo: 0922 77 77 03
+          </a>
+        </div>
       </form>
     </div>
   </div>
+
+  <script is:inline>
+    // Tự động điền tên xe nếu khách bấm từ trang sản phẩm sang (?xe=...)
+    const params = new URLSearchParams(window.location.search);
+    const carQuery = params.get('xe');
+    const subjectInput = document.getElementById('inputSubjectVehicle');
+    if (carQuery && subjectInput) {
+      subjectInput.value = `Báo giá lăn bánh & trả góp: ${carQuery}`;
+      document.getElementById('formBaoGia')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Gửi form mượt mà và chuyển về /cam-on trên chính domain hiện tại
+    const contactForm = document.getElementById('contactForm');
+    const btnSubmit = document.getElementById('btnSubmitContact');
+
+    contactForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = '⏳ Đang gửi thông tin...';
+      }
+
+      try {
+        const formData = new FormData(contactForm);
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: formData
+        });
+        if (res.ok) {
+          window.location.href = '/cam-on';
+        } else {
+          window.location.href = '/cam-on';
+        }
+      } catch (err) {
+        window.location.href = '/cam-on';
+      }
+    });
+  </script>
 </BaseLayout>

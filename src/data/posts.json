@@ -1,66 +1,57 @@
 [
   {
-    "slug": "thong-tu-30-dang-kiem-xe-o-to",
-    "title": "Thông Tư 30 Mới Nhất Về Đăng Kiểm Ô Tô: Lắp Phụ Kiện Không Cần Cải Tạo & Điểm Mới Quan Trọng",
-    "category": "Thủ Tục & Pháp Lý",
-    "publishedDate": "17/10/2026",
-    "author": "Chuyên Gia Pháp Lý Phú Cường",
-    "image": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80",
-    "summary": "Tóm tắt những điểm cốt lõi nhất của Thông tư mới về đăng kiểm: Nới lỏng quy định lắp đặt phụ kiện chính hãng không tính là cải tạo xe, quy trình đăng kiểm điện tử và các lưu ý quan trọng cho chủ xe.",
-    "content": "Bộ Xây dựng đã ban hành các quy định mới nhất về trình tự, thủ tục kiểm định, miễn kiểm định lần đầu cho xe cơ giới và chứng nhận an toàn kỹ thuật đối với xe cải tạo...",
-    "faqs": [
-      {
-        "question": "Nâng cấp mặt ca-lăng hoặc cản xe có phải xin giấy phép cải tạo không?",
-        "answer": "Không cần nếu là phụ kiện chính hãng đúng chủng loại theo xe."
-      }
-    ]
+    "slug": "test-bai-viet",
+    "title": "test bài viết",
+    "category": "Đánh Giá & So Sánh Xe",
+    "date": "22 tháng 10, 2026",
+    "author": "Chuyên gia Phú Cường 1",
+    "views": "1 lượt xem",
+    "summary": "Tóm tắt",
+    "image": "/images/posts/test-bai-viet-1.webp",
+    "content": "<p>Nội dung</p><p><br></p><p>hình</p><p><br></p><p><img src=\"/images/posts/test-bai-viet-2.webp\"></p>"
   },
   {
-    "slug": "lot-them-san-inox-co-can-lam-ho-so-cai-tao-khong",
-    "title": "Lót Thêm Sàn Inox Cho Xe Tải Có Cần Phải Làm Hồ Sơ Cải Tạo Không?",
-    "category": "Thủ Tục & Pháp Lý",
-    "publishedDate": "17/10/2026",
-    "author": "Chuyên Gia Pháp Lý Phú Cường",
-    "image": "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
-    "summary": "Giải đáp thắc mắc của nhiều chủ xe về việc lắp đặt, lót thêm sàn inox, bọc tôn hoặc gia cố thêm vật liệu bảo vệ sàn thùng xe tải có vi phạm quy định và cần làm thủ tục hoán cải không.",
-    "content": "Nhu cầu lót thêm sàn inox, bọc tôn hoặc gia cố thêm các lớp vật liệu bảo vệ sàn thùng xe tải là rất phổ biến nhằm tăng độ bền và chống rỉ sét...",
-    "faqs": [
-      {
-        "question": "Khi nào lót sàn thùng xe bắt buộc phải làm hồ sơ cải tạo?",
-        "answer": "Khi việc lót sàn đi kèm với việc thay đổi kết cấu dầm đà, nâng cao chiều cao thành thùng."
-      }
-    ]
+    "slug": "thu-tuc-mua-xe-tai-xe-chuyen-dung-tra-gop",
+    "title": "Thủ tục mua xe tải, xe chuyên dùng trả góp qua ngân hàng mới nhất: Cần chuẩn bị những gì?",
+    "category": "Kinh Nghiệm Vận Tải & Đầu Tư",
+    "date": "19 Tháng Mười, 2026",
+    "author": "Chuyên gia tài chính Phú Cường Auto",
+    "views": "1.245 lượt xem",
+    "summary": "Hướng dẫn chi tiết thủ tục, hồ sơ và quy trình vay mua xe chuyên dùng trả góp lên đến 80% giá trị xe tại các ngân hàng uy tín, hỗ trợ khách hàng cá nhân và doanh nghiệp.",
+    "image": "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80",
+    "content": "Mua xe ô tô chuyên dùng, xe tải trả góp là giải pháp tài chính tối ưu giúp nhiều cá nhân và doanh nghiệp vận tải nhanh chóng sở hữu phương tiện kinh doanh...\nLãi suất ngân hàng đang điều chỉnh cực mạnh......"
   },
   {
-    "slug": "thu-tuc-cai-tao-xe-tai-thanh-xe-chuyen-dung-moi-nhat",
-    "title": "Thủ Tục Cải Tạo, Hoán Cải Xe Tải Thành Xe Chuyên Dùng Mới Nhất",
-    "category": "Thủ Tục & Pháp Lý",
-    "publishedDate": "17/10/2026",
-    "author": "Kỹ Thuật Phú Cường",
-    "image": "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
-    "summary": "Hướng dẫn chi tiết thủ tục hồ sơ thiết kế, cải tạo xe tải sát-xi thành xe cẩu tự hành, xe bồn, xe ép rác hoặc xe nâng đầu đúng quy chuẩn Cục Đăng Kiểm.",
-    "content": "Việc cải tạo (hoán cải) xe tải nền (chassis) thành xe chuyên dùng như xe cẩu tự hành, xe bồn chở nước... là nhu cầu thiết yếu...",
-    "faqs": [
-      {
-        "question": "Thời gian hoàn thành hồ sơ cải tạo xe chuyên dùng mất bao lâu?",
-        "answer": "Từ 7 đến 15 ngày làm việc."
-      }
-    ]
+    "slug": "quy-dinh-dang-kiem-xe-chuyen-dung-moi-nhat",
+    "title": "Quy định đăng kiểm xe chuyên dùng và cải tạo thùng bồn hiện hành",
+    "category": "Thủ Tục Pháp Lý & Đăng Kiểm",
+    "date": "15 Tháng Mười, 2026",
+    "author": "Phòng Pháp lý Phú Cường",
+    "views": "980 lượt xem",
+    "summary": "Tổng hợp các điểm mới trong quy định đăng kiểm xe bồn, xe cẩu, xe cứu hộ và thủ tục lập hồ sơ thiết kế cải tạo xe cơ giới theo chuẩn Cục Đăng Kiểm.",
+    "image": "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80",
+    "content": "Công tác đăng kiểm và lập hồ sơ thiết kế cải tạo xe chuyên dùng luôn đòi hỏi sự tuân thủ nghiêm ngặt các tiêu chuẩn kỹ thuật..."
   },
   {
-    "slug": "kinh-nghiem-chon-mua-xe-cau-tu-hanh-cu-va-moi",
-    "title": "Kinh Nghiệm Chọn Mua Xe Cẩu Tự Hành Cũ Và Mới Để Nhanh Thu Hồi Vốn",
-    "category": "Kinh Nghiệm Vận Tải",
-    "publishedDate": "17/10/2026",
-    "author": "Chuyên Gia Tài Chính & Vận Tải Phú Cường",
-    "image": "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80",
-    "summary": "Phân tích ưu nhược điểm giữa việc đầu tư xe cẩu tự hành mới và xe qua sử dụng. Gợi ý bí quyết tính toán bài toán tài chính, chọn tải trọng cẩu và xe nền phù hợp.",
-    "content": "Xe cẩu tự hành là loại phương tiện thương mại có giá trị đầu tư lớn nhưng mang lại biên độ lợi nhuận cao...",
-    "faqs": [
-      {
-        "question": "Mua xe cẩu tự hành trả góp cần chuẩn bị bao nhiêu vốn?",
-        "answer": "Khoảng 20% - 25% giá trị xe và thiết bị cẩu."
-      }
-    ]
+    "slug": "danh-gia-chi-tiet-xe-bon-cam-chenglong-4-chan",
+    "title": "Đánh giá chi tiết xe bồn cám thổi Chenglong 4 chân 30 khối",
+    "category": "Đánh Giá & So Sánh Xe",
+    "date": "12 Tháng Mười, 2026",
+    "author": "Kỹ sư trưởng Phú Cường Auto",
+    "views": "1.560 lượt xem",
+    "summary": "Phân tích chi tiết ưu điểm vượt trội của xe nền Chenglong H7 kết hợp hệ thống bồn 30 khối và công nghệ thổi khí nén áp lực cao.",
+    "image": "https://phucuongauto.vn/wp-content/uploads/2026/05/bon-cam-thoi-chenglong-4-chan-slider.png",
+    "content": "Xe bồn cám thổi Chenglong 4 chân là giải pháp vận chuyển và bơm rót thức ăn chăn nuôi công nghệ cao hàng đầu hiện nay..."
+  },
+  {
+    "slug": "ban-giao-lo-xe-cuu-ho-tai-tien-giang",
+    "title": "Lô xe cứu hộ giao thông 3 chức năng bàn giao thành công tại Tiền Giang",
+    "category": "Tin Tức & Bàn Giao Xe Showroom",
+    "date": "08 Tháng Mười, 2026",
+    "author": "Ban Truyền Thông",
+    "views": "840 lượt xem",
+    "summary": "Hình ảnh ghi nhận buổi lễ bàn giao lô xe cứu hộ giao thông đa năng cho đối tác vận tải tại chi nhánh Nhị Quý, Tiền Giang.",
+    "image": "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=1200&q=80",
+    "content": "Ngày 08/10/2026, Ô Tô Chuyên Dùng Phú Cường chi nhánh Tiền Giang đã trang trọng tổ chức bàn giao lô xe cứu hộ 3 chức năng..."
   }
 ]

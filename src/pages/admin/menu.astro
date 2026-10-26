@@ -1,0 +1,194 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import navData from '../../data/navigation.json';
+
+const menuItems = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
+---
+
+<AdminLayout title="Quản Lý Hệ Thống Điều Hướng Menu Website" activeTab="menu">
+  <div class="max-w-5xl mx-auto space-y-6 pb-12">
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">Cấu Trúc & Thứ Tự Menu Đa Cấp</h2>
+        <p class="text-xs text-slate-500 mt-1">Sử dụng nút mũi tên <strong>▲ Lên / ▼ Xuống</strong> để thay đổi vị trí của từng nhóm menu hoặc từng mục nhánh con bên trong.</p>
+      </div>
+      <button type="button" id="btnSaveMenu" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3 rounded-xl text-sm transition shadow-md cursor-pointer shrink-0">
+        💾 Lưu Thay Đổi Menu
+      </button>
+    </div>
+
+    <!-- Danh sách menu chính -->
+    <div id="menuListContainer" class="space-y-4">
+      {menuItems.map((item: any, idx: number) => (
+        <div class="menu-group-card bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex flex-col sm:flex-row items-center gap-2">
+            <!-- Nút di chuyển Nhóm Menu Chính Lên / Xuống -->
+            <div class="flex items-center gap-1 shrink-0">
+              <button type="button" class="btn-group-up bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 font-bold px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer" title="Di chuyển nhóm này lên">▲</button>
+              <button type="button" class="btn-group-down bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 font-bold px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer" title="Di chuyển nhóm này xuống">▼</button>
+            </div>
+            <span class="bg-blue-50 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-lg shrink-0">Menu chính</span>
+            <input type="text" value={item.title} class="menu-title p-2.5 border rounded-xl font-bold text-slate-800 text-sm flex-1 w-full" placeholder="Tên hiển thị..." />
+            <input type="text" value={item.url} class="menu-url p-2.5 border rounded-xl text-slate-600 text-sm w-full sm:w-64 font-mono text-xs" placeholder="Đường dẫn URL..." />
+            <button type="button" onclick="this.closest('.menu-group-card').remove()" class="text-red-500 hover:text-red-700 text-xs font-bold p-2 cursor-pointer shrink-0">🗑️ Xóa</button>
+          </div>
+
+          <!-- Các mục nhánh con (Dropdown) -->
+          <div class="children-container pl-4 sm:pl-10 pt-3 border-t border-slate-100 space-y-2">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">↳ Các mục nhánh con trỏ xuống (Bấm ▲ / ▼ để đổi vị trí):</p>
+            <div class="sub-list space-y-2">
+              {item.children && Array.isArray(item.children) && item.children.map((sub: any) => (
+                <div class="flex flex-col sm:flex-row items-center gap-2 sub-row bg-slate-50 p-2 rounded-xl border border-slate-200/70">
+                  <div class="flex items-center gap-1 shrink-0">
+                    <button type="button" class="btn-sub-up bg-white hover:bg-blue-600 hover:text-white text-slate-600 border border-slate-200 font-bold px-2 py-1 rounded text-xs transition cursor-pointer" title="Đẩy mục nhánh lên">▲</button>
+                    <button type="button" class="btn-sub-down bg-white hover:bg-blue-600 hover:text-white text-slate-600 border border-slate-200 font-bold px-2 py-1 rounded text-xs transition cursor-pointer" title="Đẩy mục nhánh xuống">▼</button>
+                  </div>
+                  <input type="text" value={sub.title} class="sub-title p-2 border bg-white rounded-lg text-sm font-semibold text-slate-700 flex-1 w-full" placeholder="Tên mục nhánh..." />
+                  <input type="text" value={sub.url} class="sub-url p-2 border bg-white rounded-lg text-slate-500 text-xs font-mono w-full sm:w-64" placeholder="URL mục nhánh..." />
+                  <button type="button" onclick="this.closest('.sub-row').remove()" class="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 cursor-pointer">✕</button>
+                </div>
+              ))}
+            </div>
+            <button type="button" class="btn-add-sub text-blue-600 hover:text-blue-700 text-xs font-bold pt-1 inline-block cursor-pointer">+ Thêm mục nhánh mới</button>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="text-center pt-2">
+      <button type="button" id="btnAddGroup" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition shadow-sm cursor-pointer">
+        + Thêm Nhóm Menu Chính Mới
+      </button>
+    </div>
+  </div>
+
+  <!-- Script xử lý đổi vị trí Lên/Xuống và Lưu dữ liệu -->
+  <script is:inline>
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+      if (!target) return;
+
+      // 1. Đổi vị trí Mục nhánh con Lên (▲)
+      if (target.classList.contains('btn-sub-up')) {
+        const row = target.closest('.sub-row');
+        const prev = row?.previousElementSibling;
+        if (row && prev) {
+          row.parentNode.insertBefore(row, prev);
+        }
+      }
+
+      // 2. Đổi vị trí Mục nhánh con Xuống (▼)
+      if (target.classList.contains('btn-sub-down')) {
+        const row = target.closest('.sub-row');
+        const next = row?.nextElementSibling;
+        if (row && next) {
+          row.parentNode.insertBefore(next, row);
+        }
+      }
+
+      // 3. Đổi vị trí Nhóm Menu Chính Lên (▲)
+      if (target.classList.contains('btn-group-up')) {
+        const card = target.closest('.menu-group-card');
+        const prev = card?.previousElementSibling;
+        if (card && prev) {
+          card.parentNode.insertBefore(card, prev);
+        }
+      }
+
+      // 4. Đổi vị trí Nhóm Menu Chính Xuống (▼)
+      if (target.classList.contains('btn-group-down')) {
+        const card = target.closest('.menu-group-card');
+        const next = card?.nextElementSibling;
+        if (card && next) {
+          card.parentNode.insertBefore(next, card);
+        }
+      }
+
+      // 5. Thêm mục nhánh con mới
+      if (target.classList.contains('btn-add-sub')) {
+        const subList = target.closest('.menu-group-card').querySelector('.sub-list');
+        const div = document.createElement('div');
+        div.className = 'flex flex-col sm:flex-row items-center gap-2 sub-row bg-slate-50 p-2 rounded-xl border border-slate-200/70';
+        div.innerHTML = `
+          <div class="flex items-center gap-1 shrink-0">
+            <button type="button" class="btn-sub-up bg-white hover:bg-blue-600 hover:text-white text-slate-600 border border-slate-200 font-bold px-2 py-1 rounded text-xs transition cursor-pointer">▲</button>
+            <button type="button" class="btn-sub-down bg-white hover:bg-blue-600 hover:text-white text-slate-600 border border-slate-200 font-bold px-2 py-1 rounded text-xs transition cursor-pointer">▼</button>
+          </div>
+          <input type="text" value="Mục nhánh mới" class="sub-title p-2 border bg-white rounded-lg text-sm font-semibold text-slate-700 flex-1 w-full" />
+          <input type="text" value="/san-pham?cat=xe-tai-chuyen-dung" class="sub-url p-2 border bg-white rounded-lg text-slate-500 text-xs font-mono w-full sm:w-64" />
+          <button type="button" onclick="this.closest('.sub-row').remove()" class="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 cursor-pointer">✕</button>
+        `;
+        subList.appendChild(div);
+      }
+    });
+
+    // Thêm nhóm menu chính mới
+    document.getElementById('btnAddGroup')?.addEventListener('click', () => {
+      const container = document.getElementById('menuListContainer');
+      const div = document.createElement('div');
+      div.className = 'menu-group-card bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3';
+      div.innerHTML = `
+        <div class="flex flex-col sm:flex-row items-center gap-2">
+          <div class="flex items-center gap-1 shrink-0">
+            <button type="button" class="btn-group-up bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 font-bold px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer">▲</button>
+            <button type="button" class="btn-group-down bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 font-bold px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer">▼</button>
+          </div>
+          <span class="bg-blue-50 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-lg shrink-0">Menu chính</span>
+          <input type="text" value="Menu Mới" class="menu-title p-2.5 border rounded-xl font-bold text-slate-800 text-sm flex-1 w-full" />
+          <input type="text" value="/san-pham" class="menu-url p-2.5 border rounded-xl text-slate-600 text-sm w-full sm:w-64 font-mono text-xs" />
+          <button type="button" onclick="this.closest('.menu-group-card').remove()" class="text-red-500 hover:text-red-700 text-xs font-bold p-2 cursor-pointer shrink-0">🗑️ Xóa</button>
+        </div>
+        <div class="children-container pl-4 sm:pl-10 pt-3 border-t border-slate-100 space-y-2">
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">↳ Các mục nhánh con trỏ xuống (Bấm ▲ / ▼ để đổi vị trí):</p>
+          <div class="sub-list space-y-2"></div>
+          <button type="button" class="btn-add-sub text-blue-600 hover:text-blue-700 text-xs font-bold pt-1 inline-block cursor-pointer">+ Thêm mục nhánh mới</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+    // Lưu toàn bộ Menu qua API
+    document.getElementById('btnSaveMenu')?.addEventListener('click', async () => {
+      const groupCards = document.querySelectorAll('.menu-group-card');
+      const mainMenu = [];
+
+      groupCards.forEach(card => {
+        const title = card.querySelector('.menu-title').value.trim();
+        const url = card.querySelector('.menu-url').value.trim();
+        
+        const subRows = card.querySelectorAll('.sub-row');
+        const children = [];
+        subRows.forEach(sub => {
+          const subTitle = sub.querySelector('.sub-title').value.trim();
+          const subUrl = sub.querySelector('.sub-url').value.trim();
+          if (subTitle) {
+            children.push({ title: subTitle, url: subUrl });
+          }
+        });
+
+        if (title) {
+          const menuObj = { title, url };
+          if (children.length > 0) menuObj.children = children;
+          mainMenu.push(menuObj);
+        }
+      });
+
+      try {
+        const res = await fetch('/api/update-menu', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mainMenu })
+        });
+        const result = await res.json();
+        if (result.success) {
+          alert('🎉 ' + result.message);
+          location.reload();
+        } else {
+          alert('❌ Lỗi: ' + result.message);
+        }
+      } catch (err) {
+        alert('❌ Lỗi kết nối đến máy chủ!');
+      }
+    });
+  </script>
+</AdminLayout>

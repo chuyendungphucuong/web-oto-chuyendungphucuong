@@ -1,0 +1,83 @@
+---
+import '../styles/global.css';
+const { title = "Quản Trị Hệ Thống | Phú Cường Auto", activeTab = "dashboard" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 antialiased">
+  <script is:inline>
+    if (typeof window !== 'undefined') {
+      const isAuth = localStorage.getItem('pc_admin_auth');
+      if (isAuth !== 'true' && !window.location.pathname.includes('/admin/login')) {
+        window.location.href = '/admin/login';
+      }
+    }
+  </script>
+
+  <div class="min-h-screen flex flex-col lg:flex-row">
+    <aside class="w-full lg:w-64 bg-slate-900 text-white flex flex-col justify-between shrink-0 shadow-xl">
+      <div>
+        <div class="p-6 border-b border-slate-800">
+          <span class="text-xl font-black tracking-wider text-white block">PHÚ CƯỜNG <span class="text-red-500">ADMIN</span></span>
+          <p class="text-xs text-slate-400 mt-1">Hệ thống quản trị nội bộ</p>
+        </div>
+
+        <nav class="p-4 space-y-2 text-sm font-semibold">
+          <a href="/admin" class={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${activeTab === 'dashboard' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
+            <span>📊</span> Tổng Quan (Dashboard)
+          </a>
+          <a href="/admin/products" class={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${activeTab === 'products' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
+            <span>🚗</span> Quản Lý Sản Phẩm
+          </a>
+          <a href="/admin/menu" class={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${activeTab === 'menu' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
+            <span>🧭</span> Quản Lý Menu
+          </a>
+          <a href="/admin/posts" class={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${activeTab === 'posts' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
+            <span>📝</span> Quản Lý Tin Tức
+          </a>
+          <a href="/admin/settings" class={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${activeTab === 'settings' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
+            <span>⚙️</span> Đổi Mật Khẩu
+          </a>
+        </nav>
+      </div>
+
+      <div class="p-4 border-t border-slate-800 space-y-2">
+        <a href="/" target="_blank" class="block w-full text-center py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition">
+          🌐 Xem Website Mặt Tiền &rarr;
+        </a>
+        <button id="btnLogout" class="block w-full text-center py-2.5 px-4 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white text-xs font-bold transition cursor-pointer">
+          🚪 Đăng Xuất
+        </button>
+      </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0">
+      <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm">
+        <h1 class="text-lg font-extrabold text-slate-800">{title}</h1>
+        <div class="flex items-center gap-4 text-xs font-semibold text-slate-500">
+          <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-bold">● Trực tuyến</span>
+          <span>Quản trị viên (Admin)</span>
+        </div>
+      </header>
+
+      <main class="p-6 flex-1 overflow-y-auto">
+        <slot />
+      </main>
+    </div>
+  </div>
+
+  <script is:inline>
+    document.getElementById('btnLogout')?.addEventListener('click', () => {
+      localStorage.removeItem('pc_admin_auth');
+      window.location.href = '/admin/login';
+    });
+  </script>
+</body>
+</html>

@@ -1,146 +1,101 @@
 [
   {
-    "slug": "xe-cau-tu-hanh-dongfeng-3-chan-palfinger-12-tan",
-    "name": "Xe Tải Dongfeng 3 Chân Gắn Cẩu Gập Palfinger 12 Tấn (SPK32080)",
+    "slug": "xe-bon-cam-thoi-chenglong-4-chan",
+    "name": "Xe Bồn Cám Thổi Chenglong 4 Chân (Dung Tích 30 Khối, Động Cơ Yuchai 330HP)",
     "category": "xe-tai-chuyen-dung",
     "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Xe Cẩu Tự Hành",
-    "brand": "Dongfeng",
-    "price": 2850000000,
-    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng định vị GPS & Phù hiệu xe tải nặng",
+    "subCategory": "Xe Bồn Cám & Thực Phẩm",
+    "subKey": "bon-thuc-pham",
+    "brand": "Chenglong",
+    "price": 2280000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng bộ ống thổi cám chuyên dụng & Định vị GPS",
     "images": [
-      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+      "/images/bon-cam-thoi-chenglong-4c-inox-1.jpg"
     ],
+    "summary": "Giải pháp vận chuyển và bơm rót thức ăn chăn nuôi công nghệ cao: Xe bồn cám thổi Chenglong 4 chân dung tích 30 khối.",
+    "description": "I. Tổng quan về Xe Bồn Cám Thổi Chenglong 4 Chân (30 Khối)",
     "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
-    "roadTaxPerYear": 8900000,
+    "roadTaxPerYear": 12480000,
     "insuranceTNDS": 4330000,
     "chassisSpecs": {
-      "Model xe cơ sở": "Dongfeng 3 chân (6x4) nhập khẩu",
-      "Tải trọng cho phép": "8.700 kg",
-      "Tổng tải trọng": "24.000 kg",
-      "Động cơ": "Cummins ISD270-50, dung tích 6.690 cc, 270 Mã lực"
+      "Model xe cơ sở": "Chenglong H7 (8x4)",
+      "Tải trọng cho phép": "16.000 kg",
+      "Dung tích xi-lanh": "8.400 cc",
+      "Động cơ": "YC6L330-50 (330 Mã lực)"
     },
     "specialSpecs": {
-      "Thiết bị cẩu gập": "Sany Palfinger SPK32080-C (Công nghệ Châu Âu)",
-      "Vị trí điều khiển": "Ghế ngồi trên cao (Topseat) quan sát tối ưu",
-      "Bơm thủy lực": "LEDUC (Pháp) lưu lượng 55-80 lít/phút",
-      "Chân chống thủy lực": "Độ mở rộng 6,0m (Chân chống sau 4,8m)"
+      "Dung tích bồn chứa": "30 Khối (30 m³)",
+      "Hệ thống chuyên dùng": "Công nghệ thổi khí nén áp lực cao"
     },
     "faqs": [
       {
-        "question": "Giá lăn bánh xe cẩu Dongfeng 3 chân gắn cẩu Palfinger 12 tấn tại miền Nam là bao nhiêu?",
-        "answer": "Giá lăn bánh tại TP.HCM, Tiền Giang và An Giang đã bao gồm giá xe, thuế trước bạ 2% ưu đãi, phí đường bộ, bảo hiểm TNDS và chi phí đăng kiểm thiết bị nâng cẩu chuyên dùng."
-      },
-      {
-        "question": "Chuyên Dùng Phú Cường có hỗ trợ trả góp cho xe cẩu hạng nặng không?",
-        "answer": "Chúng tôi hỗ trợ vay vốn qua ngân hàng hoặc thuê tài chính lên đến 75% giá trị xe, thủ tục nhanh gọn, giải ngân nhanh chóng cho khách hàng doanh nghiệp vận tải."
+        "question": "Xe bồn cám thổi Chenglong 4 chân có dung tích bao nhiêu khối?",
+        "answer": "Xe có dung tích thùng bồn lớn lên đến 30 khối (30 m³)."
       }
     ]
   },
   {
-    "slug": "xe-bon-hut-chat-thai-foton-9-khoi",
-    "name": "Xe Bồn Hút Chất Thải Foton 9 Khối Nhập Khẩu (Động Cơ Yuchai 6 Máy)",
-    "category": "xe-tai-chuyen-dung",
-    "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Xe Bồn Chuyên Dùng",
-    "brand": "Foton",
-    "price": 1520000000,
-    "promo": "Tặng bơm chân không dự phòng + Hỗ trợ đăng kiểm hồ sơ môi trường trọn gói",
-    "images": [
-      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
-    ],
-    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
-    "roadTaxPerYear": 7080000,
-    "insuranceTNDS": 3520000,
-    "chassisSpecs": {
-      "Model xe cơ sở": "Foton nhập khẩu chuyên dụng môi trường",
-      "Tải trọng cho phép": "7.570 kg",
-      "Dung tích xi-lanh": "6.870 cc",
-      "Động cơ": "Yuchai YC6JA220-50 (6 máy khỏe khoắn)"
-    },
-    "specialSpecs": {
-      "Dung tích bồn chứa": "9 khối (9 m³) thép hợp kim dày 6 mm chống ăn mòn",
-      "Hệ thống bơm": "Bơm chân không vòng nước Model SK 12 lực hút cực mạnh",
-      "Cơ cấu xả thải": "Nâng hạ xi-téc ben thủy lực kết hợp xilanh mở nắp bồn tự động"
-    },
-    "faqs": [
-      {
-        "question": "Xe bồn hút chất thải Foton 9 khối có bảo hành thùng bồn không?",
-        "answer": "Toàn bộ phần bồn chứa và hệ thống bơm hút chân không được Chuyên Dùng Phú Cường bảo hành chuyên sâu 12 tháng tại 3 chi nhánh TP.HCM, Tiền Giang và An Giang."
-      }
-    ]
-  },
-  {
-    "slug": "xe-nang-dau-cang-keo-foton-5-3-tan",
-    "name": "Xe Nâng Đầu Chở Xe Tải Kết Hợp Càng Kéo Foton (Tải 5.3 Tấn)",
-    "category": "xe-tai-chuyen-dung",
-    "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Xe Nâng Đầu Chở Xe",
-    "brand": "Foton",
-    "price": 1390000000,
-    "promo": "Tặng tời kéo thủy lực 8 tấn + Càng nâng phao sau miễn phí",
-    "images": [
-      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
-    ],
-    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
-    "roadTaxPerYear": 4680000,
-    "insuranceTNDS": 2600000,
-    "chassisSpecs": {
-      "Model xe nền": "Foton Ollin / Auman cao cấp",
-      "Tải trọng cho phép": "5.300 kg",
-      "Hệ thống chuyên dụng": "S sàn trượt nâng đầu kết hợp càng kéo"
-    },
-    "specialSpecs": {
-      "Vật liệu chế tạo sàn": "Thép cường độ cao Q690D chịu lực chuyên biệt",
-      "Chân chống nâng đầu": "Chịu tải nâng tối đa lên đến 20 tấn",
-      "Tời kéo thủy lực": "Sức kéo tối đa 8 tấn, cáp dài chuyên dụng cứu hộ"
-    },
-    "faqs": [
-      {
-        "question": "Xe nâng đầu chở xe có được giao xe tận nơi ở các tỉnh miền Tây không?",
-        "answer": "Chuyên Dùng Phú Cường hỗ trợ giao xe tận nơi miễn phí tại TP.HCM, Tiền Giang, An Giang và toàn bộ các tỉnh thành miền Tây Nam Bộ."
-      }
-    ]
-  },
-  {
-    "slug": "xe-khach-29-cho-thaco-meadow-tb87s",
-    "name": "Xe Khách 29 Chỗ Bầu Hơi Cao Cấp (Động Cơ Weichai Euro 5)",
+    "slug": "xe-khach-16-cho-hyundai-solati",
+    "name": "Xe Khách Hyundai Solati 16 Chỗ Cao Cấp (Động Cơ Diesel 2.5L)",
     "category": "xe-khach",
     "categoryName": "Ô Tô Khách",
-    "subCategory": "Xe Khách 29-34 Chỗ",
-    "brand": "Weichai",
-    "price": 1720000000,
-    "promo": "Tặng gói phủ gầm + Camera hành trình Nghị định 10 + Phù hiệu Hợp đồng",
+    "subCategory": "Xe Khách 16 Chỗ",
+    "subKey": "16-cho",
+    "brand": "Hyundai",
+    "price": 1080000000,
+    "promo": "Hỗ trợ 100% phí trước bạ + Tặng camera hành trình & Phù hiệu hợp đồng du lịch",
     "images": [
-      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
     ],
+    "summary": "Đẳng cấp xe khách 16 chỗ hạng sang: Hyundai Solati sở hữu không gian rộng rãi nhất phân khúc.",
+    "description": "I. Tổng quan về Xe Khách Hyundai Solati 16 Chỗ",
     "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
     "roadTaxPerYear": 4680000,
-    "insuranceTNDS": 3643000,
+    "insuranceTNDS": 3200000,
     "chassisSpecs": {
-      "Số chỗ ngồi": "29 chỗ (Ghế Âu cao cấp ngả lưng)",
-      "Kích thước tổng thể": "8.730 x 2.300 x 3.220 mm",
-      "Hệ thống treo": "6 bầu hơi (Air Suspension) êm ái chuẩn du lịch",
-      "Động cơ": "Diesel Weichai WP5.220E51, 220 mã lực"
+      "Số chỗ ngồi": "16 chỗ ngồi",
+      "Động cơ": "Diesel 2.5L CRDi"
     },
     "specialSpecs": {
-      "Trang bị khoang hành khách": "Tủ lạnh mini, Màn hình LCD 32 inch, Dàn âm thanh, Cổng sạc USB từng ghế",
-      "Hệ thống an toàn": "Phanh ABS + Phanh điện từ Terca (hỗ trợ đổ đèo)",
-      "Hầm hành lý": "3 khoang rộng thông suốt thể tích 3.8 m³"
+      "Hộp số": "Số sàn 6 cấp"
     },
     "faqs": [
       {
-        "question": "Thủ tục mua xe khách 29 chỗ trả góp cho công ty du lịch cần những gì?",
-        "answer": "Chỉ cần Giấy phép kinh doanh và báo cáo tài chính. Hỗ trợ vay ngân hàng đến 80%, hoàn thiện trọn gói biển số vàng và định vị vận tải."
+        "question": "Hyundai Solati 16 chỗ có kích thước lớn hơn các đối thủ cùng phân khúc không?",
+        "answer": "Có. Solati là dòng xe có kích thước tổng thể lớn nhất phân khúc xe 16 chỗ tại Việt Nam."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cuu-ho-giao-thong-3-chuc-nang",
+    "name": "Xe Cứu Hộ Giao Thông 3 Chức Năng Hino (Sàn Trượt, Cần Cẩu, Cần Kéo Xe)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cứu Hộ Giao Thông",
+    "subKey": "cuu-ho",
+    "brand": "Hino",
+    "price": 1850000000,
+    "promo": "Tặng kèm bộ dây cáp chuyên dụng 30m & Hỗ trợ đăng ký biển số kinh doanh",
+    "images": [
+      "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Dòng xe cứu hộ giao thông đa năng tích hợp 3 trong 1: Sàn trượt chở xe, cần cẩu thủy lực và cần kéo xe phía sau.",
+    "description": "I. Tổng quan về Xe Cứu Hộ Giao Thông Hino 3 Chức Năng",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 10200000,
+    "insuranceTNDS": 3500000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Hino Series 500 (FG8JP7A)",
+      "Tải trọng cho phép": "6.800 kg",
+      "Động cơ": "J08E-WE (260 Mã lực)"
+    },
+    "specialSpecs": {
+      "Hệ thống chuyên dùng": "Sàn trượt thủy lực, Cần cẩu 3 tấn, Càng gắp kéo xe"
+    },
+    "faqs": [
+      {
+        "question": "Xe cứu hộ giao thông Hino có thể cẩu và kéo cùng lúc được không?",
+        "answer": "Có. Thiết kế tích hợp cho phép xe vừa chở trên sàn, vừa cẩu hoặc kéo phía sau."
       }
     ]
   }

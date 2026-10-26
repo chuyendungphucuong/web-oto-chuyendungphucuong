@@ -1,0 +1,49 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { allVehicles } from '../../data/vehicles.js';
+
+const totalVehicles = allVehicles ? allVehicles.length : 27;
+---
+
+<AdminLayout title="Bảng Điều Khiển Tổng Quan (Dashboard)" activeTab="dashboard">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-bold text-slate-500 uppercase">Tổng số xe trong kho</p>
+        <p class="text-3xl font-black text-blue-700 mt-2">{totalVehicles} <span class="text-sm font-normal text-slate-500">mẫu xe</span></p>
+      </div>
+      <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl">🚗</div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-bold text-slate-500 uppercase">Bài viết Tin tức & Pháp lý</p>
+        <p class="text-3xl font-black text-emerald-600 mt-2">12 <span class="text-sm font-normal text-slate-500">bài viết</span></p>
+      </div>
+      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-2xl">📝</div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-bold text-slate-500 uppercase">Trạng thái Database</p>
+        <p class="text-lg font-extrabold text-red-600 mt-2">Đã đồng bộ chuẩn</p>
+      </div>
+      <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-2xl">⚡</div>
+    </div>
+  </div>
+
+  <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+    <h2 class="text-base font-bold text-slate-900 border-b pb-3">Thao tác quản trị nhanh</h2>
+    <div class="flex flex-wrap gap-4">
+      <a href="/admin/products" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-3 rounded-xl text-sm transition shadow-sm">
+        🚗 Quản lý & Sửa nhanh giá xe
+      </a>
+      <a href="/admin/products/edit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-3 rounded-xl text-sm transition shadow-sm">
+        + Thêm mẫu xe chuyên dùng mới
+      </a>
+      <a href="/admin/posts" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-5 py-3 rounded-xl text-sm transition shadow-sm">
+        📝 Quản lý bài viết tin tức
+      </a>
+    </div>
+  </div>
+</AdminLayout>

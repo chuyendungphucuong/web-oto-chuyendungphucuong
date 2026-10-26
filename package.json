@@ -12,8 +12,22 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^11.1.8",
+    "@astrojs/react": "^7.1.0",
+    "@keystatic/astro": "^6.0.0",
+    "@keystatic/core": "^0.6.9",
+    "@sanity/client": "^8.9.0",
+    "@sanity/image-url": "^2.1.1",
+    "@sanity/vision": "^6.19.0",
+    "@supabase/supabase-js": "^2.118.0",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.4.0",
+    "dotenv": "^18.0.9",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sanity": "^6.19.0",
+    "sharp": "^0.35.5",
+    "styled-components": "^6.6.0",
     "tailwindcss": "^4.3.3"
   }
 }

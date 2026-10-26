@@ -1,0 +1,114 @@
+[
+  {
+    "slug": "xe-khach-16-cho-jac-sunray",
+    "name": "Xe Khách JAC Sunray Minibus 16 Chỗ Cao Cấp (Động Cơ Cummins 2.8L)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 16 Chỗ",
+    "subKey": "16-cho",
+    "brand": "JAC",
+    "price": 850000000,
+    "promo": "Hỗ trợ 100% phí trước bạ + Tặng định vị GPS & Phù hiệu hợp đồng du lịch",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe khách minibus 16 chỗ JAC Sunray thế hệ mới: Động cơ Cummins 2.8L bền bỉ, lốp đôi sau an toàn, trả trước chỉ từ 230 triệu nhận xe.",
+    "description": "I. Tổng quan Xe Khách JAC Sunray Minibus 16 Chỗ\nKích thước 5.990 x 2.100 x 2.645 mm, động cơ Cummins HFC4DE1-1D 2.8L, điều hòa 8000W, phanh ABS + EBD, bảo hành 4 năm hoặc 150.000 km.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3200000,
+    "chassisSpecs": {
+      "Số chỗ ngồi": "16 chỗ",
+      "Kích thước tổng thể": "5.990 x 2.100 x 2.645 mm",
+      "Động cơ": "Cummins HFC4DE1-1D (2.8L Turbo)"
+    },
+    "specialSpecs": {
+      "Hệ thống phanh": "Đĩa trước, tang trống sau + ABS & EBD",
+      "Lốp sau": "Bánh đôi 195R15C ổn định cao"
+    },
+    "faqs": [
+      {
+        "question": "Mua xe JAC Sunray 16 chỗ trả góp cần trả trước bao nhiêu?",
+        "answer": "Chỉ cần đầu tư từ 230 triệu đồng là có thể nhận xe."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-16-cho-hyundai-solati",
+    "name": "Xe Khách Hyundai Solati 16 Chỗ Cao Cấp (Động Cơ Diesel 2.5L)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 16 Chỗ",
+    "subKey": "16-cho",
+    "brand": "Hyundai",
+    "price": 1080000000,
+    "promo": "Hỗ trợ 100% phí trước bạ + Tặng camera hành trình & Phù hiệu hợp đồng du lịch",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Hyundai Solati 16 chỗ sở hữu kích thước rộng nhất phân khúc (6.195 x 2.038 x 2.740 mm), động cơ Diesel 2.5L CRDi 170 mã lực.",
+    "description": "I. Tổng quan Xe Khách Hyundai Solati 16 Chỗ\nĐộng cơ D4CB 2.5L VGT 170HP kết hợp hộp số sàn 6 cấp, phanh đĩa 4 bánh ABS.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3200000,
+    "chassisSpecs": {
+      "Số chỗ ngồi": "16 chỗ ngồi",
+      "Kích thước tổng thể": "6.195 x 2.038 x 2.740 mm",
+      "Động cơ": "Diesel 2.5L CRDi (170 Mã lực)"
+    },
+    "specialSpecs": {
+      "Hộp số": "Số sàn 6 cấp",
+      "Hệ thống phanh": "Phanh đĩa 4 bánh tích hợp ABS"
+    },
+    "faqs": [
+      {
+        "question": "Hyundai Solati 16 chỗ có rộng hơn các xe cùng phân khúc không?",
+        "answer": "Có, đây là mẫu xe có kích thước lớn nhất phân khúc 16 chỗ tại Việt Nam."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-hyundai-solati-limousine",
+    "name": "Xe Khách Hyundai Solati Độ Limousine Hạng Sang (Nội Thất Thương Gia)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 16 Chỗ",
+    "subKey": "16-cho",
+    "brand": "Hyundai",
+    "price": 1350000000,
+    "promo": "Hỗ trợ 100% lệ phí trước bạ + Tặng gói trang trí nội thất VIP & Phù hiệu hợp đồng",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Chuyên cơ mặt đất Hyundai Solati độ Limousine VIP: Ghế thương gia chỉnh điện massage, trần sao LED, màn hình lớn và tủ lạnh mini.",
+    "description": "I. Tổng quan Hyundai Solati Limousine\nNâng cấp toàn diện khoang hành khách chuẩn 5 sao phục vụ lữ hành cao cấp, khách sạn, resort và đưa đón chuyên gia.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3500000,
+    "chassisSpecs": {
+      "Model cơ sở": "Hyundai Solati Limousine VIP",
+      "Động cơ": "D4CB, 2.5L CRDi Diesel (170 PS, Euro 5)"
+    },
+    "specialSpecs": {
+      "Nội thất Limousine": "Ghế VIP chỉnh điện/massage, trần ánh sao, âm thanh vòm, tủ lạnh mini"
+    },
+    "faqs": [
+      {
+        "question": "Hyundai Solati Limousine có những trang bị cao cấp gì?",
+        "answer": "Trang bị ghế VIP massage chỉnh điện, trần sao, TV thông minh, tủ lạnh và cổng sạc riêng từng ghế."
+      }
+    ]
+  }
+]

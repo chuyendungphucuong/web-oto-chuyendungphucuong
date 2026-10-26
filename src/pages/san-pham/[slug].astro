@@ -1,223 +1,499 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import vehicles from '../../data/vehicles.json';
+import { allVehicles } from '../../data/vehicles.js';
+import { FINANCIAL_CONFIG } from '../../data/config.js';
 
 export function getStaticPaths() {
+  const vehicles = Array.isArray(allVehicles) ? allVehicles : [];
   return vehicles.map((vehicle) => ({
     params: { slug: vehicle.slug },
     props: { vehicle },
   }));
 }
 
-const { vehicle } = Astro.props;
-const formatVND = (n: number) => n.toLocaleString('vi-VN') + ' đ';
+const { slug } = Astro.params;
+const vehicles = Array.isArray(allVehicles) ? allVehicles : [];
+const vehicle = Astro.props?.vehicle || vehicles.find((v: any) => v.slug === slug);
 
-const combinedSchema = [
-  {
-    "@context": "https://schema.org",
-    "@type": "Vehicle",
-    "name": vehicle.name,
-    "brand": { "@type": "Brand", "name": vehicle.brand },
-    "category": vehicle.categoryName,
-    "image": vehicle.images[0],
-    "offers": {
-      "@type": "Offer",
-      "priceCurrency": "VND",
-      "price": vehicle.price,
-      "availability": "https://schema.org/InStock",
-      "seller": { "@type": "AutoDealer", "name": "Ô Tô Chuyên Dùng Phú Cường" }
-    }
+if (!vehicle) {
+  return Astro.redirect('/404');
+}
+
+const specs = vehicle.chassisSpecs || vehicle.chassis_specs || {};
+const specialSpecs = vehicle.specialSpecs || vehicle.special_specs || {};
+const faqs = Array.isArray(vehicle.faqs) ? vehicle.faqs : [];
+const images = Array.isArray(vehicle.images) && vehicle.images.length > 0 
+  ? vehicle.images 
+  : ['https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80'];
+const showrooms = Array.isArray(vehicle.showrooms) ? vehicle.showrooms : ['Bình Chánh, TP.HCM', 'Nhị Quý, Tiền Giang', 'Bình Đức, An Giang'];
+
+const cleanDescription = (vehicle.description || vehicle.summary || '')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>')
+  .replace(/&amp;/g, '&');
+
+const metrics = FINANCIAL_CONFIG.extractVehicleMetrics(vehicle);
+const dynamicRoadTax = FINANCIAL_CONFIG.getRoadTax(metrics.totalWeightKg, metrics.isBus, metrics.seats);
+const dynamicInsuranceTNDS = FINANCIAL_CONFIG.getInsuranceTNDS(metrics.payloadKg, metrics.seats, metrics.isBus);
+const fixedServiceAndPlate = FINANCIAL_CONFIG.serviceAndInspectionFee + FINANCIAL_CONFIG.plateFeeProvince;
+
+// 1. Tạo cấu trúc Product Schema (JSON-LD) cho Google & AI Overviews
+const productSchema = {
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": vehicle.name,
+  "image": images,
+  "description": vehicle.summary || vehicle.name,
+  "brand": {
+    "@type": "Brand",
+    "name": vehicle.brand || "Ô Tô Phú Cường"
   },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": vehicle.faqs.map((f: { question: string; answer: string }) => ({
-      "@type": "Question",
-      "name": f.question,
-      "acceptedAnswer": { "@type": "Answer", "text": f.answer }
-    }))
+  "offers": {
+    "@type": "Offer",
+    "url": `https://phucuongauto.vn/san-pham/${vehicle.slug}`,
+    "priceCurrency": "VND",
+    "price": vehicle.price || 0,
+    "itemCondition": "https://schema.org/NewCondition",
+    "availability": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "Ô Tô Phú Cường - Nhà Cung Cấp Và Sản Xuất Ô Tô Chuyên Dùng"
+    }
   }
-];
+};
+
+// 2. Tạo cấu trúc FAQ Schema (JSON-LD) nếu xe có danh sách câu hỏi
+const faqSchema = faqs.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((f: any) => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": f.answer
+    }
+  }))
+} : null;
 ---
 
 <BaseLayout 
-  title={`${vehicle.name} - Giá Lăn Bánh & Trả Góp`}
-  description={`Bảng giá lăn bánh ${vehicle.name} tại TP.HCM, Tiền Giang, An Giang. ${vehicle.promo}.`}
-  schema={combinedSchema}
+  title={`${vehicle.name} | Ô Tô Phú Cường`}
+  description={vehicle.summary || `Báo giá lăn bánh và thông số kỹ thuật ${vehicle.name} tại Ô Tô Phú Cường. Hỗ trợ vay trả góp lên đến 90%. Hotline/Zalo: 0922 77 77 03.`}
+  image={images[0]}
 >
-  <div class="max-w-7xl mx-auto px-4 py-8">
-    <!-- Breadcrumb -->
-    <nav class="text-sm text-slate-500 mb-4">
-      <a href="/" class="hover:underline">Trang chủ</a> / 
-      <span>{vehicle.categoryName}</span> / 
-      <strong class="text-slate-800">{vehicle.name}</strong>
+  <!-- NHÚNG MÃ JSON-LD SCHEMA ẨN CHO SEO & AI OVERVIEWS -->
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <nav class="text-sm text-gray-500 mb-6">
+      <a href="/" class="hover:text-blue-600">Trang chủ</a> &gt; 
+      <a href="/san-pham" class="hover:text-blue-600">Sản phẩm</a> &gt; 
+      <span class="text-gray-900 font-semibold line-clamp-1">{vehicle.name}</span>
     </nav>
 
-    <!-- Khối thông tin chính kèm Thư Viện Ảnh (Gallery) -->
-    <div class="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-      <!-- Thư viện nhiều ảnh -->
-      <div>
-        <div class="mb-3">
-          <img id="mainImage" src={vehicle.images[0]} alt={vehicle.name} class="w-full rounded-lg object-cover h-80 shadow-sm border border-slate-200 transition duration-300" />
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
+      <div class="lg:col-span-6 space-y-6">
+        <div class="space-y-3">
+          <div class="relative overflow-hidden rounded-xl border border-gray-200 bg-gray-50 group">
+            <img id="mainProductImg" src={images[0]} alt={vehicle.name} class="w-full h-[350px] object-contain p-2 transition duration-300" />
+            
+            {images.length > 1 && (
+              <>
+                <button 
+                  type="button" 
+                  id="btnPrevImg"
+                  aria-label="Hình trước"
+                  class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg transition cursor-pointer shadow-md"
+                >
+                  &#10094;
+                </button>
+                <button 
+                  type="button" 
+                  id="btnNextImg"
+                  aria-label="Hình tiếp theo"
+                  class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg transition cursor-pointer shadow-md"
+                >
+                  &#10095;
+                </button>
+              </>
+            )}
+          </div>
+
+          {images.length > 1 && (
+            <div class="grid grid-cols-5 gap-2 max-h-44 overflow-y-auto p-1">
+              {images.map((imgUrl, index) => (
+                <button 
+                  type="button"
+                  data-index={index}
+                  class={`thumb-btn overflow-hidden rounded-lg border-2 bg-gray-50 h-16 cursor-pointer transition hover:border-blue-600 ${index === 0 ? 'border-blue-600 ring-2 ring-blue-600/20' : 'border-gray-200'}`}
+                >
+                  <img src={imgUrl} alt={`${vehicle.name} - hình ${index + 1}`} class="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-        <div class="grid grid-cols-4 gap-2">
-          {vehicle.images.map((imgUrl: string, index: number) => (
-            <button 
-              type="button"
-              onclick={`document.getElementById('mainImage').src='${imgUrl}'`}
-              class="border-2 border-transparent hover:border-blue-600 rounded-lg overflow-hidden focus:outline-none transition cursor-pointer"
-            >
-              <img src={imgUrl} alt={`${vehicle.name} góc chụp ${index + 1}`} class="w-full h-20 object-cover" />
-            </button>
-          ))}
+        
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-900">
+          <p class="font-bold mb-1">📍 Hệ thống Showroom toàn quốc:</p>
+          <p>{showrooms.join(' | ')}</p>
+        </div>
+
+        <!-- CÔNG CỤ TÍNH GIÁ LĂN BÁNH -->
+        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-inner">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-lg font-bold text-gray-900">
+              Dự toán giá lăn bánh & Trả góp (dự kiến)
+            </h3>
+            <a href={`/tinh-lan-banh?car=${vehicle.slug}`} class="text-xs font-extrabold bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition shadow-sm">
+              🖨️ Xuất Báo Giá PDF &rarr;
+            </a>
+          </div>
+          
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between border-b pb-2">
+              <span class="text-gray-600">Giá niêm yết:</span>
+              <span id="lblPrice" class="font-bold text-gray-900" data-price={vehicle.price}>{Number(vehicle.price || 0).toLocaleString('vi-VN')} đ</span>
+            </div>
+            <div class="flex justify-between border-b pb-2">
+              <span class="text-gray-600">Lệ phí trước bạ (2%):</span>
+              <span id="lblRegistration" class="font-semibold text-gray-800">0 đ</span>
+            </div>
+            <div class="flex justify-between border-b pb-2">
+              <span class="text-gray-600">Phí sử dụng đường bộ (1 năm):</span>
+              <span class="font-semibold text-gray-800">{Number(dynamicRoadTax).toLocaleString('vi-VN')} đ</span>
+            </div>
+            <div class="flex justify-between border-b pb-2">
+              <span class="text-gray-600">
+                {metrics.isBus ? `Bảo hiểm TNDS (${metrics.seats} chỗ):` : `BH TNDS Chuyên dùng (${(metrics.payloadKg/1000).toFixed(1)}T + ${metrics.seats} ghế):`}
+              </span>
+              <span class="font-semibold text-blue-700">{Number(dynamicInsuranceTNDS).toLocaleString('vi-VN')} đ</span>
+            </div>
+            <div class="flex justify-between border-b pb-2">
+              <span class="text-gray-600">Đăng kiểm, Biển số & Dịch vụ trọn gói:</span>
+              <span class="font-semibold text-gray-800">{Number(fixedServiceAndPlate).toLocaleString('vi-VN')} đ</span>
+            </div>
+            <div class="flex justify-between bg-blue-50 p-2.5 rounded-lg font-bold text-blue-800 text-base">
+              <span>Tổng giá lăn bánh dự kiến:</span>
+              <span id="lblTotalRollout">0 đ</span>
+            </div>
+
+            <div class="pt-3 border-t mt-4 space-y-3">
+              <h4 class="font-bold text-gray-900">Tính toán vay mua xe trả góp:</h4>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs text-gray-600 mb-1">Tỷ lệ vay vốn:</label>
+                  <select id="selectLoanRatio" class="w-full p-2 border rounded-lg text-sm bg-white font-semibold">
+                    <option value="0.5">Vay 50% giá trị xe</option>
+                    <option value="0.6">Vay 60% giá trị xe</option>
+                    <option value="0.65">Vay 65% giá trị xe</option>
+                    <option value="0.7">Vay 70% giá trị xe</option>
+                    <option value="0.75" selected>Vay 75% giá trị xe</option>
+                    <option value="0.8">Vay 80% giá trị xe</option>
+                    <option value="0.85">Vay 85% giá trị xe</option>
+                    <option value="0.9">Vay 90% giá trị xe</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs text-gray-600 mb-1">Thời hạn vay:</label>
+                  <select id="selectLoanTerm" class="w-full p-2 border rounded-lg text-sm bg-white font-semibold">
+                    <option value="12">1 Năm (12 tháng)</option>
+                    <option value="24">2 Năm (24 tháng)</option>
+                    <option value="36">3 Năm (36 tháng)</option>
+                    <option value="48">4 Năm (48 tháng)</option>
+                    <option value="60" selected>5 Năm (60 tháng)</option>
+                    <option value="72">6 Năm (72 tháng)</option>
+                    <option value="84">7 Năm (84 tháng)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-gray-200 text-xs space-y-1.5">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Vốn đối ứng ban đầu (Trả trước):</span>
+                  <span id="lblDownPayment" class="font-bold text-blue-600">0 đ</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Số tiền vay ngân hàng:</span>
+                  <span id="lblLoanAmount" class="font-bold text-gray-800">0 đ</span>
+                </div>
+                <div class="flex justify-between pt-1 border-t">
+                  <span class="text-gray-600 font-semibold">Ước tính trả góp tháng đầu (Gốc + Lãi):</span>
+                  <span id="lblMonthlyPayment" class="font-bold text-red-600 text-sm">0 đ</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Thông tin & Nút hành động -->
-      <div>
-        <span class="bg-blue-100 text-blue-900 text-xs font-bold px-3 py-1 rounded">{vehicle.subCategory}</span>
-        <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-2">{vehicle.name}</h1>
-        <p class="text-3xl font-extrabold text-red-600 mt-3">{formatVND(vehicle.price)}</p>
-        <p class="text-xs text-slate-500 mt-1">* Giá đã bao gồm VAT, chưa bao gồm chi phí đăng ký lăn bánh.</p>
+      <!-- Cột Thông tin & Báo giá -->
+      <div class="lg:col-span-6 flex flex-col justify-between">
+        <div>
+          <span class="inline-block bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">{vehicle.subCategory || vehicle.categoryName || 'Xe Chuyên Dùng'}</span>
+          <h1 class="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-4 leading-snug">{vehicle.name}</h1>
+          
+          <div class="bg-gray-50 p-5 rounded-xl mb-6 border border-gray-200">
+            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Giá niêm yết chính thức:</p>
+            <p class="text-3xl lg:text-4xl font-black text-red-600 mb-3">{Number(vehicle.price || 0).toLocaleString('vi-VN')} đ</p>
+            {vehicle.promo && (
+              <div class="bg-red-500 text-white p-3 text-sm rounded-lg shadow-sm">
+                <span class="font-bold">🎁 Ưu đãi đặc biệt:</span> {vehicle.promo}
+              </div>
+            )}
+          </div>
 
-        <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg mt-4">
-          <p class="font-bold text-amber-900 text-sm">🔥 Ưu đãi tháng này tại Chuyên Dùng Phú Cường:</p>
-          <p class="text-sm text-amber-800 mt-1">{vehicle.promo}</p>
-        </div>
-
-        <div class="mt-4 text-sm">
-          <p class="font-semibold text-slate-700">📍 Xem xe & Lái thử trực tiếp tại 3 Showroom:</p>
-          <div class="flex gap-2 mt-2 flex-wrap">
-            {vehicle.showrooms.map((sr: string) => (
-              <span class="bg-slate-100 border border-slate-300 px-3 py-1 rounded text-xs font-medium">{sr}</span>
-            ))}
+          <div class="mb-6">
+            <h3 class="font-bold text-gray-800 mb-2">Tổng quan sản phẩm:</h3>
+            <p class="text-gray-600 leading-relaxed text-sm lg:text-base">{vehicle.summary}</p>
           </div>
         </div>
 
-        <div class="mt-6 grid grid-cols-2 gap-3">
-          <a href="tel:0900000000" data-gtm-event="click_call_detail" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg text-center text-sm">
-            📞 Nhận Báo Giá Kín
-          </a>
-          <a href="https://zalo.me/0900000000" data-gtm-event="click_zalo_detail" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg text-center text-sm">
-            💬 Gửi Catalogue Zalo
-          </a>
+        <!-- Cụm nút Hành động Chốt Đơn -->
+        <div class="space-y-3 pt-4 border-t border-gray-100">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <a 
+              href="tel:0922777703" 
+              class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-3.5 px-4 rounded-xl text-center transition flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 text-sm"
+            >
+              📞 Gọi Ngay: 0922 77 77 03
+            </a>
+            <a 
+              href="https://zalo.me/0922777703" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 px-4 rounded-xl text-center transition flex items-center justify-center gap-2 shadow-md text-sm"
+            >
+              💬 Chat Zalo Nhận Báo Giá
+            </a>
+          </div>
+
+          <button 
+            type="button" 
+            id="btnOpenQuickQuote"
+            class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-5 rounded-xl text-center transition text-sm cursor-pointer shadow-sm"
+          >
+            📩 Yêu Cầu Gửi Bảng Tính Trả Góp Qua Zalo / Điện Thoại
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Bảng tính Giá Lăn Bánh (Trước bạ 2%) & Trả Góp -->
-    <section id="bao-gia" class="mt-10 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-      <h2 class="text-xl font-extrabold text-blue-950 mb-4">
-        🧮 Dự Toán Chi Phí Lăn Bánh & Trả Góp (Chuẩn Xe Thương Mại Trước Bạ 2%)
-      </h2>
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="space-y-4">
+    <!-- Khối Thông số kỹ thuật chi tiết -->
+    {Object.keys(specs).length > 0 && (
+      <div class="mt-12 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 flex items-center gap-2">
+          <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Thông số kỹ thuật chi tiết
+        </h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
-            <label class="block text-sm font-bold text-slate-700 mb-1">Khu vực đăng ký biển số (Showroom phụ trách):</label>
-            <select id="provinceSelect" class="w-full border border-slate-300 rounded-lg px-4 py-2.5">
-              <option value="500000">TP. Hồ Chí Minh (Phí biển số 500.000đ)</option>
-              <option value="150000">Tiền Giang & Miền Tây (Phí biển số 150.000đ)</option>
-              <option value="150000">An Giang & ĐBSCL (Phí biển số 150.000đ)</option>
+            <h3 class="font-bold text-base text-white bg-blue-700 p-3 rounded-lg mb-4">1. Thông số Xe cơ sở (Chassis)</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left text-gray-600">
+                <tbody>
+                  {Object.entries(specs).map(([key, value]) => (
+                    <tr class="border-b border-gray-100 hover:bg-gray-50">
+                      <td class="py-3 px-3 font-medium text-gray-900 w-2/5">{key}</td>
+                      <td class="py-3 px-3 text-gray-700 w-3/5">{String(value)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {Object.keys(specialSpecs).length > 0 && (
+            <div>
+              <h3 class="font-bold text-base text-white bg-blue-700 p-3 rounded-lg mb-4">2. Thiết bị chuyên dùng & Thùng/Bồn/Xi-téc</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-600">
+                  <tbody>
+                    {Object.entries(specialSpecs).map(([key, value]) => (
+                      <tr class="border-b border-gray-100 hover:bg-gray-50">
+                        <td class="py-3 px-3 font-medium text-gray-900 w-2/5">{key}</td>
+                        <td class="py-3 px-3 text-gray-700 w-3/5">{String(value)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+
+    <!-- KHỐI MÔ TẢ CHI TIẾT -->
+    <div class="mt-12 bg-white p-6 lg:p-10 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 flex items-center gap-2">
+        <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Đánh giá chi tiết & Cấu hình sản phẩm
+      </h2>
+      <div 
+        class="prose max-w-none text-gray-800 leading-relaxed space-y-4 text-base 
+               [&_img]:max-w-xl [&_img]:w-full [&_img]:h-auto [&_img]:max-h-[450px] [&_img]:object-cover [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:border [&_img]:border-gray-200 [&_img]:shadow-sm 
+               [&_p]:mb-3" 
+        set:html={cleanDescription} 
+      />
+    </div>
+
+    <!-- Khối Câu hỏi FAQ -->
+    {faqs.length > 0 && (
+      <div class="mt-12 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 flex items-center gap-2">
+          <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Câu hỏi thường gặp (FAQ)
+        </h2>
+        <div class="space-y-4">
+          {faqs.map((faq: any) => (
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+              <h4 class="font-bold text-gray-900 mb-1 text-base">Q: {faq.question}</h4>
+              <p class="text-gray-700 text-sm">A: {faq.answer}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- POPUP ĐĂNG KÝ NHẬN BÁO GIÁ NHANH NGAY TẠI TRANG XE -->
+    <div id="quickQuoteModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div class="bg-blue-900 text-white px-5 py-4 flex justify-between items-center">
+          <div>
+            <h3 class="text-base font-extrabold">Nhận Báo Giá Lăn Bánh & Trả Góp</h3>
+            <p class="text-xs text-blue-200 line-clamp-1 mt-0.5">{vehicle.name}</p>
+          </div>
+          <button type="button" id="btnCloseQuickQuote" class="w-8 h-8 rounded-full bg-white/10 hover:bg-red-600 text-white font-bold flex items-center justify-center cursor-pointer">✕</button>
+        </div>
+        <form id="quickQuoteForm" class="p-5 space-y-3.5">
+          <input type="hidden" name="access_key" value="3f9f6577-6ee2-4393-9651-7dbe59109431" />
+          <input type="hidden" name="subject" value={`Yêu cầu báo giá xe: ${vehicle.name}`} />
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Họ và tên quý khách *</label>
+            <input type="text" name="name" required placeholder="Nhập họ tên..." class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-blue-600" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Số điện thoại / Zalo nhận bảng tính *</label>
+            <input type="tel" name="phone" required placeholder="Nhập số điện thoại..." class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-blue-600" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Nhu cầu tư vấn</label>
+            <select name="message" class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm bg-white outline-none focus:border-blue-600">
+              <option value={`Cần gửi bảng tính trả góp mẫu xe ${vehicle.name} qua Zalo`}>Gửi bảng tính trả góp chi tiết qua Zalo</option>
+              <option value={`Cần báo giá lăn bánh tiền mặt tốt nhất cho xe ${vehicle.name}`}>Báo giá lăn bánh trả thẳng tốt nhất</option>
+              <option value={`Cần tư vấn đóng thùng / hồ sơ thiết kế xe ${vehicle.name}`}>Tư vấn đóng thùng & hồ sơ cải tạo</option>
             </select>
           </div>
-          <div>
-            <label class="block text-sm font-bold text-slate-700 mb-1">Tỷ lệ vay ngân hàng / Thuê tài chính: <span id="loanPercentLabel" class="text-blue-700">75%</span></label>
-            <input id="loanSlider" type="range" min="50" max="85" step="5" value="75" class="w-full" />
-          </div>
-        </div>
-
-        <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 space-y-2 text-sm">
-          <div class="flex justify-between"><span>Giá xe niêm yết:</span> <strong>{formatVND(vehicle.price)}</strong></div>
-          <div class="flex justify-between"><span>Lệ phí trước bạ (2%):</span> <strong id="taxFee"></strong></div>
-          <div class="flex justify-between"><span>Phí bảo trì đường bộ (1 năm):</span> <strong>{formatVND(vehicle.roadTaxPerYear)}</strong></div>
-          <div class="flex justify-between"><span>Bảo hiểm TNDS + Đăng kiểm + Phù hiệu GPS:</span> <strong id="otherFee"></strong></div>
-          <hr class="my-2" />
-          <div class="flex justify-between text-base font-extrabold text-red-600">
-            <span>TỔNG LĂN BÁNH TẠM TÍNH:</span> <span id="totalRolling"></span>
-          </div>
-          <div class="flex justify-between text-base font-extrabold text-emerald-700 pt-2">
-            <span>CẦN TRẢ TRƯỚC ĐỂ NHẬN XE:</span> <span id="downPayment"></span>
-          </div>
-        </div>
+          <button type="submit" id="btnSubmitQuickQuote" class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-3 rounded-xl text-sm transition shadow cursor-pointer">
+            🚀 Gửi Yêu Cầu Ngay
+          </button>
+        </form>
       </div>
-    </section>
+    </div>
 
-    <!-- Bảng Thông số kỹ thuật -->
-    <section class="mt-10 grid md:grid-cols-2 gap-8">
-      <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h2 class="text-lg font-extrabold text-blue-950 mb-4">1. Thông Số Xe Cơ Sở (Chassis)</h2>
-        <table class="w-full text-sm">
-          <tbody>
-            {Object.entries(vehicle.chassisSpecs).map(([key, val]) => (
-              <tr class="border-b border-slate-100">
-                <th class="py-2.5 text-left text-slate-600 font-medium w-1/2">{key}</th>
-                <td class="py-2.5 text-right font-semibold text-slate-900">{val}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  </main>
 
-      <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h2 class="text-lg font-extrabold text-red-700 mb-4">2. Thông Số Thiết Bị Chuyên Dùng</h2>
-        <table class="w-full text-sm">
-          <tbody>
-            {Object.entries(vehicle.specialSpecs).map(([key, val]) => (
-              <tr class="border-b border-slate-100">
-                <th class="py-2.5 text-left text-slate-600 font-medium w-1/2">{key}</th>
-                <td class="py-2.5 text-right font-semibold text-slate-900">{val}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </section>
+  <script is:inline define:vars={{ rawImages: images, basePrice: vehicle.price || 0, roadTax: dynamicRoadTax, insurance: dynamicInsuranceTNDS, otherFixed: fixedServiceAndPlate }}>
+    let currentImgIdx = 0;
+    const imagesList = Array.isArray(rawImages) ? rawImages : [];
 
-    <!-- Câu hỏi thường gặp (FAQ) -->
-    <section class="mt-10 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-      <h2 class="text-xl font-extrabold text-blue-950 mb-4">Câu Hỏi Thường Gặp Về {vehicle.name}</h2>
-      <div class="space-y-4">
-        {vehicle.faqs.map((faq: { question: string; answer: string }) => (
-          <div class="border-b border-slate-100 pb-4">
-            <h3 class="font-bold text-slate-900">❓ {faq.question}</h3>
-            <p class="text-slate-600 text-sm mt-1 leading-relaxed">{faq.answer}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  </div>
+    function updateMainImage(idx) {
+      if (imagesList.length === 0) return;
+      if (idx < 0) currentImgIdx = imagesList.length - 1;
+      else if (idx >= imagesList.length) currentImgIdx = 0;
+      else currentImgIdx = idx;
 
-  <script define:vars={{ basePrice: vehicle.price, roadTax: vehicle.roadTaxPerYear, ins: vehicle.insuranceTNDS }}>
-    const provinceSelect = document.getElementById('provinceSelect');
-    const loanSlider = document.getElementById('loanSlider');
-    const loanPercentLabel = document.getElementById('loanPercentLabel');
-    const taxFeeEl = document.getElementById('taxFee');
-    const otherFeeEl = document.getElementById('otherFee');
-    const totalRollingEl = document.getElementById('totalRolling');
-    const downPaymentEl = document.getElementById('downPayment');
+      const mainImg = document.getElementById('mainProductImg');
+      if (mainImg) mainImg.src = imagesList[currentImgIdx];
 
-    const fmt = (n) => Math.round(n).toLocaleString('vi-VN') + ' đ';
-
-    function calculate() {
-      const plateFee = Number(provinceSelect.value);
-      const loanRatio = Number(loanSlider.value) / 100;
-      loanPercentLabel.textContent = loanSlider.value + '%';
-
-      const registrationTax = basePrice * 0.02; // 2% trước bạ
-      const gpsAndInspection = 3500000;
-      const otherFees = ins + plateFee + gpsAndInspection;
-      const totalRolling = basePrice + registrationTax + roadTax + otherFees;
-      const loanAmount = basePrice * loanRatio;
-      const downPayment = totalRolling - loanAmount;
-
-      taxFeeEl.textContent = fmt(registrationTax);
-      otherFeeEl.textContent = fmt(otherFees);
-      totalRollingEl.textContent = fmt(totalRolling);
-      downPaymentEl.textContent = fmt(downPayment);
+      document.querySelectorAll('.thumb-btn').forEach((btn, bIdx) => {
+        if (bIdx === currentImgIdx) {
+          btn.className = 'thumb-btn overflow-hidden rounded-lg border-2 bg-gray-50 h-16 cursor-pointer transition border-blue-600 ring-2 ring-blue-600/20';
+        } else {
+          btn.className = 'thumb-btn overflow-hidden rounded-lg border-2 bg-gray-50 h-16 cursor-pointer transition border-gray-200 hover:border-blue-600';
+        }
+      });
     }
 
-    provinceSelect.addEventListener('change', calculate);
-    loanSlider.addEventListener('input', calculate);
-    calculate();
+    document.getElementById('btnPrevImg')?.addEventListener('click', () => {
+      updateMainImage(currentImgIdx - 1);
+    });
+
+    document.getElementById('btnNextImg')?.addEventListener('click', () => {
+      updateMainImage(currentImgIdx + 1);
+    });
+
+    document.querySelectorAll('.thumb-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.currentTarget.getAttribute('data-index') || '0');
+        updateMainImage(idx);
+      });
+    });
+
+    function calculateRollout() {
+      const fixedFees = roadTax + insurance + otherFixed;
+      const regFee = basePrice * 0.02;
+      const total = basePrice + regFee + fixedFees;
+
+      const elReg = document.getElementById('lblRegistration');
+      const elTotal = document.getElementById('lblTotalRollout');
+      const elRatio = document.getElementById('selectLoanRatio');
+      const elTerm = document.getElementById('selectLoanTerm');
+
+      if (elReg) elReg.innerText = regFee.toLocaleString('vi-VN') + ' đ';
+      if (elTotal) elTotal.innerText = total.toLocaleString('vi-VN') + ' đ';
+
+      const ratio = elRatio ? parseFloat(elRatio.value) : 0.75;
+      const months = elTerm ? parseInt(elTerm.value) : 60;
+
+      const loanAmount = Math.round(basePrice * ratio);
+      const downPayment = total - loanAmount;
+
+      const monthlyInterestRate = 0.095 / 12;
+      const monthlyPrincipal = loanAmount / months;
+      const monthlyInterest = loanAmount * monthlyInterestRate;
+      const monthlyPayment = monthlyPrincipal + monthlyInterest;
+
+      const elDown = document.getElementById('lblDownPayment');
+      const elLoan = document.getElementById('lblLoanAmount');
+      const elMonthly = document.getElementById('lblMonthlyPayment');
+
+      if (elDown) elDown.innerText = downPayment.toLocaleString('vi-VN') + ' đ';
+      if (elLoan) elLoan.innerText = loanAmount.toLocaleString('vi-VN') + ' đ';
+      if (elMonthly) elMonthly.innerText = Math.round(monthlyPayment).toLocaleString('vi-VN') + ' đ / tháng';
+    }
+
+    document.getElementById('selectLoanRatio')?.addEventListener('change', calculateRollout);
+    document.getElementById('selectLoanTerm')?.addEventListener('change', calculateRollout);
+    calculateRollout();
+
+    // Điều khiển Popup Báo Giá Nhanh
+    const quickModal = document.getElementById('quickQuoteModal');
+    document.getElementById('btnOpenQuickQuote')?.addEventListener('click', () => {
+      quickModal?.classList.remove('hidden');
+    });
+    document.getElementById('btnCloseQuickQuote')?.addEventListener('click', () => {
+      quickModal?.classList.add('hidden');
+    });
+    quickModal?.addEventListener('click', (e) => {
+      if (e.target === quickModal) quickModal.classList.add('hidden');
+    });
+
+    const quickForm = document.getElementById('quickQuoteForm');
+    const btnQuickSubmit = document.getElementById('btnSubmitQuickQuote');
+    quickForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (btnQuickSubmit) {
+        btnQuickSubmit.disabled = true;
+        btnQuickSubmit.innerText = '⏳ Đang gửi...';
+      }
+      try {
+        const fd = new FormData(quickForm);
+        await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
+        window.location.href = '/cam-on';
+      } catch (err) {
+        window.location.href = '/cam-on';
+      }
+    });
   </script>
 </BaseLayout>

@@ -1,0 +1,308 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const sampleVehicle = {
+  name: "Xe Bồn Cám Thổi Chenglong 4 Chân (Dung Tích 30 Khối, Động Cơ Yuchai 330HP)",
+  categoryName: "Xe Tải Chuyên Dùng",
+  brand: "Chenglong",
+  price: 2280000000,
+  promo: "Hỗ trợ 100% phí trước bạ (2%) + Tặng bộ ống thổi cám chuyên dụng & Định vị GPS",
+  summary: "Giải pháp vận chuyển và bơm rót thức ăn chăn nuôi công nghệ cao: Xe bồn cám thổi Chenglong 4 chân dung tích 30 khối, nền chassis H7 nhập khẩu nguyên chiếc kết hợp động cơ Yuchai 330HP mạnh mẽ.",
+  showrooms: ["Bình Chánh, TP.HCM", "Nhị Quý, Tiền Giang", "Bình Đức, An Giang"],
+  roadTaxPerYear: 12480000,
+  insuranceTNDS: 4330000,
+  chassisSpecs: {
+    "Model xe cơ sở": "Chenglong H7 nhập khẩu nguyên chiếc (8x4)",
+    "Kích thước tổng thể (DxRxC)": "12.100 x 2.500 x 3.950 mm",
+    "Chiều dài cơ sở": "1.950 + 5.050 + 1.350 mm",
+    "Tải trọng cho phép": "16.000 kg",
+    "Khối lượng toàn bộ": "30.000 kg",
+    "Dung tích xi-lanh": "8.400 cc",
+    "Động cơ": "YC6L330-50 (4 kỳ, 6 xi lanh thẳng hàng, tăng áp)",
+    "Hộp số": "Fast Gear (9 tiến, 1 lùi)",
+    "Cỡ lốp": "12.00R22.5 bố thép"
+  },
+  specialSpecs: {
+    "Dung tích bồn chứa": "30 Khối (30 m³) chia nhiều khoang độc lập",
+    "Kích thước lòng thùng/bồn/xi-téc": "8.600 x 2.200 x 2.200 mm",
+    "Vật liệu chế tạo": "Thép cường lực cao cấp chống mài mòn",
+    "Hệ thống chuyên dùng": "Công nghệ thổi khí nén áp lực cao bơm cám trực tiếp vào si-lô",
+    "Thời gian xả tải": "Nhanh chóng, khép kín hoàn toàn chống hao hụt"
+  },
+  review: {
+    title: "Đánh giá khả năng vận hành và hiệu suất bơm cám thực tế của Chenglong 4 Chân 30 Khối",
+    excerpt: "Trong các chuyến hành trình thử nghiệm thực tế tại các hệ thống trang trại khép kín ở miền Tây, dòng xe bồn cám thổi Chenglong 4 chân thể hiện sự vượt trội rõ rệt nhờ khối động cơ Yuchai 330HP bền bỉ. Hệ thống quạt thổi khí nén áp lực cao hoạt động ổn định, giúp đẩy khối lượng lớn thức ăn chăn nuôi lên các si-lô cao trên 15 mét một cách mượt mà, hoàn toàn không xảy ra hiện tượng tắc nghẽn...",
+    image: "https://phucuongauto.vn/wp-content/uploads/2026/05/bon-cam-thoi-chenglong-4-chan-slider.png"
+  },
+  faqs: [
+    {
+      question: "Xe bồn cám thổi Chenglong 4 chân có dung tích bao nhiêu khối?",
+      answer: "Xe có dung tích thùng bồn lớn lên đến 30 khối (30 m3), chia nhiều khoang linh hoạt."
+    },
+    {
+      question: "Phú Cường Auto có hỗ trợ mua xe trả góp không?",
+      answer: "Có. Chúng tôi hỗ trợ vay vốn ngân hàng lên đến 75-80% giá trị xe, thủ tục nhanh gọn tại TP.HCM, Tiền Giang và An Giang."
+    }
+  ],
+  images: [
+    "https://phucuongauto.vn/wp-content/uploads/2026/05/bon-cam-thoi-chenglong-4-chan-slider.png",
+    "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80"
+  ]
+};
+---
+
+<BaseLayout title={`${sampleVehicle.name} | Ô Tô Chuyên Dùng Phú Cường`}>
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Breadcrumb -->
+    <nav class="text-sm text-gray-500 mb-6">
+      <a href="/" class="hover:text-blue-600">Trang chủ</a> &gt; 
+      <a href="/san-pham" class="hover:text-blue-600">Sản phẩm</a> &gt; 
+      <span class="text-gray-900 font-semibold">Chi tiết sản phẩm mẫu</span>
+    </nav>
+
+    <!-- Khối chính sản phẩm -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
+      <!-- Cột Thư viện Hình ảnh & Công cụ tính giá lăn bánh (6 phần) -->
+      <div class="lg:col-span-6 space-y-6">
+        <div class="space-y-3">
+          <div class="overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+            <img id="mainProductImg" src={sampleVehicle.images[0]} alt={sampleVehicle.name} class="w-full h-[350px] object-contain p-2 transition duration-300" />
+          </div>
+          <div class="grid grid-cols-4 gap-2">
+            {sampleVehicle.images.map((imgUrl, index) => (
+              <button 
+                type="button"
+                onclick={`document.getElementById('mainProductImg').src='${imgUrl}';`}
+                class={`overflow-hidden rounded-lg border-2 bg-gray-50 h-20 cursor-pointer transition hover:border-blue-600 ${index === 0 ? 'border-blue-600 ring-2 ring-blue-600/20' : 'border-gray-200'}`}
+              >
+                <img src={imgUrl} alt={`Thumbnail ${index + 1}`} class="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-900">
+          <p class="font-bold mb-1">📍 Hệ thống Showroom toàn quốc:</p>
+          <p>{sampleVehicle.showrooms.join(' | ')}</p>
+        </div>
+
+        <!-- CÔNG CỤ TÍNH GIÁ LĂN BÁNH & TRẢ GÓP -->
+        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-inner">
+          <h3 class="text-lg font-bold text-gray-900 mb-3">
+            Dự toán giá lăn bánh & Trả góp (dự kiến)
+          </h3>
+          
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between border-b pb-2">
+              <span class="text-gray-600">Giá niêm yết:</span>
+              <span id="lblPrice" class="font-bold text-gray-900" data-price={sampleVehicle.price}>{Number(sampleVehicle.price).toLocaleString('vi-VN')} đ</span>
+            </div>
+            <div class="flex justify-between border-b pb-2">
+              <span class="text-gray-600">Lệ phí trước bạ (2%):</span>
+              <span id="lblRegistration" class="font-semibold text-gray-800">0 đ</span>
+            </div>
+            <div class="flex justify-between border-b pb-2">
+              <span class="text-gray-600">Phí đăng kiểm & Đường bộ:</span>
+              <span class="font-semibold text-gray-800">{Number(sampleVehicle.roadTaxPerYear + 3500000).toLocaleString('vi-VN')} đ</span>
+            </div>
+            <div class="flex justify-between border-b pb-2">
+              <span class="text-gray-600">Bảo hiểm TNDS & Biển số:</span>
+              <span class="font-semibold text-gray-800">{Number(sampleVehicle.insuranceTNDS + 3000000).toLocaleString('vi-VN')} đ</span>
+            </div>
+            <div class="flex justify-between bg-blue-50 p-2.5 rounded-lg font-bold text-blue-800 text-base">
+              <span>Tổng giá lăn bánh dự kiến:</span>
+              <span id="lblTotalRollout">0 đ</span>
+            </div>
+
+            <!-- Phần tính trả góp -->
+            <div class="pt-3 border-t mt-4 space-y-3">
+              <h4 class="font-bold text-gray-900">Tính toán vay mua xe trả góp:</h4>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs text-gray-600 mb-1">Tỷ lệ vay vốn:</label>
+                  <select id="selectLoanRatio" class="w-full p-2 border rounded-lg text-sm bg-white">
+                    <option value="0.5">Vay 50% giá trị xe</option>
+                    <option value="0.7">Vay 70% giá trị xe</option>
+                    <option value="0.75" selected>Vay 75% giá trị xe</option>
+                    <option value="0.8">Vay 80% giá trị xe</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs text-gray-600 mb-1">Thời hạn vay:</label>
+                  <select id="selectLoanTerm" class="w-full p-2 border rounded-lg text-sm bg-white">
+                    <option value="12">1 Năm (12 tháng)</option>
+                    <option value="24">2 Năm (24 tháng)</option>
+                    <option value="36">3 Năm (36 tháng)</option>
+                    <option value="48">4 Năm (48 tháng)</option>
+                    <option value="60" selected>5 Năm (60 tháng)</option>
+                    <option value="72">6 Năm (72 tháng)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-gray-200 text-xs space-y-1.5">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Vốn đối ứng ban đầu (Trả trước):</span>
+                  <span id="lblDownPayment" class="font-bold text-blue-600">0 đ</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Số tiền vay ngân hàng:</span>
+                  <span id="lblLoanAmount" class="font-bold text-gray-800">0 đ</span>
+                </div>
+                <div class="flex justify-between pt-1 border-t">
+                  <span class="text-gray-600 font-semibold">Ước tính trả góp hàng tháng (Gốc + Lãi):</span>
+                  <span id="lblMonthlyPayment" class="font-bold text-red-600 text-sm">0 đ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cột Thông tin & Báo giá (6 phần) -->
+      <div class="lg:col-span-6 flex flex-col justify-between">
+        <div>
+          <span class="inline-block bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">{sampleVehicle.categoryName}</span>
+          <h1 class="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-4 leading-snug">{sampleVehicle.name}</h1>
+          
+          <div class="bg-gray-50 p-5 rounded-xl mb-6 border border-gray-200">
+            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Giá niêm yết chính thức:</p>
+            <p class="text-3xl lg:text-4xl font-black text-red-600 mb-3">{Number(sampleVehicle.price).toLocaleString('vi-VN')} đ</p>
+            {sampleVehicle.promo && (
+              <div class="bg-red-500 text-white p-3 text-sm rounded-lg shadow-sm">
+                <span class="font-bold">🎁 Ưu đãi đặc biệt:</span> {sampleVehicle.promo}
+              </div>
+            )}
+          </div>
+
+          <div class="mb-6">
+            <h3 class="font-bold text-gray-800 mb-2">Tổng quan sản phẩm:</h3>
+            <p class="text-gray-600 leading-relaxed text-sm lg:text-base">{sampleVehicle.summary}</p>
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-4 border-t border-gray-100">
+          <a href="tel:0922777703" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl text-center transition flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 text-lg">
+            📞 Tư vấn báo giá trực tiếp: 0922 77 77 03
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Khối Thông số kỹ thuật chi tiết chuẩn Hòa Việt -->
+    <div class="mt-12 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 flex items-center gap-2">
+        <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Thông số kỹ thuật chi tiết
+      </h2>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <!-- Ô số 1: Xanh dương -->
+          <h3 class="font-bold text-base text-white bg-blue-700 p-3 rounded-lg mb-4">1. Thông số Xe cơ sở (Chassis)</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-600">
+              <tbody>
+                {Object.entries(sampleVehicle.chassisSpecs).map(([key, value]) => (
+                  <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="py-3 px-3 font-medium text-gray-900 w-2/5">{key}</td>
+                    <td class="py-3 px-3 text-gray-700 w-3/5">{String(value)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <!-- Ô số 2: Đã đồng bộ sang Xanh dương -->
+          <h3 class="font-bold text-base text-white bg-blue-700 p-3 rounded-lg mb-4">2. Thiết bị chuyên dùng & Thùng/Bồn/Xi-téc</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-600">
+              <tbody>
+                {Object.entries(sampleVehicle.specialSpecs).map(([key, value]) => (
+                  <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="py-3 px-3 font-medium text-gray-900 w-2/5">{key}</td>
+                    <td class="py-3 px-3 text-gray-700 w-3/5">{String(value)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KHỐI ĐÁNH GIÁ CHI TIẾT & TRẢI NGHIỆM THỰC TẾ -->
+    <div class="mt-12 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 flex items-center gap-2">
+        <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Đánh giá chi tiết & Trải nghiệm thực tế
+      </h2>
+      
+      <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 md:p-6">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+          <div class="md:col-span-4">
+            <img src={sampleVehicle.review.image} alt="Đánh giá thực tế" class="w-full h-48 object-cover rounded-lg border border-gray-200" />
+          </div>
+          <div class="md:col-span-8 space-y-3">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-md">Đánh giá chuyên gia Phú Cường Auto</span>
+            <h3 class="text-xl font-bold text-gray-900">{sampleVehicle.review.title}</h3>
+            <p class="text-gray-600 text-sm line-clamp-3 leading-relaxed">
+              {sampleVehicle.review.excerpt}
+            </p>
+            <div>
+              <button onclick="alert('Tính năng mở rộng toàn bộ bài viết chi tiết sẽ được phát triển ở bước tiếp theo!')" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 font-bold text-sm transition cursor-pointer">
+                Xem chi tiết đánh giá & hình ảnh thực tế &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Khối Câu hỏi FAQ -->
+    <div class="mt-12 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 flex items-center gap-2">
+        <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Câu hỏi thường gặp (FAQ)
+      </h2>
+      <div class="space-y-4">
+        {sampleVehicle.faqs.map((faq) => (
+          <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+            <h4 class="font-bold text-gray-900 mb-1 text-base">Q: {faq.question}</h4>
+            <p class="text-gray-700 text-sm">A: {faq.answer}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <!-- Script tính giá lăn bánh tự động -->
+  <script define:vars={{ basePrice: sampleVehicle.price, fixedFees: sampleVehicle.roadTaxPerYear + sampleVehicle.insuranceTNDS + 6500000 }}>
+    function calculateRollout() {
+      const regFee = basePrice * 0.02;
+      const total = basePrice + regFee + fixedFees;
+
+      document.getElementById('lblRegistration').innerText = regFee.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('lblTotalRollout').innerText = total.toLocaleString('vi-VN') + ' đ';
+
+      const ratio = parseFloat(document.getElementById('selectLoanRatio').value);
+      const months = parseInt(document.getElementById('selectLoanTerm').value);
+
+      const loanAmount = basePrice * ratio;
+      const downPayment = total - loanAmount;
+
+      const monthlyInterestRate = 0.008;
+      const monthlyPrincipal = loanAmount / months;
+      const monthlyInterest = loanAmount * monthlyInterestRate;
+      const monthlyPayment = monthlyPrincipal + monthlyInterest;
+
+      document.getElementById('lblDownPayment').innerText = downPayment.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('lblLoanAmount').innerText = loanAmount.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('lblMonthlyPayment').innerText = Math.round(monthlyPayment).toLocaleString('vi-VN') + ' đ / tháng';
+    }
+
+    document.getElementById('selectLoanRatio').addEventListener('change', calculateRollout);
+    document.getElementById('selectLoanTerm').addEventListener('change', calculateRollout);
+
+    calculateRollout();
+  </script>
+</BaseLayout>

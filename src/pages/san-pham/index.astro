@@ -1,0 +1,372 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { allVehicles } from '../../data/vehicles.js';
+
+const productList = Array.isArray(allVehicles) ? allVehicles : [];
+const availableBrands = Array.from(new Set(productList.map((v: any) => v.brand).filter(Boolean)));
+
+const categories = [
+  { id: 'all', name: 'Tất cả sản phẩm' },
+  { id: 'xe-tai-chuyen-dung', name: 'Tất cả Xe Chuyên Dùng' },
+  { id: 'bon-thuc-pham', name: 'Xe Bồn Cám' },
+  { id: 'bon-nuoc', name: 'Xe Bồn Nước & Hút Chất Thải' },
+  { id: 'xe-cau', name: 'Xe Cẩu Tự Hành' },
+  { id: 'cuu-ho', name: 'Xe Cứu Hộ & Nâng Đầu' },
+  { id: 'xe-khach', name: 'Tất cả Ô Tô Khách' },
+  { id: '16-cho', name: 'Xe Khách 16 Chỗ' },
+  { id: '29-cho', name: 'Xe Khách 29 - 34 Chỗ' },
+  { id: '47-cho', name: 'Xe Khách 47 Chỗ' }
+];
+---
+
+<BaseLayout title="Tổng hợp danh mục xe chuyên dùng & Ô tô khách | Ô Tô Chuyên Dùng Phú Cường">
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <nav class="text-sm text-gray-500 mb-6">
+      <a href="/" class="hover:text-blue-600">Trang chủ</a> &gt; 
+      <span id="breadcrumbCurrent" class="text-gray-900 font-semibold">Tất cả sản phẩm</span>
+    </nav>
+
+    <div class="bg-blue-800 text-white p-8 rounded-2xl mb-8 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h1 id="categoryTitle" class="text-2xl lg:text-4xl font-extrabold mb-2">Danh Mục Xe Chuyên Dùng & Ô Tô Khách</h1>
+        <p class="text-white/90 text-sm lg:text-base">Đóng mới chất lượng cao, đạt chuẩn đăng kiểm, bảo hành toàn quốc tại TP.HCM, Tiền Giang và An Giang.</p>
+      </div>
+      <div class="bg-white/10 px-4 py-2.5 rounded-xl border border-white/20 text-sm font-bold whitespace-nowrap">
+        Hiển thị: <span id="lblCount" class="text-yellow-300 text-lg">{productList.length}</span> mẫu xe
+      </div>
+    </div>
+
+    <!-- Thanh lọc danh mục ngang -->
+    <div class="flex overflow-x-auto gap-2 pb-4 mb-6 no-scrollbar">
+      {categories.map((cat, idx) => (
+        <button 
+          type="button"
+          data-category={cat.id}
+          class={`cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer ${idx === 0 ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'}`}
+        >
+          {cat.name}
+        </button>
+      ))}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Cột Bộ lọc & Tìm kiếm bên trái -->
+      <div class="lg:col-span-3 space-y-6">
+        <!-- Ô TÌM KIẾM THÔNG MINH (KHÔNG DẤU & DUNG SAI LỖI) -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
+          <h3 class="font-bold text-gray-900 border-b pb-2 text-base">🔎 Tìm kiếm thông minh</h3>
+          <div class="relative">
+            <input 
+              type="text" 
+              id="quickSearchInput" 
+              placeholder="Gõ có dấu hoặc không dấu (VD: bon cam, cau 15t, solati...)" 
+              class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-600 outline-none"
+            />
+          </div>
+          <p class="text-[11px] text-gray-400">Hỗ trợ tìm kiếm nhanh không dấu, tìm theo tải trọng, số chỗ, hãng xe.</p>
+        </div>
+
+        <!-- Lọc theo Hãng xe -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+          <div class="flex justify-between items-center border-b pb-2">
+            <h3 class="font-bold text-gray-900 text-base">🚛 Lọc theo Hãng xe</h3>
+            <button type="button" id="btnResetFilter" class="text-xs text-blue-600 hover:underline font-semibold cursor-pointer">Đặt lại</button>
+          </div>
+          <div class="space-y-2 text-sm max-h-60 overflow-y-auto">
+            {availableBrands.map((brand: any) => (
+              <label class="flex items-center gap-2 cursor-pointer text-gray-700 hover:text-red-600">
+                <input type="checkbox" value={brand} class="brand-checkbox rounded border-gray-300 accent-red-600 focus:ring-red-500 w-4 h-4 cursor-pointer" />
+                <span>{brand}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <!-- Lọc theo Khoảng giá -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+          <h3 class="font-bold text-gray-900 border-b pb-2 text-base">💰 Lọc theo Khoảng giá</h3>
+          <div class="space-y-2 text-sm">
+            {[
+              { label: 'Tất cả mức giá', min: 0, max: Infinity },
+              { label: 'Dưới 1 tỷ đồng', min: 0, max: 1000000000 },
+              { label: 'Từ 1 tỷ - 1.5 tỷ', min: 1000000000, max: 1500000000 },
+              { label: 'Từ 1.5 tỷ - 2 tỷ', min: 1500000000, max: 2000000000 },
+              { label: 'Từ 2 tỷ - 2.5 tỷ', min: 2000000000, max: 2500000000 },
+              { label: 'Trên 2.5 tỷ đồng', min: 2500000000, max: Infinity }
+            ].map((range, idx) => (
+              <label class="flex items-center gap-2 cursor-pointer text-gray-700 hover:text-red-600">
+                <input type="radio" name="priceRange" value={idx} checked={idx === 0} class="price-radio border-gray-300 accent-red-600 focus:ring-red-500 w-4 h-4 cursor-pointer" />
+                <span>{range.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Cột Lưới sản phẩm bên phải -->
+      <div class="lg:col-span-9">
+        <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {productList.map((product: any) => {
+            const specText = product.specialSpecs ? Object.values(product.specialSpecs)[0] : (product.chassisSpecs ? Object.values(product.chassisSpecs)[0] : 'Chính hãng chất lượng cao');
+            const catSub = product.subCategory || product.categoryName || 'Xe Chuyên Dùng';
+            const subKey = product.subKey || '';
+            const categoryType = product.category || (catSub.toLowerCase().includes('khách') ? 'xe-khach' : 'xe-tai-chuyen-dung');
+            
+            // Gom toàn bộ thông tin của xe (tên, hãng, danh mục, tóm tắt, thông số) thành 1 chuỗi để tìm kiếm sâu
+            const fullSearchableText = [
+              product.name,
+              product.brand,
+              catSub,
+              product.summary,
+              JSON.stringify(product.chassisSpecs || {}),
+              JSON.stringify(product.specialSpecs || {})
+            ].join(' ');
+
+            return (
+              <div 
+                class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md transition group product-card"
+                data-name={product.name?.toLowerCase() || ''}
+                data-search={fullSearchableText}
+                data-brand={product.brand || ''}
+                data-category={catSub.toLowerCase()}
+                data-subkey={subKey.toLowerCase()}
+                data-type={categoryType.toLowerCase()}
+                data-price={product.price || 0}
+              >
+                <div>
+                  <div class="relative overflow-hidden bg-gray-100 h-48">
+                    <span class="absolute top-3 left-3 bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-md z-10">{catSub}</span>
+                    <img src={product.images?.[0] || 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80'} alt={product.name} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                  </div>
+                  <div class="p-4 space-y-2">
+                    <span class="text-xs font-bold text-gray-500 uppercase">{product.brand || 'Phú Cường'}</span>
+                    <h3 class="font-bold text-base text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition">
+                      <a href={`/san-pham/${product.slug}`}>{product.name}</a>
+                    </h3>
+                    <p class="text-xs text-gray-600 font-medium bg-gray-50 p-1.5 rounded line-clamp-1">{specText}</p>
+                    <p class="text-red-600 font-black text-lg">{Number(product.price || 0).toLocaleString('vi-VN')} đ</p>
+                    {product.promo && (
+                      <p class="text-xs text-red-700 bg-red-50 p-2 rounded border border-red-100 font-medium line-clamp-1">🎁 {product.promo}</p>
+                    )}
+                  </div>
+                </div>
+                <div class="p-4 pt-0">
+                  <a href={`/san-pham/${product.slug}`} class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-center transition text-sm shadow-sm shadow-blue-600/20">
+                    Xem thông số & Nhận ưu đãi
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div id="emptyState" class="hidden bg-white p-12 rounded-2xl border border-gray-200 text-center space-y-3">
+          <p class="text-xl font-bold text-gray-800">Không tìm thấy mẫu xe nào phù hợp với từ khóa hoặc bộ lọc</p>
+          <p class="text-sm text-gray-500">Quý khách vui lòng thử gõ từ khóa ngắn gọn hơn hoặc bấm "Đặt lại" bộ lọc.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script is:inline>
+    const priceRanges = [
+      { min: 0, max: Infinity },
+      { min: 0, max: 1000000000 },
+      { min: 1000000000, max: 1500000000 },
+      { min: 1500000000, max: 2000000000 },
+      { min: 2000000000, max: 2500000000 },
+      { min: 2500000000, max: Infinity }
+    ];
+
+    const categoryTitles = {
+      'all': 'Tất Cả Sản Phẩm Xe Chuyên Dùng & Ô Tô Khách',
+      'xe-tai-chuyen-dung': 'Tất Cả Các Dòng Xe Tải Chuyên Dùng',
+      'xe-khach': 'Tất Cả Các Dòng Ô Tô Khách (16 - 47 Chỗ)',
+      'bon-thuc-pham': 'Xe Bồn Cám & Thức Ăn Chăn Nuôi',
+      'xe-bon-cam': 'Xe Bồn Cám & Thức Ăn Chăn Nuôi',
+      'bon-nuoc': 'Xe Bồn Chở Nước & Hút Chất Thải',
+      'xe-bon-nuoc': 'Xe Bồn Chở Nước Tưới Cây',
+      'bon-hut-chat-thai': 'Xe Bồn Hút Chất Thải Môi Trường',
+      'xe-cau': 'Xe Tải Gắn Cẩu Tự Hành',
+      'cuu-ho': 'Xe Cứu Hộ Giao Thông & Nâng Đầu',
+      'xe-cuu-ho': 'Xe Cứu Hộ Giao Thông',
+      'nang-dau': 'Xe Nâng Đầu Chở Máy Công Trình',
+      'ep-rac': 'Xe Cuốn Ép Rác Môi Trường',
+      'xe-nang-khac': 'Đầu Kéo Gắn Cẩu & Xe Chở Gia Cầm',
+      '16-cho': 'Xe Khách 16 Chỗ Cao Cấp',
+      '29-cho': 'Xe Khách 29 - 34 Chỗ Bầu Hơi',
+      '34-cho': 'Xe Khách 34 Chỗ Bóng Hơi',
+      '47-cho': 'Xe Khách 47 Chỗ & Giường Nằm'
+    };
+
+    // HÀM 1: Khử dấu tiếng Việt và chuẩn hóa lỗi gõ phổ biến
+    function normalizeText(str) {
+      if (!str) return '';
+      return str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[đĐ]/g, 'd')
+        // Tự động sửa các lỗi gõ sai hoặc từ viết tắt phổ biến của khách
+        .replace(/huyndai/g, 'hyundai')
+        .replace(/xitec|xi tec/g, 'bon')
+        .replace(/(\d+)t\b/g, '$1 tan')
+        .replace(/(\d+)c\b/g, '$1 chan')
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    // HÀM 2: Tính khoảng cách sai lệch ký tự (Levenshtein Distance) để chịu lỗi gõ sai 1 ký tự
+    function isFuzzyWordMatch(queryWord, targetWords) {
+      for (const word of targetWords) {
+        if (word.includes(queryWord)) return true;
+        // Nếu từ dài >= 4 ký tự, cho phép gõ sai 1 ký tự (ví dụ: "chenlong" vẫn khớp "chenglong")
+        if (queryWord.length >= 4 && Math.abs(word.length - queryWord.length) <= 1) {
+          let diffs = 0;
+          const len = Math.max(queryWord.length, word.length);
+          let i = 0, j = 0;
+          while (i < queryWord.length && j < word.length) {
+            if (queryWord[i] !== word[j]) {
+              diffs++;
+              if (diffs > 1) break;
+              if (queryWord.length > word.length) i++;
+              else if (word.length > queryWord.length) j++;
+              else { i++; j++; }
+            } else {
+              i++; j++;
+            }
+          }
+          diffs += (queryWord.length - i) + (word.length - j);
+          if (diffs <= 1) return true;
+        }
+      }
+      return false;
+    }
+
+    // HÀM 3: Kiểm tra khớp tìm kiếm thông minh
+    function smartSearchMatch(rawQuery, rawTargetText) {
+      if (!rawQuery) return true;
+      const normQuery = normalizeText(rawQuery);
+      const normTarget = normalizeText(rawTargetText);
+
+      if (normTarget.includes(normQuery)) return true;
+
+      const queryWords = normQuery.split(' ').filter(Boolean);
+      const targetWords = normTarget.split(' ').filter(Boolean);
+
+      // Mọi từ trong câu tìm kiếm đều phải khớp (chính xác hoặc dung sai 1 ký tự)
+      return queryWords.every(qWord => isFuzzyWordMatch(qWord, targetWords));
+    }
+
+    let currentFilter = 'all';
+    const urlParams = new URLSearchParams(window.location.search);
+    const catParam = urlParams.get('cat');
+    if (catParam) {
+      currentFilter = catParam.toLowerCase();
+    }
+
+    function checkCategoryMatch(filterKey, cardType, cardSubKey, cardCatName, cardTitle) {
+      if (filterKey === 'all') return true;
+      if (filterKey === 'xe-tai-chuyen-dung') return cardType === 'xe-tai-chuyen-dung' || !cardCatName.includes('khách');
+      if (filterKey === 'xe-khach') return cardType === 'xe-khach' || cardCatName.includes('khách');
+      if (filterKey === 'xe-cau' || filterKey === 'cau-truc' || filterKey === 'cau-gap') return cardSubKey.includes('cau') || cardCatName.includes('cẩu');
+      if (filterKey === 'bon-thuc-pham' || filterKey === 'xe-bon-cam') return cardSubKey === 'bon-thuc-pham' || cardCatName.includes('bồn cám');
+      if (filterKey === 'bon-nuoc' || filterKey === 'xe-bon-nuoc') return cardSubKey === 'bon-nuoc' || cardSubKey === 'bon-hut-chat-thai' || cardCatName.includes('bồn chuyên dùng');
+      if (filterKey === 'bon-hut-chat-thai') return cardSubKey === 'bon-hut-chat-thai' || cardTitle.includes('hút chất thải');
+      if (filterKey === 'cuu-ho' || filterKey === 'xe-cuu-ho') return cardSubKey === 'cuu-ho' || cardSubKey === 'nang-dau' || cardCatName.includes('cứu hộ') || cardCatName.includes('nâng đầu');
+      if (filterKey === 'nang-dau' || filterKey === 'xe-nang-dau') return cardSubKey === 'nang-dau' || cardCatName.includes('nâng đầu');
+      if (filterKey === 'ep-rac' || filterKey === 'xe-ep-rac') return cardSubKey === 'ep-rac' || cardCatName.includes('ép rác');
+      if (filterKey === 'xe-nang-khac') return cardSubKey === 'xe-nang-khac';
+      if (filterKey === '16-cho') return cardSubKey === '16-cho' || cardCatName.includes('16 chỗ');
+      if (filterKey === '29-cho') return cardSubKey === '29-cho' || cardSubKey === '34-cho' || cardCatName.includes('29-34 chỗ');
+      if (filterKey === '34-cho') return cardSubKey === '34-cho' || cardTitle.includes('34 chỗ');
+      if (filterKey === '47-cho') return cardSubKey === '47-cho' || cardCatName.includes('47 chỗ');
+      return cardSubKey.includes(filterKey) || cardCatName.includes(filterKey);
+    }
+
+    function filterProducts() {
+      const searchVal = document.getElementById('quickSearchInput')?.value || '';
+      const selectedBrands = Array.from(document.querySelectorAll('.brand-checkbox:checked')).map(cb => cb.value);
+      const selectedPriceIdx = parseInt(document.querySelector('.price-radio:checked')?.value || '0');
+      const currentRange = priceRanges[selectedPriceIdx];
+
+      const cards = document.querySelectorAll('.product-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const name = card.getAttribute('data-name') || '';
+        const fullSearch = card.getAttribute('data-search') || '';
+        const brand = card.getAttribute('data-brand') || '';
+        const category = card.getAttribute('data-category') || '';
+        const subkey = card.getAttribute('data-subkey') || '';
+        const type = card.getAttribute('data-type') || '';
+        const price = parseFloat(card.getAttribute('data-price') || '0');
+
+        const matchSearch = smartSearchMatch(searchVal, fullSearch);
+        const matchCat = checkCategoryMatch(currentFilter, type, subkey, category, name);
+        const matchBrand = selectedBrands.length === 0 || selectedBrands.includes(brand);
+        const matchPrice = price >= currentRange.min && price < currentRange.max;
+
+        if (matchSearch && matchCat && matchBrand && matchPrice) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      const lblCount = document.getElementById('lblCount');
+      if (lblCount) lblCount.innerText = String(visibleCount);
+
+      const emptyState = document.getElementById('emptyState');
+      if (emptyState) {
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+
+      const titleText = categoryTitles[currentFilter] || 'Danh Mục Sản Phẩm';
+      const titleEl = document.getElementById('categoryTitle');
+      const breadEl = document.getElementById('breadcrumbCurrent');
+      if (titleEl) titleEl.innerText = titleText;
+      if (breadEl) breadEl.innerText = titleText;
+    }
+
+    function highlightActiveTab() {
+      document.querySelectorAll('.cat-tab').forEach(t => {
+        const tabCat = (t.getAttribute('data-category') || '').toLowerCase();
+        if (tabCat === currentFilter) {
+          t.className = 'cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer bg-blue-600 text-white shadow-md shadow-blue-600/20';
+        } else {
+          t.className = 'cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer bg-white text-gray-700 border border-gray-200 hover:bg-gray-100';
+        }
+      });
+    }
+
+    document.querySelectorAll('.cat-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        currentFilter = (target.getAttribute('data-category') || 'all').toLowerCase();
+        highlightActiveTab();
+        filterProducts();
+      });
+    });
+
+    document.getElementById('quickSearchInput')?.addEventListener('input', filterProducts);
+    document.querySelectorAll('.brand-checkbox').forEach(cb => cb.addEventListener('change', filterProducts));
+    document.querySelectorAll('.price-radio').forEach(rb => rb.addEventListener('change', filterProducts));
+
+    document.getElementById('btnResetFilter')?.addEventListener('click', () => {
+      document.querySelectorAll('.brand-checkbox').forEach(cb => cb.checked = false);
+      const firstRadio = document.querySelector('.price-radio');
+      if (firstRadio) firstRadio.checked = true;
+      const searchInput = document.getElementById('quickSearchInput');
+      if (searchInput) searchInput.value = '';
+      currentFilter = 'all';
+      highlightActiveTab();
+      filterProducts();
+    });
+
+    highlightActiveTab();
+    filterProducts();
+  </script>
+</BaseLayout>

@@ -1,0 +1,514 @@
+[
+  {
+    "slug": "xe-cau-tu-hanh-faw-jh6-4-chan-soosan-15-tan",
+    "name": "Xe Cẩu Tự Hành FAW JH6 4 Chân – Gắn Cẩu Soosan 15 Tấn (SCS1516S)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "subKey": "cau-truc",
+    "brand": "FAW",
+    "price": 3350000000,
+    "promo": "Tặng 100% phí trước bạ (2%) + Hồ sơ thiết kế & Kiểm định an toàn cẩu",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Gã khổng lồ nâng hạ hạng nặng: Xe tải FAW JH6 4 chân động cơ 370HP gắn cẩu Soosan 15 tấn (SCS1516S) Hàn Quốc, tải trọng chở 9.150 kg.",
+    "description": "I. Tổng quan Xe Cẩu FAW JH6 4 Chân Gắn Cẩu Soosan 15 Tấn\nGiải pháp nâng hạ siêu trọng cho công trình lớn, kết hợp xe nền FAW JH6 động cơ CA6DL3-37E5 (8.600 cc) và cẩu Hàn Quốc Soosan SCS1516S.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 12480000,
+    "insuranceTNDS": 4330000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "FAW JH6 4 chân (8x4)",
+      "Tải trọng cho phép chở": "9.150 kg",
+      "Dung tích xi-lanh": "8.600 cc",
+      "Động cơ": "CA6DL3-37E5 (FAWED - 370 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu tự hành": "Soosan SCS1516S (Hàn Quốc)",
+      "Sức nâng lớn nhất": "15.000 kg (15 Tấn)"
+    },
+    "faqs": [
+      {
+        "question": "Tải trọng chở hàng của FAW JH6 4 chân sau khi gắn cẩu 15 tấn là bao nhiêu?",
+        "answer": "Tải trọng cho phép chở hàng hóa là 9.150 kg."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cau-tu-hanh-dongfeng-4-chan-soosan-12-tan",
+    "name": "Xe Cẩu Tự Hành Dongfeng 4 Chân KL340 – Cẩu Soosan 12 Tấn (SCS1516S)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "subKey": "cau-truc",
+    "brand": "Dongfeng",
+    "price": 3250000000,
+    "promo": "Tặng 100% phí trước bạ (2%) + Hồ sơ thiết kế & Kiểm định an toàn cẩu",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Mãnh hổ công trình hạng nặng: Xe tải Dongfeng 4 chân KL340 động cơ Cummins 340HP kết hợp cẩu tự hành Soosan 12 tấn Hàn Quốc, tải trọng chở 10.680 kg.",
+    "description": "I. Tổng quan Xe Cẩu Dongfeng 4 Chân KL340 Cẩu Soosan 12 Tấn\nTrang bị động cơ Cummins ISL9.5-340E51A dung tích 9.460 cc mạnh mẽ, tải trọng hàng hóa 10.680 kg.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 12480000,
+    "insuranceTNDS": 4330000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng KL340 (4 chân - 8x4)",
+      "Tải trọng cho phép chở": "10.680 kg",
+      "Dung tích xi-lanh": "9.460 cc",
+      "Động cơ": "Cummins ISL9.5-340E51A (340 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu tự hành": "Soosan SCS1516S (Hàn Quốc)",
+      "Sức nâng lớn nhất": "12.000 kg (12 Tấn)"
+    },
+    "faqs": [
+      {
+        "question": "Tải trọng chở hàng thực tế của xe Dongfeng 4 chân gắn cẩu Soosan 12 tấn là bao nhiêu?",
+        "answer": "Tải trọng hàng hóa cho phép chở là 10.680 kg."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cau-tu-hanh-dongfeng-3-chan-palfinger-12-tan",
+    "name": "Xe Tải Dongfeng 3 Chân Gắn Cẩu Gập Palfinger 12 Tấn (SPK32080)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "subKey": "cau-gap",
+    "brand": "Dongfeng",
+    "price": 2850000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng định vị GPS & Phù hiệu xe tải nặng",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe tải Dongfeng 3 chân động cơ Cummins ISD270-50 gắn cẩu gập Châu Âu Palfinger 12 tấn SPK32080, tải trọng 8.700 kg.",
+    "description": "I. Ưu thế Cẩu Gập Palfinger 12 Tấn\nCẩu gập gọn sau cabin giúp giữ trọn không gian thùng hàng, kết hợp xe nền Dongfeng 3 chân động cơ Cummins 6.690 cc (270HP).",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 8900000,
+    "insuranceTNDS": 4330000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng 3 chân (6x4) nhập khẩu",
+      "Tải trọng cho phép": "8.700 kg",
+      "Dung tích xi-lanh": "6.690 cc",
+      "Động cơ": "Cummins ISD270-50 (270 Mã lực)"
+    },
+    "specialSpecs": {
+      "Thiết bị cẩu gập": "Sany Palfinger SPK32080 (Công nghệ Châu Âu)",
+      "Sức nâng tối đa": "12.000 kg (12 Tấn)"
+    },
+    "faqs": [
+      {
+        "question": "Ưu điểm của cẩu gập Palfinger 12 tấn là gì?",
+        "answer": "Gập gọn sau cabin giúp trọng tâm xe thấp và không chiếm chiều dài thùng hàng."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cau-tu-hanh-dongfeng-kr180-soosan-5-2-tan",
+    "name": "Xe Tải Dongfeng KR180 Gắn Cẩu Soosan 5.2 Tấn (SCS525)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "subKey": "cau-truc",
+    "brand": "Dongfeng",
+    "price": 1750000000,
+    "promo": "Hỗ trợ vay 80% + Tặng bảo hiểm TNDS & Định vị phù hiệu vận tải",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe tải Dongfeng KR180 động cơ Cummins 180HP kết hợp cẩu Soosan 5.2 tấn 5 đốt (SCS525), tải trọng chở hàng đạt 6.650 kg.",
+    "description": "I. Đánh giá Xe Cẩu Dongfeng KR180 Cẩu Soosan 5.2 Tấn\nĐộng cơ Cummins ISB180-50 dung tích 5.900 cc bền bỉ kết hợp cẩu Hàn Quốc Soosan SCS525 5 đốt vươn xa.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 7080000,
+    "insuranceTNDS": 3520000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng KR180 (Nhập khẩu)",
+      "Tải trọng cho phép chở": "6.650 kg",
+      "Dung tích xi-lanh": "5.900 cc",
+      "Động cơ": "Cummins ISB180-50 (180 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu tự hành": "Soosan SCS525 (Hàn Quốc)",
+      "Sức nâng lớn nhất": "5.200 kg (5.2 Tấn - 5 đốt)"
+    },
+    "faqs": [
+      {
+        "question": "Xe Dongfeng KR180 gắn cẩu Soosan 5.2 tấn còn tải trọng bao nhiêu?",
+        "answer": "Tải trọng cho phép chở hàng là 6.650 kg."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cau-tu-hanh-dongfeng-captain-c-unic-5-tan",
+    "name": "Xe Cẩu Tự Hành Dongfeng Captain C Gắn Cẩu Unic 5 Tấn (URV555)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "subKey": "cau-truc",
+    "brand": "Dongfeng",
+    "price": 1620000000,
+    "promo": "Tặng 100% lệ phí trước bạ + Giao xe tận nơi toàn miền Nam",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe tải trung Dongfeng Captain C động cơ Yuchai 170HP gắn cần cẩu Nhật Bản UNIC URV555 (5 tấn 5 khúc), tải trọng 6.950 kg.",
+    "description": "I. Điểm sáng phân khúc cẩu 5 tấn tầm trung\nKết hợp động cơ Yuchai YC4S170-50 (3.767 cc) tiết kiệm dầu và cẩu UNIC URV555 5 khúc chính xác.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 7080000,
+    "insuranceTNDS": 3520000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng Captain C",
+      "Tải trọng cho phép chở": "6.950 kg",
+      "Dung tích xi-lanh": "3.767 cc",
+      "Động cơ": "Yuchai YC4S170-50 (170 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu tự hành": "UNIC URV555 (5 Tấn - 5 khúc)",
+      "Sức nâng lớn nhất": "5.050 kg"
+    },
+    "faqs": [
+      {
+        "question": "Cẩu Unic URV555 có mấy khúc?",
+        "answer": "Model UNIC URV555 trang bị 5 khúc vươn dài linh hoạt."
+      }
+    ]
+  },
+  {
+    "slug": "dau-keo-howo-th7-440hp-gan-cau-palfinger-10-tan",
+    "name": "Đầu Kéo Howo TH7 440HP Gắn Cẩu Gập Palfinger 10 Tấn (SPK23500-C)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Ben & Xe Nặng Khác",
+    "subKey": "xe-nang-khac",
+    "brand": "Howo",
+    "price": 2680000000,
+    "promo": "Hỗ trợ đăng kiểm trọn gói + Vay ngân hàng/Thuê tài chính 80%",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Đầu kéo Howo Sitrak TH7 440HP động cơ công nghệ MAN Đức gắn cẩu gập Palfinger 10 tấn, vừa kéo sơ-mi rơ-moóc vừa tự cẩu hàng.",
+    "description": "I. Giải pháp '2 trong 1' cho vận tải siêu trường\nĐộng cơ MC11.40-50 dung tích 10.518 cc (440HP) kết hợp cẩu gập Palfinger SPK23500-C 10 tấn.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 12480000,
+    "insuranceTNDS": 5280000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Đầu kéo Howo Sitrak TH7 (6x4)",
+      "Tải trọng": "11.000 kg (Kéo theo rơ-moóc tải nặng)",
+      "Dung tích xi-lanh": "10.518 cc",
+      "Động cơ": "MC11.40-50 (440 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu gập": "Palfinger SPK23500-C (10 Tấn)"
+    },
+    "faqs": [
+      {
+        "question": "Đầu kéo Howo TH7 gắn cẩu gập có kéo moóc sàn bình thường không?",
+        "answer": "Hoàn toàn được vì cẩu gập gọn sát sau cabin."
+      }
+    ]
+  },
+  {
+    "slug": "dau-keo-faw-j6p-gan-cau-palfinger-10-tan",
+    "name": "Đầu Kéo FAW J6P 6x4 Gắn Cẩu Gập Palfinger 10 Tấn (SPK23500-C)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Ben & Xe Nặng Khác",
+    "subKey": "xe-nang-khac",
+    "brand": "FAW",
+    "price": 2550000000,
+    "promo": "Hỗ trợ đăng kiểm trọn gói + Vay ngân hàng/Thuê tài chính 80%",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe đầu kéo FAW J6P 6x4 động cơ FAWED 370HP gắn cẩu gập Palfinger 10 tấn SPK23500-C, tải trọng 13.200 kg.",
+    "description": "I. Giải pháp '2 trong 1' vận chuyển & nâng hạ đỉnh cao\nĐầu kéo FAW J6P 6x4 trang bị động cơ CA6DL3-37E5 dung tích 8.600 cc siêu bền bỉ kết hợp cẩu gập Palfinger 10 tấn.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 12480000,
+    "insuranceTNDS": 5280000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Đầu kéo FAW J6P (6x4)",
+      "Tải trọng": "13.200 kg",
+      "Dung tích xi-lanh": "8.600 cc",
+      "Động cơ": "CA6DL3-37E5 (FAWED - 370 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu gập": "Palfinger SPK23500-C (10 Tấn)"
+    },
+    "faqs": [
+      {
+        "question": "Đầu kéo FAW J6P gắn cẩu 10 tấn dùng động cơ gì?",
+        "answer": "Sử dụng động cơ FAWED CA6DL3-37E5 dung tích 8.600 cc cực kỳ tiết kiệm nhiên liệu."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-16-cho-jac-sunray",
+    "name": "Xe Khách JAC Sunray Minibus 16 Chỗ Cao Cấp (Động Cơ Cummins 2.8L)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 16 Chỗ",
+    "subKey": "16-cho",
+    "brand": "JAC",
+    "price": 850000000,
+    "promo": "Hỗ trợ 100% phí trước bạ + Tặng định vị GPS & Phù hiệu hợp đồng du lịch",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe khách minibus 16 chỗ JAC Sunray thế hệ mới: Động cơ Cummins 2.8L bền bỉ, lốp đôi sau an toàn, trả trước chỉ từ 230 triệu nhận xe.",
+    "description": "I. Tổng quan Xe Khách JAC Sunray Minibus 16 Chỗ\nKích thước 5.990 x 2.100 x 2.645 mm, động cơ Cummins HFC4DE1-1D 2.8L, điều hòa 8000W, phanh ABS + EBD, bảo hành 4 năm hoặc 150.000 km.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3200000,
+    "chassisSpecs": {
+      "Số chỗ ngồi": "16 chỗ",
+      "Kích thước tổng thể": "5.990 x 2.100 x 2.645 mm",
+      "Động cơ": "Cummins HFC4DE1-1D (2.8L Turbo)"
+    },
+    "specialSpecs": {
+      "Hệ thống phanh": "Đĩa trước, tang trống sau + ABS & EBD",
+      "Lốp sau": "Bánh đôi 195R15C ổn định cao"
+    },
+    "faqs": [
+      {
+        "question": "Mua xe JAC Sunray 16 chỗ trả góp cần trả trước bao nhiêu?",
+        "answer": "Chỉ cần đầu tư từ 230 triệu đồng là có thể nhận xe."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-16-cho-hyundai-solati",
+    "name": "Xe Khách Hyundai Solati 16 Chỗ Cao Cấp (Động Cơ Diesel 2.5L)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 16 Chỗ",
+    "subKey": "16-cho",
+    "brand": "Hyundai",
+    "price": 1080000000,
+    "promo": "Hỗ trợ 100% phí trước bạ + Tặng camera hành trình & Phù hiệu hợp đồng du lịch",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Hyundai Solati 16 chỗ sở hữu kích thước rộng nhất phân khúc (6.195 x 2.038 x 2.740 mm), động cơ Diesel 2.5L CRDi 170 mã lực.",
+    "description": "I. Tổng quan Xe Khách Hyundai Solati 16 Chỗ\nĐộng cơ D4CB 2.5L VGT 170HP kết hợp hộp số sàn 6 cấp, phanh đĩa 4 bánh ABS.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3200000,
+    "chassisSpecs": {
+      "Số chỗ ngồi": "16 chỗ ngồi",
+      "Kích thước tổng thể": "6.195 x 2.038 x 2.740 mm",
+      "Động cơ": "Diesel 2.5L CRDi (170 Mã lực)"
+    },
+    "specialSpecs": {
+      "Hộp số": "Số sàn 6 cấp",
+      "Hệ thống phanh": "Phanh đĩa 4 bánh tích hợp ABS"
+    },
+    "faqs": [
+      {
+        "question": "Hyundai Solati 16 chỗ có rộng hơn các xe cùng phân khúc không?",
+        "answer": "Có, đây là mẫu xe có kích thước lớn nhất phân khúc 16 chỗ tại Việt Nam."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-hyundai-solati-limousine",
+    "name": "Xe Khách Hyundai Solati Độ Limousine Hạng Sang (Nội Thất Thương Gia)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 16 Chỗ",
+    "subKey": "16-cho",
+    "brand": "Hyundai",
+    "price": 1350000000,
+    "promo": "Hỗ trợ 100% lệ phí trước bạ + Tặng gói trang trí nội thất VIP & Phù hiệu hợp đồng",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Chuyên cơ mặt đất Hyundai Solati độ Limousine VIP: Ghế thương gia chỉnh điện massage, trần sao LED, màn hình lớn và tủ lạnh mini.",
+    "description": "I. Tổng quan Hyundai Solati Limousine\nNâng cấp toàn diện khoang hành khách chuẩn 5 sao phục vụ lữ hành cao cấp, khách sạn, resort và đưa đón chuyên gia.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3500000,
+    "chassisSpecs": {
+      "Model cơ sở": "Hyundai Solati Limousine VIP",
+      "Động cơ": "D4CB, 2.5L CRDi Diesel (170 PS, Euro 5)"
+    },
+    "specialSpecs": {
+      "Nội thất Limousine": "Ghế VIP chỉnh điện/massage, trần ánh sao, âm thanh vòm, tủ lạnh mini"
+    },
+    "faqs": [
+      {
+        "question": "Hyundai Solati Limousine có những trang bị cao cấp gì?",
+        "answer": "Trang bị ghế VIP massage chỉnh điện, trần sao, TV thông minh, tủ lạnh và cổng sạc riêng từng ghế."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-29-cho-hyundai-county",
+    "name": "Xe Khách Hyundai County 29 Chỗ Thế Hệ Mới (Động Cơ D4GA Tiêu Chuẩn)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 29-34 Chỗ",
+    "subKey": "29-cho",
+    "brand": "Hyundai",
+    "price": 1390000000,
+    "promo": "Hỗ trợ 100% lệ phí trước bạ + Tặng camera hành trình Nghị định 10 & Phù hiệu hợp đồng",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Hyundai County 29 chỗ thế hệ mới thân dài 7.62m rộng rãi, động cơ D4GA 3.933 cc bền bỉ và tiết kiệm nhiên liệu.",
+    "description": "I. Tổng quan Hyundai County 29 Chỗ\nDòng xe quốc dân chuyên chạy hợp đồng, đưa đón học sinh và nhân viên với độ bền vượt trội và khả năng giữ giá cao.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3643000,
+    "chassisSpecs": {
+      "Số chỗ ngồi": "29 chỗ ngồi",
+      "Kích thước tổng thể": "7.620 x 2.040 x 2.810 mm",
+      "Động cơ": "Diesel D4GA, 3.933 cc"
+    },
+    "specialSpecs": {
+      "Hộp số": "Số sàn 5 tiến, 1 lùi"
+    },
+    "faqs": [
+      {
+        "question": "Hyundai County 29 chỗ mới có cải tiến gì?",
+        "answer": "Thân xe kéo dài 7.62m giúp tăng khoảng để chân và hầm hành lý rộng hơn."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-kinglong-nova-82y-29-cho",
+    "name": "Xe Khách Kinglong Nova 82Y 29 Chỗ Bóng Hơi Cao Cấp (Weichai 220HP)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 29-34 Chỗ",
+    "subKey": "29-cho",
+    "brand": "Kinglong",
+    "price": 1650000000,
+    "promo": "Hỗ trợ 100% lệ phí trước bạ + Tặng camera hành trình Nghị định 10 & Phù hiệu hợp đồng",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Kinglong Nova 82Y-29SA thân dài 8.3m, trang bị hệ thống treo 6 bầu hơi êm ái, động cơ Weichai 220PS Euro 5 và hộp số FAST.",
+    "description": "I. Tổng quan Kinglong Nova 82Y 29 Chỗ Bóng Hơi\nSở hữu kích thước 8.300 x 2.480 x 3.390 mm cùng 6 bầu hơi khí nén và hầm hành lý 3.02 m³.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3643000,
+    "chassisSpecs": {
+      "Số chỗ ngồi": "29 chỗ ngồi",
+      "Kích thước tổng thể": "8.300 x 2.480 x 3.390 mm",
+      "Động cơ": "Weichai WP4.6NQ220E5 (220 PS)"
+    },
+    "specialSpecs": {
+      "Hệ thống treo": "Khí nén 6 bầu hơi (2 trước, 4 sau)",
+      "Khoang hành lý": "3.02 m³ phủ nhôm nhám"
+    },
+    "faqs": [
+      {
+        "question": "Kinglong Nova 82Y 29 chỗ dùng hệ thống treo gì?",
+        "answer": "Trang bị hệ thống treo khí nén 6 bầu hơi êm ái chuẩn du lịch."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-kinglong-nova-82y-34-cho",
+    "name": "Xe Khách Kinglong Nova 82Y 34 Chỗ Bóng Hơi Cao Cấp (Động Cơ Weichai 220HP)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 29-34 Chỗ",
+    "subKey": "34-cho",
+    "brand": "Kinglong",
+    "price": 1850000000,
+    "promo": "Hỗ trợ 100% lệ phí trước bạ + Tặng camera hành trình Nghị định 10 & Phù hiệu hợp đồng",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Kinglong Nova 82Y 34SA trang bị 34 chỗ ngồi rộng rãi, treo khí nén 6 bầu hơi, động cơ Weichai 220PS Euro 5, mô-men xoắn 800 Nm.",
+    "description": "I. Tổng quan Kinglong Nova 82Y 34 Chỗ Bóng Hơi\nKhoảng cách hàng ghế rộng 860mm, lối đi 390mm sàn vân gỗ, màn hình LCD 22 inch ổ cứng 500GB, sạc USB Type A & C từng hàng ghế.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3950000,
+    "chassisSpecs": {
+      "Số chỗ ngồi": "34 chỗ (33 khách + 1 lái)",
+      "Kích thước tổng thể": "8.300 x 2.480 x 3.390 mm",
+      "Động cơ": "Weichai WP4.6NQ220E5 (4.580 cc - 220 PS)"
+    },
+    "specialSpecs": {
+      "Hệ thống treo": "Khí nén 6 bầu hơi (2 trước, 4 sau)",
+      "Hộp số": "FAST 6DS80T (6 tiến, 1 lùi)"
+    },
+    "faqs": [
+      {
+        "question": "Kinglong Nova 82Y 34 chỗ bảo hành bao lâu?",
+        "answer": "Bảo hành chính hãng 24 tháng hoặc 150.000 km."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-29-cho-thaco-meadow-tb87s",
+    "name": "Xe Khách 29 Chỗ Bầu Hơi Cao Cấp (Động Cơ Weichai Euro 5)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 29-34 Chỗ",
+    "subKey": "29-cho",
+    "brand": "Weichai",
+    "price": 1720000000,
+    "promo": "Tặng gói phủ gầm + Camera hành trình Nghị định 10 + Phù hiệu Hợp đồng",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe khách 29 chỗ bầu hơi cao cấp động cơ Weichai WP5.220E51 (220HP) đặt sau, 6 bầu hơi êm ái, hầm hành lý 3.8 m³.",
+    "description": "I. Chuẩn mực xe khách 29 chỗ bầu hơi\nTrang bị phanh ABS kết hợp phanh điện từ Terca hỗ trợ đổ đèo an toàn, ghế Âu cao cấp.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 3643000,
+    "chassisSpecs": {
+      "Số chỗ ngồi": "29 chỗ",
+      "Kích thước tổng thể": "8.730 x 2.300 x 3.220 mm",
+      "Động cơ": "Weichai WP5.220E51 (220 HP)"
+    },
+    "specialSpecs": {
+      "Hệ thống treo": "6 bầu hơi (Air Suspension)",
+      "Hệ thống an toàn": "Phanh ABS + Phanh điện từ Terca"
+    },
+    "faqs": [
+      {
+        "question": "Thủ tục mua xe khách 29 chỗ trả góp cần gì?",
+        "answer": "Hỗ trợ vay đến 80% cho cá nhân và doanh nghiệp du lịch."
+      }
+    ]
+  },
+  {
+    "slug": "xe-khach-hyundai-universe-47-cho",
+    "name": "Xe Khách Hạng Sang Hyundai Universe Prestige 47 Chỗ (Động Cơ 410HP)",
+    "category": "xe-khach",
+    "categoryName": "Ô Tô Khách",
+    "subCategory": "Xe Khách 47 Chỗ & Giường Nằm",
+    "subKey": "47-cho",
+    "brand": "Hyundai",
+    "price": 3650000000,
+    "promo": "Hỗ trợ 100% lệ phí trước bạ + Tặng camera hành trình Nghị định 10 & Phù hiệu hợp đồng",
+    "images": [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Biểu tượng đỉnh cao xe khách 47 chỗ: Hyundai Universe Prestige khung gầm Monocoque liền khối, động cơ 410 mã lực mạnh mẽ.",
+    "description": "I. Tổng quan Hyundai Universe Prestige 47 Chỗ\nKích thước 12.060 x 2.495 x 3.535 mm, động cơ Diesel 410HP, treo bầu hơi êm ái và hầm hành lý xuyên suốt cỡ lớn.",
+    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 4850000,
+    "chassisSpecs": {
+      "Số chỗ ngồi": "47 chỗ ngồi cao cấp",
+      "Kích thước tổng thể": "12.060 x 2.495 x 3.535 mm",
+      "Động cơ": "Diesel Turbo tăng áp (410 Mã lực)"
+    },
+    "specialSpecs": {
+      "Kết cấu khung gầm": "Monocoque liền khối tiêu chuẩn Châu Âu",
+      "Hệ thống treo": "Bầu hơi kết hợp giảm chấn thủy lực"
+    },
+    "faqs": [
+      {
+        "question": "Hyundai Universe 47 chỗ hỗ trợ trả góp bao nhiêu phần trăm?",
+        "answer": "Hỗ trợ vay ngân hàng hoặc thuê tài chính lên đến 75% - 80% giá trị xe."
+      }
+    ]
+  }
+]

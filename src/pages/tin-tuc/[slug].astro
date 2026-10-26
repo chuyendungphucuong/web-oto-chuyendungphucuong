@@ -1,82 +1,107 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import posts from '../../data/posts.json';
+import postsData from '../../data/posts.json';
 
 export function getStaticPaths() {
+  const posts = Array.isArray(postsData) ? postsData : [];
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: { post },
   }));
 }
 
-const { post } = Astro.props;
+const { slug } = Astro.params;
+const posts = Array.isArray(postsData) ? postsData : [];
+const post = Astro.props?.post || posts.find((p: any) => p.slug === slug);
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": post.title,
-  "description": post.summary,
-  "image": post.image,
-  "datePublished": post.publishedDate,
-  "author": { "@type": "Person", "name": post.author }
-};
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+// Tự động làm sạch các ký tự HTML bị mã hóa kép (&lt;p&gt;) nếu có từ lần lưu trước
+const cleanContent = (post.content || '')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>')
+  .replace(/&amp;/g, '&');
+
+const related = posts.filter((p: any) => p.slug !== slug).slice(0, 3);
 ---
 
-<BaseLayout title={post.title} description={post.summary} schema={articleSchema}>
-  <article class="max-w-4xl mx-auto px-4 py-10">
-    <nav class="text-sm text-slate-500 mb-6">
-      <a href="/" class="hover:underline">Trang chủ</a> / 
-      <a href="/tin-tuc" class="hover:underline">Kiến Thức & Tin Tức</a> / 
-      <strong class="text-slate-800">{post.category}</strong>
+<BaseLayout title={`${post.title} | Kiến thức Ô Tô Chuyên Dùng Phú Cường`}>
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <nav class="text-sm text-gray-500 mb-6">
+      <a href="/" class="hover:text-blue-600">Trang chủ</a> &gt; 
+      <a href="/tin-tuc" class="hover:text-blue-600">Kiến thức & Tin tức</a> &gt; 
+      <span class="text-gray-900 font-semibold line-clamp-1">{post.category}</span>
     </nav>
 
-    <header class="mb-8">
-      <span class="bg-blue-100 text-blue-900 text-xs font-extrabold px-3 py-1 rounded uppercase">
-        {post.category}
-      </span>
-      <h1 class="text-3xl md:text-4xl font-extrabold text-blue-950 mt-3 mb-4 leading-tight">
-        {post.title}
-      </h1>
-      <div class="flex items-center text-sm text-slate-500 space-x-4">
-        <span>📅 Ngày đăng: {post.publishedDate}</span>
-        <span>✍️ Tác giả: {post.author}</span>
-      </div>
-    </header>
-
-    <div class="mb-8">
-      <img src={post.image} alt={post.title} class="w-full h-96 object-cover rounded-xl shadow-sm border border-slate-200" />
-    </div>
-
-    <!-- Tóm tắt Answer-First cho AI Overviews -->
-    <div class="bg-blue-50 border-l-4 border-blue-900 p-5 rounded-r-lg mb-8 text-slate-700 leading-relaxed font-medium">
-      {post.summary}
-    </div>
-
-    <!-- Nội dung bài viết -->
-    <div class="prose max-w-none text-slate-700 space-y-6 text-base leading-relaxed whitespace-pre-line">
-      {post.content}
-    </div>
-
-    <!-- Khối Câu Hỏi Thường Gặp (FAQ) cho AI Overviews -->
-    <section class="mt-12 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-      <h2 class="text-xl font-extrabold text-blue-950 mb-4">Câu Hỏi Thường Gặp</h2>
-      <div class="space-y-4 text-sm">
-        {post.faqs.map((faq) => (
-          <div class="border-b border-slate-100 pb-3">
-            <h3 class="font-bold text-slate-900">❓ {faq.question}</h3>
-            <p class="text-slate-600 mt-1">{faq.answer}</p>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <article class="lg:col-span-8 bg-white p-6 lg:p-10 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+        <div>
+          <span class="inline-block bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">{post.category}</span>
+          <h1 class="text-2xl lg:text-4xl font-extrabold text-gray-900 leading-snug mb-4">{post.title}</h1>
+          <div class="flex items-center gap-4 text-xs text-gray-500 border-b pb-4">
+            <span>📅 {post.date}</span>
+            <span>✍️ {post.author}</span>
+            <span>👁️ {post.views}</span>
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
 
-    <!-- Khối liên hệ tư vấn cuối bài -->
-    <div class="mt-12 bg-slate-900 text-white p-8 rounded-2xl text-center">
-      <h3 class="text-2xl font-bold mb-2">Cần Tư Vấn Hồ Sơ Cải Tạo & Đóng Thùng Xe?</h3>
-      <p class="text-slate-300 text-sm mb-6">Liên hệ trực tiếp với chuyên viên pháp lý của Ô Tô Chuyên Dùng Phú Cường.</p>
-      <a href="tel:0922777703" class="inline-block bg-red-600 hover:bg-red-700 text-white font-extrabold px-8 py-3 rounded-lg text-lg transition shadow">
-        📞 Hotline Tư Vấn: 0922 77 77 03
-      </a>
+        {post.image && (
+          <div class="overflow-hidden rounded-xl border border-gray-200">
+            <img src={post.image} alt={post.title} class="w-full h-[400px] object-cover" />
+          </div>
+        )}
+
+        {post.summary && (
+          <p class="text-lg font-semibold text-slate-700 bg-slate-50 p-4 rounded-xl border-l-4 border-blue-600 leading-relaxed">
+            {post.summary}
+          </p>
+        )}
+
+        <!-- Render HTML chuẩn xác (biến thẻ <img> thành hình ảnh thật) -->
+        <div 
+          class="prose max-w-none text-gray-800 leading-relaxed space-y-4 text-base [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:border [&_img]:border-gray-200 [&_p]:mb-3" 
+          set:html={cleanContent} 
+        />
+
+        <div class="bg-gradient-to-r from-blue-800 to-blue-900 text-white p-6 rounded-2xl shadow-md mt-8 space-y-4 text-center">
+          <h3 class="text-xl font-bold">Bạn đang cần tư vấn mua xe chuyên dùng trả góp?</h3>
+          <p class="text-sm text-white/90 max-w-xl mx-auto">Liên hệ ngay với Ô Tô Chuyên Dùng Phú Cường để nhận bảng dự toán chi tiết và hỗ trợ thủ tục ngân hàng nhanh chóng.</p>
+          <a href="tel:0922777703" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg text-lg">
+            📞 Hotline tư vấn: 0922 77 77 03
+          </a>
+        </div>
+      </article>
+
+      <aside class="lg:col-span-4 space-y-6">
+        <div class="bg-blue-800 text-white p-6 rounded-2xl shadow-sm space-y-3">
+          <h3 class="font-bold text-lg border-b border-white/20 pb-2">Hỗ trợ nhanh 24/7</h3>
+          <p class="text-sm text-white/90">Giải đáp mọi thắc mắc về kỹ thuật xe chuyên dùng và thủ tục đăng ký, đăng kiểm.</p>
+          <a href="tel:0922777703" class="block bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-center transition">
+            📞 0922 77 77 03
+          </a>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+          <h3 class="font-bold text-gray-900 border-b pb-2 text-base flex items-center gap-2">
+            <span class="w-2 h-5 bg-blue-600 rounded-full"></span> Bài viết liên quan
+          </h3>
+          <div class="space-y-4">
+            {related.map((rel: any) => (
+              <div class="group border-b border-gray-100 pb-3 last:border-0 last:pb-0">
+                <div class="flex items-center justify-between text-xs mb-1">
+                  <span class="text-blue-600 font-semibold">{rel.category}</span>
+                  <span class="text-gray-400">{rel.date}</span>
+                </div>
+                <h4 class="font-semibold text-sm text-gray-800 group-hover:text-blue-600 transition leading-snug">
+                  <a href={`/tin-tuc/${rel.slug}`}>{rel.title}</a>
+                </h4>
+              </div>
+            ))}
+          </div>
+        </div>
+      </aside>
     </div>
-  </article>
+  </main>
 </BaseLayout>

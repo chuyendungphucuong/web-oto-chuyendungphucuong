@@ -1,0 +1,375 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import postsData from '../../../data/posts.json';
+import navData from '../../../data/navigation.json';
+
+const url = new URL(Astro.request.url);
+const slug = url.searchParams.get('slug');
+
+const posts = Array.isArray(postsData) ? postsData : [];
+const post = posts.find((p: any) => p.slug === slug) || null;
+const isEditMode = !!post;
+
+const mainMenu = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
+const newsMenu = mainMenu.find((m: any) => typeof m.url === 'string' && m.url.includes('/tin-tuc'));
+const dynamicPostCategories: string[] = [];
+
+if (newsMenu && Array.isArray(newsMenu.children)) {
+  newsMenu.children.forEach((child: any) => {
+    if (child.title && !child.title.toLowerCase().includes('xem tất cả')) {
+      dynamicPostCategories.push(child.title);
+    }
+  });
+}
+
+const defaultCategories = [
+  'Đánh Giá & So Sánh Xe',
+  'Thủ Tục Pháp Lý & Đăng Kiểm',
+  'Kinh Nghiệm Vận Tải & Đầu Tư',
+  'Tin Tức & Bàn Giao Xe Showroom'
+];
+
+const postCategories = dynamicPostCategories.length > 0 ? dynamicPostCategories : defaultCategories;
+
+const rawPostContent = (post?.content || '')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>');
+---
+
+<AdminLayout title={isEditMode ? "Chỉnh Sửa Bài Viết Tin Tức" : "Viết Bài Viết Mới"} activeTab="posts">
+  <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+
+  <div class="max-w-4xl mx-auto space-y-6 pb-12">
+    <div class="flex items-center justify-between">
+      <a href="/admin/posts" class="text-sm font-bold text-blue-600 hover:underline">&larr; Quay lại danh sách bài viết</a>
+      <button type="button" id="btnSavePost" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-8 py-3 rounded-xl shadow-lg cursor-pointer transition text-sm">
+        💾 {isEditMode ? "LƯU THAY ĐỔI BÀI VIẾT" : "XUẤT BẢN BÀI VIẾT MỚI"}
+      </button>
+    </div>
+
+    <input type="hidden" id="isEditMode" value={isEditMode ? "true" : "false"} />
+
+    <!-- KHỐI TRỢ LÝ AI NHẬP LIỆU NHANH 1-CLICK CHO BÀI VIẾT TIN TỨC -->
+    <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-6 rounded-2xl shadow-lg border border-blue-800 space-y-4">
+      <div class="border-b border-white/15 pb-3">
+        <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded uppercase tracking-wider">⚡ Trợ Lý Tin Tức Siêu Tốc</span>
+        <h2 class="text-base sm:text-lg font-extrabold mt-1">Tự Động Điền Bài Viết Tin Tức Chuẩn SEO & AI Overviews (1-Click)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-sm">
+        <div class="lg:col-span-8 space-y-2">
+          <label class="block text-xs font-bold text-blue-200">
+            Dán "Mã Nhập Liệu Bài Viết (JSON)" từ trợ lý AI vào đây:
+          </label>
+          <textarea 
+            id="aiPostQuickInput" 
+            rows="4" 
+            placeholder='Dán khối mã JSON bài viết vào đây rồi bấm nút "🚀 Tự Động Điền Bài Viết"...'
+            class="w-full p-3 rounded-xl bg-slate-800/90 border border-slate-600 text-white font-mono text-xs focus:border-amber-400 outline-none"
+          ></textarea>
+        </div>
+
+        <div class="lg:col-span-4 flex flex-col justify-end gap-2.5">
+          <button 
+            type="button" 
+            id="btnApplyPostJson" 
+            class="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-3 px-4 rounded-xl shadow-md transition cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-2"
+          >
+            🚀 Tự Động Điền Bài Viết (1-Click)
+          </button>
+          <button 
+            type="button" 
+            id="btnGeneratePostTemplate" 
+            class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl transition cursor-pointer text-xs flex items-center justify-center gap-1.5"
+          >
+            ✍️ Tự Dựng Khung Bài Từ Tiêu Đề
+          </button>
+          <p id="aiPostStatus" class="text-[11px] text-emerald-400 font-bold hidden"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <h2 class="text-base font-bold text-white bg-blue-700 p-3 rounded-xl">Trình Soạn Thảo Bài Viết Chuẩn SEO & AI Overviews</h2>
+      
+      <div class="space-y-4 text-sm">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Tiêu đề bài viết (*):</label>
+          <input type="text" id="inputTitle" value={post?.title || ''} placeholder="Nhập tiêu đề chuẩn SEO..." class="w-full p-3 border rounded-xl font-bold text-slate-900 text-base outline-none focus:ring-2 focus:ring-blue-600" />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Mã định danh URL (Slug) (*):</label>
+            <input type="text" id="inputSlug" value={post?.slug || ''} placeholder="vd: thu-tuc-dang-kiem-xe" class={`w-full p-3 border rounded-xl font-mono text-xs ${isEditMode ? 'bg-slate-100' : ''}`} readonly={isEditMode} />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Chuyên mục bài viết:</label>
+            <select id="inputCategory" class="w-full p-3 border rounded-xl bg-white font-semibold outline-none">
+              {postCategories.map((cat) => (
+                <option value={cat} selected={post?.category?.toLowerCase() === cat.toLowerCase()}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Tác giả:</label>
+            <input type="text" id="inputAuthor" value={post?.author || 'Chuyên gia Phú Cường'} class="w-full p-3 border rounded-xl outline-none" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Ảnh đại diện bài viết (Tự động nén WebP 1200px):</label>
+            <div class="flex gap-2">
+              <input type="text" id="inputImage" value={post?.image || ''} placeholder="/images/posts/..." class="flex-1 p-3 border rounded-xl font-mono text-xs outline-none" />
+              <input type="file" id="fileBannerPost" accept="image/*" class="hidden" />
+              <button type="button" id="btnUploadBanner" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 rounded-xl text-xs cursor-pointer shrink-0 transition">
+                📤 Chọn ảnh
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Tóm tắt ngắn chuẩn AI Overviews (Summary):</label>
+          <textarea id="inputSummary" rows="3" class="w-full p-3 border rounded-xl outline-none">{post?.summary || ''}</textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-2">Nội dung chi tiết (Ảnh chèn vào bài tự động Resize 1200px & đổi tên chuẩn SEO):</label>
+          <div id="editor-container" style="height: 380px; background: white; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+  <script is:inline define:vars={{ savedHtml: rawPostContent }}>
+    const inputTitle = document.getElementById('inputTitle');
+    const inputSlug = document.getElementById('inputSlug');
+    const inputImage = document.getElementById('inputImage');
+    const isEditMode = document.getElementById('isEditMode').value === 'true';
+
+    function makeSlug(str) {
+      return (str || '').toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[đĐ]/g, 'd')
+        .replace(/([^0-9a-z-\s])/g, '')
+        .trim()
+        .replace(/(\s+)/g, '-');
+    }
+
+    if (!isEditMode && inputTitle) {
+      inputTitle.addEventListener('input', () => {
+        inputSlug.value = makeSlug(inputTitle.value);
+      });
+    }
+
+    const fileBanner = document.getElementById('fileBannerPost');
+    document.getElementById('btnUploadBanner')?.addEventListener('click', () => {
+      fileBanner.click();
+    });
+
+    fileBanner?.addEventListener('change', async () => {
+      const file = fileBanner.files[0];
+      if (!file) return;
+      const currentTitle = inputTitle.value.trim() || 'tin-tuc-phu-cuong';
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('title', currentTitle);
+      formData.append('type', 'posts');
+
+      try {
+        const res = await fetch('/api/upload-image', { method: 'POST', body: formData });
+        const result = await res.json();
+        if (result.success) {
+          inputImage.value = result.url;
+        } else {
+          alert('❌ Lỗi tải ảnh: ' + result.message);
+        }
+      } catch (err) {
+        alert('❌ Lỗi kết nối khi tải ảnh đại diện!');
+      }
+    });
+
+    const quill = new Quill('#editor-container', {
+      theme: 'snow',
+      modules: {
+        toolbar: {
+          container: [
+            [{ header: [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ color: [] }, { background: [] }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image'],
+            ['clean']
+          ],
+          handlers: {
+            image: function() {
+              const input = document.createElement('input');
+              input.setAttribute('type', 'file');
+              input.setAttribute('accept', 'image/*');
+              input.click();
+
+              input.onchange = async () => {
+                const file = input.files[0];
+                const currentTitle = inputTitle.value.trim() || 'phu-cuong-auto';
+
+                if (file) {
+                  const formData = new FormData();
+                  formData.append('image', file);
+                  formData.append('title', currentTitle);
+                  formData.append('type', 'posts');
+
+                  try {
+                    const res = await fetch('/api/upload-image', {
+                      method: 'POST',
+                      body: formData
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                      const range = quill.getSelection(true);
+                      quill.insertEmbed(range.index, 'image', result.url);
+                    } else {
+                      alert('❌ Tải ảnh lên thất bại: ' + result.message);
+                    }
+                  } catch (err) {
+                    alert('❌ Lỗi kết nối khi tải ảnh lên!');
+                  }
+                }
+              };
+            }
+          }
+        }
+      }
+    });
+
+    if (savedHtml) {
+      quill.clipboard.dangerouslyPasteHTML(savedHtml);
+    }
+
+    // Nút 1: Tự động điền bài viết từ khối JSON 1-Click
+    document.getElementById('btnApplyPostJson')?.addEventListener('click', () => {
+      const rawText = document.getElementById('aiPostQuickInput').value.trim();
+      const statusEl = document.getElementById('aiPostStatus');
+
+      if (!rawText) {
+        alert('⚠️ Vui lòng dán gói mã JSON bài viết vào ô trước khi bấm!');
+        return;
+      }
+
+      try {
+        const cleanedJson = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+        const data = JSON.parse(cleanedJson);
+
+        if (data.title) {
+          inputTitle.value = data.title;
+          if (!isEditMode) {
+            inputSlug.value = data.slug || makeSlug(data.title);
+          }
+        }
+        if (!isEditMode && data.slug) {
+          inputSlug.value = data.slug;
+        }
+        if (data.author) {
+          document.getElementById('inputAuthor').value = data.author;
+        }
+        if (data.image) {
+          inputImage.value = data.image;
+        }
+        if (data.summary) {
+          document.getElementById('inputSummary').value = data.summary;
+        }
+        if (data.category) {
+          const selectCat = document.getElementById('inputCategory');
+          for (let i = 0; i < selectCat.options.length; i++) {
+            if (selectCat.options[i].value.toLowerCase().includes(data.category.toLowerCase())) {
+              selectCat.selectedIndex = i;
+              break;
+            }
+          }
+        }
+        if (data.content) {
+          quill.root.innerHTML = data.content;
+        }
+
+        if (statusEl) {
+          statusEl.classList.remove('hidden');
+          statusEl.innerText = '✅ Đã điền tự động toàn bộ bài viết Tin tức! Anh kiểm tra lại rồi bấm Xuất bản nhé.';
+        }
+      } catch (e) {
+        alert('❌ Định dạng mã JSON chưa khớp. Anh hãy copy nguyên khối mã JSON trong khung code nhé!');
+      }
+    });
+
+    // Nút 2: Tự dựng khung bài viết chuẩn SEO từ Tiêu đề đã gõ
+    document.getElementById('btnGeneratePostTemplate')?.addEventListener('click', () => {
+      const title = inputTitle.value.trim() || 'Kinh Nghiệm Chọn Mua & Vận Hành Xe Chuyên Dùng Hiệu Quả';
+      const category = document.getElementById('inputCategory').value;
+      const statusEl = document.getElementById('aiPostStatus');
+
+      if (!inputTitle.value.trim()) {
+        inputTitle.value = title;
+        if (!isEditMode) inputSlug.value = makeSlug(title);
+      }
+
+      document.getElementById('inputSummary').value = `${title} - Phân tích chi tiết từ chuyên gia Ô Tô Phú Cường giúp doanh nghiệp tối ưu chi phí đầu tư, nắm vững quy định đăng kiểm và khai thác vận hành bền bỉ.`;
+
+      quill.root.innerHTML = `
+        <h2>${title}</h2>
+        <p>Trong lĩnh vực vận tải thương mại và khai thác phương tiện chuyên dùng, việc nắm rõ thông tin về <strong>${title.toLowerCase()}</strong> đóng vai trò then chốt giúp chủ xe và doanh nghiệp tối ưu hóa hiệu quả đầu tư cũng như tuân thủ đúng các quy định kỹ thuật hiện hành.</p>
+        <h3>1. Những Điểm Quan Trọng Cần Lưu Ý</h3>
+        <p>Theo đội ngũ kỹ thuật tại <strong>Ô Tô Phú Cường - Nhà Cung Cấp Và Sản Xuất Ô Tô Chuyên Dùng</strong>, khi đánh giá và triển khai thực tế, quý khách hàng cần đặc biệt quan tâm đến các yếu tố cốt lõi sau:</p>
+        <ul>
+          <li><strong>Thông số kỹ thuật &amp; Tải trọng thiết kế:</strong> Đảm bảo sự đồng bộ giữa xe cơ sở (Chassis) và hệ thống thiết bị chuyên dùng theo đúng giấy chứng nhận chất lượng của Cục Đăng kiểm Việt Nam.</li>
+          <li><strong>Hiệu quả khai thác &amp; Chi phí vận hành:</strong> Lựa chọn cấu hình động cơ tiết kiệm nhiên liệu, phụ tùng sẵn có và kết cấu bồn/thùng bền bỉ.</li>
+          <li><strong>Bài toán tài chính &amp; Vay trả góp:</strong> Tận dụng các gói vay ưu đãi từ 50% đến 90% giá trị xe để giữ dòng tiền lưu động cho doanh nghiệp.</li>
+        </ul>
+        <h3>2. Giải Pháp Đồng Hành Trọn Gói Tại Ô Tô Phú Cường</h3>
+        <p>Với hệ thống 3 Showroom và Trạm dịch vụ quy mô lớn tại <strong>TP. Hồ Chí Minh, Tiền Giang và An Giang</strong>, <strong>Ô Tô Phú Cường</strong> cam kết hỗ trợ trọn gói từ khâu tư vấn thiết kế đóng mới, hoàn thiện hồ sơ đăng kiểm đến bảo hành – cứu hộ kỹ thuật 24/7.</p>
+        <p>Quý khách hàng cần tư vấn chi tiết hơn hoặc nhận bảng tính giá lăn bánh kèm lịch trả góp cụ thể, vui lòng liên hệ trực tiếp Hotline/Zalo: <strong>0922 77 77 03 (Mr. Hoàng Vũ)</strong>.</p>
+      `;
+
+      if (statusEl) {
+        statusEl.classList.remove('hidden');
+        statusEl.innerText = '✅ Đã dựng sẵn khung bài viết chuẩn SEO theo tiêu đề!';
+      }
+    });
+
+    document.getElementById('btnSavePost')?.addEventListener('click', async () => {
+      const title = inputTitle.value.trim();
+      const slug = inputSlug.value.trim();
+      const category = document.getElementById('inputCategory').value;
+      const author = document.getElementById('inputAuthor').value.trim();
+      const image = inputImage.value.trim();
+      const summary = document.getElementById('inputSummary').value.trim();
+      const content = quill.root.innerHTML;
+
+      if (!title || !slug) {
+        alert('❌ Vui lòng nhập đầy đủ Tiêu đề và Slug bài viết!');
+        return;
+      }
+
+      const payload = { slug, title, category, author, image, summary, content };
+
+      try {
+        const res = await fetch('/api/update-post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.success) {
+          alert('🎉 ' + result.message);
+          window.location.href = '/admin/posts';
+        } else {
+          alert('❌ Lỗi: ' + result.message);
+        }
+      } catch (err) {
+        alert('❌ Lỗi kết nối đến máy chủ!');
+      }
+    });
+  </script>
+</AdminLayout>

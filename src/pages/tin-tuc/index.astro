@@ -1,148 +1,93 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import posts from '../../data/posts.json';
+import postsData from '../../data/posts.json';
+
+const posts = Array.isArray(postsData) ? postsData : [];
+
+const categories = [
+  'Tất Cả Chuyên Mục',
+  'Đánh Giá & So Sánh Xe',
+  'Thủ Tục Pháp Lý & Đăng Kiểm',
+  'Kinh Nghiệm Vận Tải & Đầu Tư',
+  'Tin Tức & Bàn Giao Xe Showroom'
+];
 ---
 
-<BaseLayout 
-  title="Kiến Thức, Thủ Tục Đăng Kiểm & Tin Tức Xe Chuyên Dùng"
-  description="Tổng hợp kiến thức chuyên ngành xe tải chuyên dùng, thủ tục cải tạo hoán cải, đăng kiểm và cập nhật tin tức bàn giao xe tại Phú Cường."
->
-  <div class="max-w-7xl mx-auto px-4 py-10">
-    <!-- Breadcrumb -->
-    <nav class="text-sm text-slate-500 mb-6">
-      <a href="/" class="hover:underline">Trang chủ</a> / 
-      <a href="/tin-tuc" class="hover:underline">Kiến Thức & Tin Tức</a>
-      <span id="breadcrumbCat" class="hidden"> / <strong id="breadcrumbCatText" class="text-slate-800"></strong></span>
+<BaseLayout title="Kiến Thức & Tin Tức Ô Tô Chuyên Dùng | Phú Cường Auto">
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <nav class="text-sm text-gray-500 mb-6">
+      <a href="/" class="hover:text-blue-600">Trang chủ</a> &gt; 
+      <span class="text-gray-900 font-semibold">Kiến Thức & Tin Tức</span>
     </nav>
 
-    <!-- Tiêu đề trang -->
-    <div class="text-center max-w-3xl mx-auto mb-8">
-      <span id="badgeText" class="bg-blue-100 text-blue-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
-        Góc Chuyên Gia Vận Tải
-      </span>
-      <h1 id="pageTitle" class="text-3xl md:text-4xl font-extrabold text-blue-950 mt-3">
-        Kiến Thức Kỹ Thuật, Thủ Tục Đăng Kiểm & Tin Tức
-      </h1>
-      <p class="text-slate-600 mt-3 text-base">
-        Cập nhật các quy định pháp luật mới nhất về cải tạo xe chuyên dùng, kinh nghiệm đầu tư xe tải cẩu, xe bồn và tin tức hoạt động từ hệ thống Phú Cường.
-      </p>
+    <div class="bg-blue-800 text-white p-8 rounded-2xl mb-8 shadow-md">
+      <h1 class="text-3xl lg:text-4xl font-extrabold mb-2">Kiến Thức Chuyên Ngành & Tin Tức Phú Cường</h1>
+      <p class="text-white/90 text-sm lg:text-base">Cập nhật các thông tin đăng kiểm, đánh giá xe chuyên dùng và kinh nghiệm đầu tư vận tải thực tế.</p>
     </div>
 
-    <!-- Thanh nút bấm lọc nhanh các mục nhỏ ngay trên trang -->
-    <div class="flex flex-wrap justify-center gap-2 mb-10">
-      <a href="/tin-tuc" data-cat-btn="all" class="cat-filter-btn px-4 py-2 rounded-lg text-sm font-bold border transition bg-blue-900 text-white border-blue-900">
-        Tất Cả Bài Viết
-      </a>
-      <a href="/tin-tuc?cat=danh-gia-xe" data-cat-btn="danh-gia-xe" class="cat-filter-btn px-4 py-2 rounded-lg text-sm font-bold border transition bg-white text-slate-700 border-slate-300 hover:border-blue-900">
-        Đánh Giá & So Sánh Xe
-      </a>
-      <a href="/tin-tuc?cat=phap-ly" data-cat-btn="phap-ly" class="cat-filter-btn px-4 py-2 rounded-lg text-sm font-bold border transition bg-white text-slate-700 border-slate-300 hover:border-blue-900">
-        Thủ Tục Pháp Lý & Đăng Kiểm
-      </a>
-      <a href="/tin-tuc?cat=kinh-nghiem" data-cat-btn="kinh-nghiem" class="cat-filter-btn px-4 py-2 rounded-lg text-sm font-bold border transition bg-white text-slate-700 border-slate-300 hover:border-blue-900">
-        Kinh Nghiệm Vận Tải & Đầu Tư
-      </a>
-      <a href="/tin-tuc?cat=tin-tuc" data-cat-btn="tin-tuc" class="cat-filter-btn px-4 py-2 rounded-lg text-sm font-bold border transition bg-white text-slate-700 border-slate-300 hover:border-blue-900">
-        Tin Tức & Bàn Giao Xe
-      </a>
-    </div>
-
-    <!-- Danh sách bài viết -->
-    <div id="postsGrid" class="grid md:grid-cols-3 gap-8">
-      {posts.map((post) => (
-        <article 
-          class="post-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-md transition"
-          data-category={post.category}
+    <!-- Thanh lọc chuyên mục tin tức -->
+    <div class="flex overflow-x-auto gap-2 pb-4 mb-8 no-scrollbar">
+      {categories.map((cat, idx) => (
+        <button 
+          type="button"
+          data-category={cat}
+          class={`cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer ${idx === 0 ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'}`}
         >
+          {cat}
+        </button>
+      ))}
+    </div>
+
+    <!-- Lưới bài viết -->
+    <div id="postGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+      {posts.map((post: any) => (
+        <article class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm flex flex-col justify-between post-card" data-category={post.category}>
           <div>
-            <img src={post.image} alt={post.title} class="w-full h-48 object-cover" />
-            <div class="p-6">
-              <span class="text-xs font-bold text-blue-900 bg-blue-50 px-2.5 py-1 rounded">{post.category}</span>
-              <h2 class="font-bold text-lg text-slate-900 hover:text-red-600 mt-2 mb-3 leading-snug">
+            <div class="overflow-hidden h-60 bg-gray-100">
+              <img src={post.image} alt={post.title} class="w-full h-full object-cover hover:scale-105 transition duration-300" />
+            </div>
+            <div class="p-6 space-y-3">
+              <div class="flex justify-between items-center text-xs">
+                <span class="bg-blue-100 text-blue-800 font-extrabold px-3 py-1 rounded-md">{post.category}</span>
+                <span class="text-gray-400">{post.date}</span>
+              </div>
+              <h2 class="text-xl font-extrabold text-gray-900 leading-snug hover:text-blue-600 transition">
                 <a href={`/tin-tuc/${post.slug}`}>{post.title}</a>
               </h2>
-              <p class="text-slate-600 text-sm line-clamp-3 leading-relaxed">
-                {post.summary}
-              </p>
+              <p class="text-gray-600 text-sm line-clamp-2 leading-relaxed">{post.summary}</p>
             </div>
           </div>
-          <div class="p-6 pt-0 flex justify-between items-center text-xs text-slate-500 border-t border-slate-100 mt-4 pt-4">
-            <span>📅 {post.publishedDate}</span>
-            <a href={`/tin-tuc/${post.slug}`} class="font-bold text-red-600 hover:underline">Xem chi tiết →</a>
+          <div class="p-6 pt-0">
+            <a href={`/tin-tuc/${post.slug}`} class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-bold text-sm transition">
+              Đọc bài viết chi tiết &rarr;
+            </a>
           </div>
         </article>
       ))}
     </div>
+  </main>
 
-    <!-- Thông báo khi mục nhỏ chưa có bài viết -->
-    <div id="emptyState" class="hidden text-center py-16 bg-white rounded-xl border border-slate-200">
-      <p class="text-slate-500 text-base mb-4">Hiện tại chưa có bài viết nào thuộc chuyên mục này.</p>
-      <a href="/tin-tuc" class="inline-block bg-blue-900 text-white font-bold px-6 py-2.5 rounded-lg text-sm">
-        Xem Tất Cả Bài Viết
-      </a>
-    </div>
-  </div>
+  <script is:inline>
+    document.querySelectorAll('.cat-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.cat-tab').forEach(t => {
+          t.className = 'cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer bg-white text-gray-700 border border-gray-200 hover:bg-gray-100';
+        });
+        const target = e.currentTarget;
+        target.className = 'cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer bg-blue-600 text-white shadow-md shadow-blue-600/20';
 
-  <!-- Script tự động đọc ?cat= trên thanh địa chỉ và lọc bài ngay lập tức -->
-  <script>
-    const categoryMap: Record<string, { match: string; title: string }> = {
-      'danh-gia-xe': { match: 'Đánh Giá', title: 'Đánh Giá & So Sánh Xe' },
-      'phap-ly': { match: 'Pháp Lý', title: 'Thủ Tục Pháp Lý & Đăng Kiểm' },
-      'kinh-nghiem': { match: 'Kinh Nghiệm', title: 'Kinh Nghiệm Vận Tải & Đầu Tư' },
-      'tin-tuc': { match: 'Tin Tức', title: 'Tin Tức & Bàn Giao Xe Showroom' }
-    };
+        const selectedCat = target.getAttribute('data-category');
+        const cards = document.querySelectorAll('.post-card');
 
-    function applyCategoryFilter() {
-      const params = new URLSearchParams(window.location.search);
-      const catKey = params.get('cat') || 'all';
-      const config = categoryMap[catKey];
-
-      const cards = document.querySelectorAll('.post-card');
-      const buttons = document.querySelectorAll('.cat-filter-btn');
-      const emptyState = document.getElementById('emptyState');
-      const pageTitle = document.getElementById('pageTitle');
-      const badgeText = document.getElementById('badgeText');
-      const breadcrumbCat = document.getElementById('breadcrumbCat');
-      const breadcrumbCatText = document.getElementById('breadcrumbCatText');
-
-      // Đổi màu nút tab đang được chọn
-      buttons.forEach((btn) => {
-        const el = btn as HTMLElement;
-        if (el.dataset.catBtn === catKey) {
-          el.className = 'cat-filter-btn px-4 py-2 rounded-lg text-sm font-bold border transition bg-blue-900 text-white border-blue-900';
-        } else {
-          el.className = 'cat-filter-btn px-4 py-2 rounded-lg text-sm font-bold border transition bg-white text-slate-700 border-slate-300 hover:border-blue-900';
-        }
+        cards.forEach(card => {
+          const cardCat = card.getAttribute('data-category');
+          if (selectedCat === 'Tất Cả Chuyên Mục' || cardCat === selectedCat) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
       });
-
-      // Cập nhật tiêu đề theo mục nhỏ
-      if (config && pageTitle && badgeText && breadcrumbCat && breadcrumbCatText) {
-        pageTitle.textContent = config.title;
-        badgeText.textContent = `Chuyên Mục: ${config.title}`;
-        breadcrumbCat.classList.remove('hidden');
-        breadcrumbCatText.textContent = config.title;
-      }
-
-      // Lọc các bài viết khớp với mục nhỏ
-      let visibleCount = 0;
-      cards.forEach((card) => {
-        const el = card as HTMLElement;
-        const postCat = (el.dataset.category || '').toLowerCase();
-        const isMatch = !config || postCat.includes(config.match.toLowerCase());
-
-        if (isMatch) {
-          el.style.display = 'flex';
-          visibleCount++;
-        } else {
-          el.style.display = 'none';
-        }
-      });
-
-      if (emptyState) {
-        emptyState.classList.toggle('hidden', visibleCount > 0);
-      }
-    }
-
-    applyCategoryFilter();
+    });
   </script>
 </BaseLayout>

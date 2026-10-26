@@ -1,0 +1,154 @@
+[
+  {
+    "slug": "xe-cuon-ep-rac-isuzu-9-khoi",
+    "name": "Xe Cuốn Ép Rác Môi Trường 9 Khối (Hệ Thống Thủy Lực Cao Cấp)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Ép Rác & Môi Trường",
+    "subKey": "ep-rac",
+    "brand": "Isuzu",
+    "price": 1690000000,
+    "promo": "Hỗ trợ trọn gói hồ sơ thầu môi trường + Bảo hành thùng ép 18 tháng",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe cuốn ép rác chuyên dụng 9 khối đóng bằng thép Perform/Inox chống ăn mòn nước rỉ rác, cơ cấu nạp rác máng xúc hoặc kẹp thùng tự động.",
+    "description": "I. Giải pháp thu gom rác thải đô thị & KCN\nThùng chứa rác biên dạng cong chịu áp lực nén cao, tỷ số nén đạt 1.8 - 2.2 lần giúp tối ưu khối lượng rác chuyên chở trong mỗi chuyến.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 7080000,
+    "insuranceTNDS": 3520000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Isuzu / Hino / Dongfeng tùy chọn",
+      "Thể tích thùng chứa": "9 khối (9 m³)",
+      "Tiêu chuẩn khí thải": "Euro 5"
+    },
+    "specialSpecs": {
+      "Vật liệu thùng ép": "Inox 304 kết hợp thép cường lực chống ăn mòn",
+      "Cơ cấu nạp rác": "Càng gắp thùng rác đa năng / Máng xúc thủy lực"
+    },
+    "faqs": [
+      {
+        "question": "Phú Cường có nhận đóng xe ép rác 6 khối, 9 khối, 14 khối theo hồ sơ thầu không?",
+        "answer": "Có. Xưởng cơ khí Phú Cường nhận thiết kế và đóng mới đầy đủ các dung tích 6 khối, 9 khối, 14 khối, 20 khối chuẩn hồ sơ dự thầu."
+      }
+    ]
+  },
+  {
+    "slug": "xe-tai-jac-n900plus-e5-cho-gia-cam",
+    "name": "Xe Tải JAC N900Plus E5 Chuyên Dùng Chở Gia Cầm (Động Cơ Cummins)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Ben & Xe Nặng Khác",
+    "subKey": "xe-nang-khac",
+    "brand": "JAC",
+    "price": 980000000,
+    "promo": "Đóng thùng Inox chống ăn mòn theo yêu cầu + Hỗ trợ vay 80%",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Giải pháp vận chuyển chăn nuôi thế hệ mới: Xe tải JAC N900Plus Euro 5 động cơ Cummins B4.5EV210 bền bỉ, thùng chở lồng gia cầm thông thoáng.",
+    "description": "I. Thiết kế tối ưu cho ngành chăn nuôi miền Nam\nThùng chuyên dụng chở lồng gia cầm thông thoáng, chống rỉ sét tuyệt đối trước chất thải chăn nuôi, động cơ Cummins 210HP tiết kiệm dầu.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 2002000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "JAC N900Plus E5 (Euro 5)",
+      "Dung tích xi-lanh": "4.460 cc",
+      "Động cơ": "Cummins B4.5EV210 (210 HP)"
+    },
+    "specialSpecs": {
+      "Kết cấu thùng": "Thùng chuyên dụng chở lồng gia cầm thông thoáng",
+      "Vật liệu đóng thùng": "Tùy chọn Inox 304 / Thép mạ kẽm"
+    },
+    "faqs": [
+      {
+        "question": "Xưởng Phú Cường có nhận đóng thùng chở gia súc, gia cầm bằng Inox 304 không?",
+        "answer": "Có. Chúng tôi nhận đóng mới thùng chở gia súc có bửng nâng và thùng chở gia cầm Inox 304 trọn gói đăng kiểm."
+      }
+    ]
+  },
+  {
+    "slug": "dau-keo-howo-th7-440hp-gan-cau-palfinger-10-tan",
+    "name": "Đầu Kéo Howo TH7 440HP Gắn Cẩu Gập Palfinger 10 Tấn (SPK23500-C)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Ben & Xe Nặng Khác",
+    "subKey": "xe-nang-khac",
+    "brand": "Howo",
+    "price": 2680000000,
+    "promo": "Hỗ trợ đăng kiểm trọn gói + Vay ngân hàng/Thuê tài chính 80%",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Đầu kéo Howo Sitrak TH7 440HP động cơ công nghệ MAN Đức gắn cẩu gập Palfinger 10 tấn, vừa kéo sơ-mi rơ-moóc vừa tự cẩu hàng.",
+    "description": "I. Giải pháp '2 trong 1' cho vận tải siêu trường\nĐộng cơ MC11.40-50 dung tích 10.518 cc (440HP) kết hợp cẩu gập Palfinger SPK23500-C 10 tấn.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 12480000,
+    "insuranceTNDS": 5280000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Đầu kéo Howo Sitrak TH7 (6x4)",
+      "Tải trọng": "11.000 kg (Kéo theo rơ-moóc tải nặng)",
+      "Dung tích xi-lanh": "10.518 cc",
+      "Động cơ": "MC11.40-50 (440 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu gập": "Palfinger SPK23500-C (10 Tấn)"
+    },
+    "faqs": [
+      {
+        "question": "Đầu kéo Howo TH7 gắn cẩu gập có kéo moóc sàn bình thường không?",
+        "answer": "Hoàn toàn được vì cẩu gập gọn sát sau cabin."
+      }
+    ]
+  },
+  {
+    "slug": "dau-keo-faw-j6p-gan-cau-palfinger-10-tan",
+    "name": "Đầu Kéo FAW J6P 6x4 Gắn Cẩu Gập Palfinger 10 Tấn (SPK23500-C)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Ben & Xe Nặng Khác",
+    "subKey": "xe-nang-khac",
+    "brand": "FAW",
+    "price": 2550000000,
+    "promo": "Hỗ trợ đăng kiểm trọn gói + Vay ngân hàng/Thuê tài chính 80%",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe đầu kéo FAW J6P 6x4 động cơ FAWED 370HP gắn cẩu gập Palfinger 10 tấn SPK23500-C, tải trọng 13.200 kg.",
+    "description": "I. Giải pháp '2 trong 1' vận chuyển & nâng hạ đỉnh cao\nĐầu kéo FAW J6P 6x4 trang bị động cơ CA6DL3-37E5 dung tích 8.600 cc siêu bền bỉ kết hợp cẩu gập Palfinger 10 tấn.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 12480000,
+    "insuranceTNDS": 5280000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Đầu kéo FAW J6P (6x4)",
+      "Tải trọng": "13.200 kg",
+      "Dung tích xi-lanh": "8.600 cc",
+      "Động cơ": "CA6DL3-37E5 (FAWED - 370 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu gập": "Palfinger SPK23500-C (10 Tấn)"
+    },
+    "faqs": [
+      {
+        "question": "Đầu kéo FAW J6P gắn cẩu 10 tấn dùng động cơ gì?",
+        "answer": "Sử dụng động cơ FAWED CA6DL3-37E5 dung tích 8.600 cc cực kỳ tiết kiệm nhiên liệu."
+      }
+    ]
+  }
+]

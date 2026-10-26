@@ -1,0 +1,81 @@
+[
+  {
+    "slug": "xe-bon-nuoc-dongfeng-14-khoi",
+    "name": "Xe Bồn Chở Nước Dongfeng 14 Khối (Phun Nước Rửa Đường, Tưới Cây)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Bồn Chuyên Dùng",
+    "subKey": "bon-nuoc",
+    "brand": "Dongfeng",
+    "price": 1780000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng bộ vòi phun áp lực cao & Định vị GPS",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe bồn chở nước Dongfeng 14 khối (14.000 lít) nhập khẩu nguyên chiếc, động cơ Cummins ISD270-50 (270HP) cùng hệ thống bơm phun rửa đường, tưới cây.",
+    "description": "I. Tổng quan Xe Bồn Nước Dongfeng 14 Khối\nDung tích 14.000 lít, tải trọng 13.500 kg, động cơ Cummins 6.690 cc (270HP), trang bị béc phun mỏ vịt trước, giàn tưới sau và súng phun cao áp.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 8900000,
+    "insuranceTNDS": 4330000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng nhập khẩu nguyên chiếc",
+      "Tải trọng cho phép chở": "13.500 kg",
+      "Dung tích xi-lanh": "6.690 cc",
+      "Động cơ": "ISD270-50 (Cummins - 270 Mã lực)"
+    },
+    "specialSpecs": {
+      "Dung tích bồn chứa": "14 Khối (14.000 lít)",
+      "Hệ thống chuyên dùng": "Bơm ly tâm + Vòi phun rửa đường, tưới cây & Súng cao áp"
+    },
+    "faqs": [
+      {
+        "question": "Xe bồn nước Dongfeng 14 khối có dung tích thực tế bao nhiêu?",
+        "answer": "Dung tích định mức là 14 khối (14.000 lít)."
+      }
+    ]
+  },
+  {
+    "slug": "xe-bon-hut-chat-thai-foton-9-khoi",
+    "name": "Xe Bồn Hút Chất Thải Foton 9 Khối Nhập Khẩu (Động Cơ Yuchai 6 Máy)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Bồn Chuyên Dùng",
+    "subKey": "bon-hut-chat-thai",
+    "brand": "Foton",
+    "price": 1520000000,
+    "promo": "Tặng bơm chân không dự phòng + Hỗ trợ đăng kiểm hồ sơ môi trường trọn gói",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe bồn hút chất thải Foton 9 khối nhập khẩu nguyên chiếc, tải trọng 7.570 kg, trang bị động cơ 6 máy Yuchai YC6JA220-50 siêu khỏe.",
+    "description": "I. Giới thiệu Xe Bồn Hút Chất Thải Foton 9 Khối\nPhục vụ thu gom, hút và vận chuyển chất thải lỏng, bùn hầm cầu. Bồn thép hợp kim dày 6mm chống ăn mòn, bơm hút chân không vòng nước công suất lớn kết hợp ben thủy lực nâng hạ bồn.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 7080000,
+    "insuranceTNDS": 3520000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Foton chuyên dụng môi trường",
+      "Tải trọng cho phép": "7.570 kg",
+      "Dung tích xi-lanh": "6.870 cc",
+      "Động cơ": "Yuchai YC6JA220-50 (220 HP)"
+    },
+    "specialSpecs": {
+      "Dung tích bồn chứa": "9 khối (9 m³) thép dày 6 mm",
+      "Hệ thống bơm": "Bơm chân không vòng nước lực hút mạnh",
+      "Cơ cấu xả thải": "Ben thủy lực nâng bồn + Mở nắp hậu tự động"
+    },
+    "faqs": [
+      {
+        "question": "Xe bồn hút chất thải Foton 9 khối bảo hành bao lâu?",
+        "answer": "Bảo hành chính hãng 12 tháng tại 3 chi nhánh TP.HCM, Tiền Giang và An Giang."
+      }
+    ]
+  }
+]

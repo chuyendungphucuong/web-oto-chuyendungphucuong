@@ -1,0 +1,197 @@
+[
+  {
+    "slug": "xe-cau-tu-hanh-faw-jh6-4-chan-soosan-15-tan",
+    "name": "Xe Cẩu Tự Hành FAW JH6 4 Chân – Gắn Cẩu Soosan 15 Tấn (SCS1516S)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "subKey": "cau-truc",
+    "brand": "FAW",
+    "price": 3350000000,
+    "promo": "Tặng 100% phí trước bạ (2%) + Hồ sơ thiết kế & Kiểm định an toàn cẩu",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Gã khổng lồ nâng hạ hạng nặng: Xe tải FAW JH6 4 chân động cơ 370HP gắn cẩu Soosan 15 tấn (SCS1516S) Hàn Quốc, tải trọng chở 9.150 kg.",
+    "description": "I. Tổng quan Xe Cẩu FAW JH6 4 Chân Gắn Cẩu Soosan 15 Tấn\nGiải pháp nâng hạ siêu trọng cho công trình lớn, kết hợp xe nền FAW JH6 động cơ CA6DL3-37E5 (8.600 cc) và cẩu Hàn Quốc Soosan SCS1516S.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 12480000,
+    "insuranceTNDS": 4330000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "FAW JH6 4 chân (8x4)",
+      "Tải trọng cho phép chở": "9.150 kg",
+      "Dung tích xi-lanh": "8.600 cc",
+      "Động cơ": "CA6DL3-37E5 (FAWED - 370 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu tự hành": "Soosan SCS1516S (Hàn Quốc)",
+      "Sức nâng lớn nhất": "15.000 kg (15 Tấn)"
+    },
+    "faqs": [
+      {
+        "question": "Tải trọng chở hàng của FAW JH6 4 chân sau khi gắn cẩu 15 tấn là bao nhiêu?",
+        "answer": "Tải trọng cho phép chở hàng hóa là 9.150 kg."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cau-tu-hanh-dongfeng-4-chan-soosan-12-tan",
+    "name": "Xe Cẩu Tự Hành Dongfeng 4 Chân KL340 – Cẩu Soosan 12 Tấn (SCS1516S)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "subKey": "cau-truc",
+    "brand": "Dongfeng",
+    "price": 3250000000,
+    "promo": "Tặng 100% phí trước bạ (2%) + Hồ sơ thiết kế & Kiểm định an toàn cẩu",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Mãnh hổ công trình hạng nặng: Xe tải Dongfeng 4 chân KL340 động cơ Cummins 340HP kết hợp cẩu tự hành Soosan 12 tấn Hàn Quốc, tải trọng chở 10.680 kg.",
+    "description": "I. Tổng quan Xe Cẩu Dongfeng 4 Chân KL340 Cẩu Soosan 12 Tấn\nTrang bị động cơ Cummins ISL9.5-340E51A dung tích 9.460 cc mạnh mẽ, tải trọng hàng hóa 10.680 kg.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 12480000,
+    "insuranceTNDS": 4330000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng KL340 (4 chân - 8x4)",
+      "Tải trọng cho phép chở": "10.680 kg",
+      "Dung tích xi-lanh": "9.460 cc",
+      "Động cơ": "Cummins ISL9.5-340E51A (340 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu tự hành": "Soosan SCS1516S (Hàn Quốc)",
+      "Sức nâng lớn nhất": "12.000 kg (12 Tấn)"
+    },
+    "faqs": [
+      {
+        "question": "Tải trọng chở hàng thực tế của xe Dongfeng 4 chân gắn cẩu Soosan 12 tấn là bao nhiêu?",
+        "answer": "Tải trọng hàng hóa cho phép chở là 10.680 kg."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cau-tu-hanh-dongfeng-3-chan-palfinger-12-tan",
+    "name": "Xe Tải Dongfeng 3 Chân Gắn Cẩu Gập Palfinger 12 Tấn (SPK32080)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "subKey": "cau-gap",
+    "brand": "Dongfeng",
+    "price": 2850000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng định vị GPS & Phù hiệu xe tải nặng",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe tải Dongfeng 3 chân động cơ Cummins ISD270-50 gắn cẩu gập Châu Âu Palfinger 12 tấn SPK32080, tải trọng 8.700 kg.",
+    "description": "I. Ưu thế Cẩu Gập Palfinger 12 Tấn\nCẩu gập gọn sau cabin giúp giữ trọn không gian thùng hàng, kết hợp xe nền Dongfeng 3 chân động cơ Cummins 6.690 cc (270HP).",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 8900000,
+    "insuranceTNDS": 4330000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng 3 chân (6x4) nhập khẩu",
+      "Tải trọng cho phép": "8.700 kg",
+      "Dung tích xi-lanh": "6.690 cc",
+      "Động cơ": "Cummins ISD270-50 (270 Mã lực)"
+    },
+    "specialSpecs": {
+      "Thiết bị cẩu gập": "Sany Palfinger SPK32080 (Công nghệ Châu Âu)",
+      "Sức nâng tối đa": "12.000 kg (12 Tấn)"
+    },
+    "faqs": [
+      {
+        "question": "Ưu điểm của cẩu gập Palfinger 12 tấn là gì?",
+        "answer": "Gập gọn sau cabin giúp trọng tâm xe thấp và không chiếm chiều dài thùng hàng."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cau-tu-hanh-dongfeng-kr180-soosan-5-2-tan",
+    "name": "Xe Tải Dongfeng KR180 Gắn Cẩu Soosan 5.2 Tấn (SCS525)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "subKey": "cau-truc",
+    "brand": "Dongfeng",
+    "price": 1750000000,
+    "promo": "Hỗ trợ vay 80% + Tặng bảo hiểm TNDS & Định vị phù hiệu vận tải",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe tải Dongfeng KR180 động cơ Cummins 180HP kết hợp cẩu Soosan 5.2 tấn 5 đốt (SCS525), tải trọng chở hàng đạt 6.650 kg.",
+    "description": "I. Đánh giá Xe Cẩu Dongfeng KR180 Cẩu Soosan 5.2 Tấn\nĐộng cơ Cummins ISB180-50 dung tích 5.900 cc bền bỉ kết hợp cẩu Hàn Quốc Soosan SCS525 5 đốt vươn xa.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 7080000,
+    "insuranceTNDS": 3520000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng KR180 (Nhập khẩu)",
+      "Tải trọng cho phép chở": "6.650 kg",
+      "Dung tích xi-lanh": "5.900 cc",
+      "Động cơ": "Cummins ISB180-50 (180 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu tự hành": "Soosan SCS525 (Hàn Quốc)",
+      "Sức nâng lớn nhất": "5.200 kg (5.2 Tấn - 5 đốt)"
+    },
+    "faqs": [
+      {
+        "question": "Xe Dongfeng KR180 gắn cẩu Soosan 5.2 tấn còn tải trọng bao nhiêu?",
+        "answer": "Tải trọng cho phép chở hàng là 6.650 kg."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cau-tu-hanh-dongfeng-captain-c-unic-5-tan",
+    "name": "Xe Cẩu Tự Hành Dongfeng Captain C Gắn Cẩu Unic 5 Tấn (URV555)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cẩu Tự Hành",
+    "subKey": "cau-truc",
+    "brand": "Dongfeng",
+    "price": 1620000000,
+    "promo": "Tặng 100% lệ phí trước bạ + Giao xe tận nơi toàn miền Nam",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe tải trung Dongfeng Captain C động cơ Yuchai 170HP gắn cần cẩu Nhật Bản UNIC URV555 (5 tấn 5 khúc), tải trọng 6.950 kg.",
+    "description": "I. Điểm sáng phân khúc cẩu 5 tấn tầm trung\nKết hợp động cơ Yuchai YC4S170-50 (3.767 cc) tiết kiệm dầu và cẩu UNIC URV555 5 khúc chính xác.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 7080000,
+    "insuranceTNDS": 3520000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng Captain C",
+      "Tải trọng cho phép chở": "6.950 kg",
+      "Dung tích xi-lanh": "3.767 cc",
+      "Động cơ": "Yuchai YC4S170-50 (170 HP)"
+    },
+    "specialSpecs": {
+      "Model cẩu tự hành": "UNIC URV555 (5 Tấn - 5 khúc)",
+      "Sức nâng lớn nhất": "5.050 kg"
+    },
+    "faqs": [
+      {
+        "question": "Cẩu Unic URV555 có mấy khúc?",
+        "answer": "Model UNIC URV555 trang bị 5 khúc vươn dài linh hoạt."
+      }
+    ]
+  }
+]

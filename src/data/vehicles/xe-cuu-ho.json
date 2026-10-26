@@ -1,0 +1,119 @@
+[
+  {
+    "slug": "xe-cuu-ho-foton-3-chuc-nang",
+    "name": "Xe Cứu Hộ Giao Thông Foton 3 Chức Năng (Cẩu, Kéo, Chở Tải Trọng 2.8 Tấn)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cứu Hộ Giao Thông",
+    "subKey": "cuu-ho",
+    "brand": "Foton",
+    "price": 1850000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng bộ cáp tời chuyên dụng & Định vị GPS",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe cứu hộ Foton 3 chức năng tích hợp cẩu tự hành Shimei 5 tấn, sàn trượt chở xe 2.8 tấn và càng kéo chữ Y phía sau 10 tấn, động cơ Yuchai 220HP.",
+    "description": "I. Tổng quan Xe Cứu Hộ Foton 3 Chức Năng\nNhập khẩu nguyên chiếc HTW5160TQZPB, tích hợp đồng thời sàn trượt 5.8m, cẩu 5 tấn 5 khúc và càng kéo chữ Y 10 tấn.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 7080000,
+    "insuranceTNDS": 3520000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Foton HTW5160TQZPB nhập khẩu",
+      "Khối lượng chuyên chở": "2.800 kg",
+      "Dung tích xi-lanh": "6.870 cc",
+      "Động cơ": "YC6JA220-50 (Yuchai - 220 Mã lực)"
+    },
+    "specialSpecs": {
+      "Hệ thống chuyên dùng": "Sàn trượt 2.8 tấn + Cẩu Shimei 5 tấn + Càng kéo 10 tấn",
+      "Kích thước sàn chở": "5.800 x 2.470 mm"
+    },
+    "faqs": [
+      {
+        "question": "Sàn trượt của xe cứu hộ Foton chịu được tải trọng bao nhiêu?",
+        "answer": "Sàn trượt chịu tải nâng và chở phương tiện lên đến 2.8 tấn."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cuu-ho-dongfeng-3-chuc-nang",
+    "name": "Xe Cứu Hộ Giao Thông Dongfeng 3 Chức Năng (Cẩu, Kéo, Chở Tải Trọng 3.35 Tấn)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cứu Hộ Giao Thông",
+    "subKey": "cuu-ho",
+    "brand": "Dongfeng",
+    "price": 1650000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng bộ cáp tời chuyên dụng & Định vị GPS",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe cứu hộ Dongfeng 3 chức năng tích hợp cẩu tự hành, sàn trượt chở xe 3.35 tấn và càng kéo phía sau, động cơ Yuchai YC4S160-50 (160HP).",
+    "description": "I. Tổng quan Xe Cứu Hộ Dongfeng 3 Chức Năng\nGiải pháp cứu hộ đa năng cẩu, kéo và chở xe với tải trọng sàn trượt lên đến 3.350 kg, động cơ Yuchai 3.767 cc tiết kiệm nhiên liệu.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 2600000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng nhập khẩu nguyên chiếc",
+      "Tải trọng cho phép chở": "3.350 kg",
+      "Dung tích xi-lanh": "3.767 cc",
+      "Động cơ": "YC4S160-50 (Yuchai - 160 Mã lực)"
+    },
+    "specialSpecs": {
+      "Hệ thống chuyên dùng": "Tích hợp 3 chức năng: Cẩu, Kéo và Chở xe",
+      "Sàn trượt thủy lực": "Tải trọng chở 3.35 tấn"
+    },
+    "faqs": [
+      {
+        "question": "Xe cứu hộ Dongfeng 3 chức năng có tải trọng sàn bao nhiêu?",
+        "answer": "Khối lượng chuyên chở cho phép trên sàn trượt là 3.350 kg."
+      }
+    ]
+  },
+  {
+    "slug": "xe-cuu-ho-foton-aumark-2-chuc-nang-2-45-tan",
+    "name": "Xe Cứu Hộ Giao Thông Foton Aumark 2 Chức Năng (Sàn Trượt & Càng Kéo, Tải 2.45 Tấn)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Cứu Hộ Giao Thông",
+    "subKey": "cuu-ho",
+    "brand": "Foton",
+    "price": 980000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng tời kéo thủy lực & Định vị GPS",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe cứu hộ đô thị Foton Aumark 2 chức năng tích hợp sàn trượt chở xe và càng kéo phía sau, tải trọng 2.45 tấn, động cơ Cummins ISF3.8.",
+    "description": "I. Tổng quan Xe Cứu Hộ Foton Aumark 2 Chức Năng\nThiết kế linh hoạt cho đô thị, tích hợp sàn trượt 5.800 x 2.300 mm và càng kéo sau, động cơ Cummins 3.760 cc.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 2002000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Foton Aumark (Nhập khẩu)",
+      "Tải trọng cho phép chở": "2.450 kg",
+      "Dung tích xi-lanh": "3.760 cc",
+      "Động cơ": "Cummins ISF3.8s5154"
+    },
+    "specialSpecs": {
+      "Hệ thống chuyên dùng": "Sàn trượt chở xe + Càng kéo phía sau",
+      "Kích thước sàn chở": "5.800 x 2.300 mm"
+    },
+    "faqs": [
+      {
+        "question": "Xe cứu hộ Foton Aumark 2.45 tấn phù hợp cứu hộ xe nào?",
+        "answer": "Chuyên cứu hộ xe con 4-7 chỗ, xe du lịch và xe tải nhẹ trong đô thị."
+      }
+    ]
+  }
+]

@@ -1,0 +1,57 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Cài Đặt Bảo Mật & Đổi Mật Khẩu Quản Trị" activeTab="settings">
+  <div class="max-w-md bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+    <h2 class="text-base font-bold text-slate-900 border-b pb-3">🔑 Thay Đổi Mật Khẩu Quản Lý Chung</h2>
+    
+    <form id="changePassForm" class="space-y-4 text-sm">
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Mật khẩu hiện tại:</label>
+        <input type="password" id="oldPass" class="w-full p-3 border rounded-xl" required />
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Mật khẩu mới:</label>
+        <input type="password" id="newPass" class="w-full p-3 border rounded-xl" required />
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Nhập lại mật khẩu mới:</label>
+        <input type="password" id="confirmPass" class="w-full p-3 border rounded-xl" required />
+      </div>
+      <p id="msgStatus" class="text-xs font-bold hidden"></p>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 rounded-xl transition cursor-pointer">
+        Cập Nhật Mật Khẩu Mới
+      </button>
+    </form>
+  </div>
+
+  <script is:inline>
+    document.getElementById('changePassForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const oldP = document.getElementById('oldPass').value;
+      const newP = document.getElementById('newPass').value;
+      const confP = document.getElementById('confirmPass').value;
+      const msg = document.getElementById('msgStatus');
+      const currentSaved = localStorage.getItem('pc_admin_pass') || 'phucuong@2026';
+
+      msg.classList.remove('hidden', 'text-red-600', 'text-emerald-600');
+
+      if (oldP !== currentSaved) {
+        msg.innerText = '❌ Mật khẩu hiện tại không đúng!';
+        msg.classList.add('text-red-600');
+        return;
+      }
+      if (newP !== confP) {
+        msg.innerText = '❌ Mật khẩu mới nhập lại không khớp!';
+        msg.classList.add('text-red-600');
+        return;
+      }
+
+      localStorage.setItem('pc_admin_pass', newP);
+      msg.innerText = '✅ Đã đổi mật khẩu quản trị thành công!';
+      msg.classList.add('text-emerald-600');
+      document.getElementById('changePassForm').reset();
+    });
+  </script>
+</AdminLayout>

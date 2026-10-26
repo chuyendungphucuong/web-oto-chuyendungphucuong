@@ -1,194 +1,329 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import vehicles from '../data/vehicles.json';
+import { allVehicles } from '../data/vehicles.js';
+import postsData from '../data/posts.json';
 
-const formatVND = (price: number) => price.toLocaleString('vi-VN') + ' đ';
+const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
+
+// Ưu tiên xe có isFeatured === true, nếu ít hơn 8 xe thì tự động lấy bù thêm xe trong kho
+const explicitlyFeatured = vehicleList.filter((v: any) => v.isFeatured === true);
+const nonFeatured = vehicleList.filter((v: any) => v.isFeatured !== true);
+const combinedVehicles = [...explicitlyFeatured, ...nonFeatured];
+const safeVehicles = combinedVehicles.slice(0, Math.max(explicitlyFeatured.length, 8));
+
+const coreServices = [
+  { title: "Cứu Hộ Chuyên Dùng 24/7", desc: "Đội ngũ xe sàn trượt và cẩu trực chiến hỗ trợ khẩn cấp mọi lúc mọi nơi.", icon: "🚨", link: "/dich-vu/cuu-ho-chuyen-dung" },
+  { title: "Sửa Chữa Động Cơ & Thủy Lực", desc: "Đại tu động cơ Cummins, Yuchai, Hino và phục hồi hệ thống bơm van.", icon: "⚙️", link: "/dich-vu/sua-xe-chuyen-dung" },
+  { title: "Sửa Chữa & Gia Cố Thùng Bồn", desc: "Hàn vá bồn xitec, gia cố khung xương thùng xe tải, chống rò rỉ.", icon: "🚛", link: "/dich-vu/sua-thung-bon" },
+  { title: "Đăng Kiểm & Cải Tạo Hồ Sơ", desc: "Trọn gói thủ tục thiết kế hoán cải, đăng kiểm và cấp biển số vàng.", icon: "📄", link: "/dich-vu/cai-tao-ho-so" }
+];
+
+// Lấy 6 tin tức mới nhất để chạy ngang
+const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 6) : [];
 ---
 
-<BaseLayout 
-  title="Xe Tải Chuyên Dùng & Ô Tô Khách Chính Hãng Miền Nam"
-  description="Đại lý Ô Tô Chuyên Dùng Phú Cường (TP.HCM, Tiền Giang, An Giang): Phân phối xe tải gắn cẩu, xe ép rác, xe bồn, xe ben và xe khách 16-47 chỗ giá gốc."
->
-  <!-- Banner chính -->
-  <section class="bg-gradient-to-r from-blue-950 to-slate-900 text-white py-12 px-4">
-    <div class="max-w-7xl mx-auto">
-      <span class="bg-amber-500 text-slate-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
-        Hệ thống 3 Showroom: TP.HCM • Tiền Giang • An Giang
-      </span>
-      <h1 class="text-3xl md:text-5xl font-extrabold mt-4 leading-tight">
-        Tổng Kho Xe Tải Chuyên Dùng & Ô Tô Khách Phú Cường
-      </h1>
-      <p class="mt-3 text-slate-300 max-w-2xl text-lg">
-        Chuyên thiết kế đóng mới thùng chuyên dùng (Cẩu, Bồn, Ép rác, Đông lạnh) và phân phối xe khách 16 - 47 chỗ. Hỗ trợ vay 80%, giao xe ngay.
-      </p>
-    </div>
-  </section>
+<BaseLayout title="Ô Tô Chuyên Dùng Phú Cường | Xe Tải, Xe Bồn, Xe Cứu Hộ Hàng Đầu">
+  <style is:inline>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 
-  <!-- ND-ND- -->
-  <section class="max-w-7xl mx-auto px-4 py-12">
-  <!-- Tiêu đề chính chuẩn SEO -->
-  <h1 class="text-3xl md:text-4xl font-extrabold text-blue-950 mb-6">
-    Ô Tô Chuyên Dùng Phú Cường - Đơn Vị Phân Phối & Đóng Thùng Xe Chuyên Dụng Hàng Đầu Miền Nam
-  </h1>
+  <main class="space-y-12 pb-16">
 
-  <!-- Đoạn tóm tắt trực diện cho AI Overviews -->
-  <div class="bg-blue-50 border-l-4 border-blue-900 p-5 rounded-r-lg mb-8 text-slate-700 leading-relaxed text-base">
-    <p>
-      <strong>Ô Tô Chuyên Dùng Phú Cường</strong> với hơn 13 năm kinh nghiệm trong ngành, tự hào là đối tác tin cậy chuyên cung cấp các dòng <strong>xe tải chuyên dùng, xe cẩu, xe bồn, xe ép rác, xe nâng đầu</strong> và ô tô khách chính hãng. Sở hữu hệ thống xưởng đóng thùng chuyên biệt cùng 3 showroom trực thuộc tại <strong>TP.HCM, Tiền Giang và An Giang</strong>, chúng tôi mang đến giải pháp vận tải toàn diện, tối ưu chi phí và đồng hành bền vững cùng các doanh nghiệp vận tải.
-    </p>
-  </div>
-
-  <!-- Các giá trị cốt lõi & Thế mạnh -->
-  <div class="grid md:grid-cols-3 gap-6 mb-10">
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-      <h2 class="text-lg font-bold text-blue-900 mb-2">1. Hệ Thống 3 Showroom Miền Nam</h2>
-      <p class="text-sm text-slate-600 leading-relaxed">
-        Trưng bày xe sẵn giao ngay tại Bình Chánh (TP.HCM), Nhị Quý (Tiền Giang) và Bình Đức (An Giang), hỗ trợ xem xe và bảo dưỡng thuận tiện cho khách hàng toàn vùng ĐBSCL.
-      </p>
-    </div>
-
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-      <h2 class="text-lg font-bold text-blue-900 mb-2">2. Xưởng Đóng Thùng Chuyên Sâu</h2>
-      <p class="text-sm text-slate-600 leading-relaxed">
-        Xưởng cơ khí quy mô lớn chuyên thiết kế, đóng mới, hoán cải và cải tạo các loại thùng chuyên dùng theo đúng tiêu chuẩn Cục Đăng Kiểm với độ bền cao và bảo hành uy tín.
-      </p>
-    </div>
-
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-      <h2 class="text-lg font-bold text-blue-900 mb-2">3. Giải Pháp Tài Chính Tối Ưu</h2>
-      <p class="text-sm text-slate-600 leading-relaxed">
-        Hỗ trợ thủ tục mua xe trả góp qua ngân hàng hoặc thuê tài chính lên đến 80% giá trị xe, giải ngân nhanh chóng, thủ tục đơn giản cho cả cá nhân và doanh nghiệp.
-      </p>
-    </div>
-  </div>
-
-  <!-- Khối Câu Hỏi Thường Gặp (FAQ) cho AI Overviews -->
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-    <h2 class="text-xl font-extrabold text-blue-950 mb-4">Câu Hỏi Thường Gặp Về Ô Tô Chuyên Dùng Phú Cường</h2>
-    <div class="space-y-4 text-sm">
-      <div class="border-b border-slate-100 pb-3">
-        <h3 class="font-bold text-slate-900">❓ Ô Tô Chuyên Dùng Phú Cường phân phối những dòng xe nào?</h3>
-        <p class="text-slate-600 mt-1">Chúng tôi cung cấp đa dạng các dòng xe chuyên dùng gồm: xe cẩu tự hành, xe bồn (nước, hút chất thải), xe cuốn ép rác, xe nâng đầu chở máy, xe khách 16-47 chỗ từ các thương hiệu uy tín như Hino, Isuzu, Foton, Dongfeng...</p>
-      </div>
-      <div class="border-b border-slate-100 pb-3">
-        <h3 class="font-bold text-slate-900">❓ Liên hệ tư vấn và xem xe trực tiếp ở đâu tại miền Nam?</h3>
-        <p class="text-slate-600 mt-1">Quý khách có thể ghé trực tiếp 3 showroom tại Bình Chánh (TP.HCM), Tiền Giang hoặc An Giang, hoặc gọi ngay Hotline 24/7: <strong>0922 77 77 03</strong> để được tư vấn chọn đúng tải trọng và nhận báo giá lăn bánh chi tiết.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Kêu gọi hành động (CTA) -->
-  <div class="mt-8 text-center bg-gradient-to-r from-blue-900 to-slate-900 text-white p-8 rounded-xl shadow-md">
-    <h3 class="text-2xl font-bold mb-2">Đầu Tư Hiệu Quả - Đồng Hành Bền Vững Cùng Phú Cường</h3>
-    <p class="text-slate-300 mb-6 text-sm">Liên hệ ngay với đội ngũ chuyên viên kỹ thuật để nhận tư vấn giải pháp vận tải phù hợp nhất cho doanh nghiệp của bạn.</p>
-    <a href="tel:0922777703" class="inline-block bg-red-600 hover:bg-red-700 text-white font-extrabold px-8 py-3 rounded-lg text-lg transition shadow-lg">
-      📞 Hotline Tư Vấn & Cứu Hộ: 0922 77 77 03
-    </a>
-  </div>
-</section>
-
-  <!-- Bộ lọc chi tiết đồng bộ với Menu đa cấp -->
-  <section class="max-w-7xl mx-auto px-4 -mt-6">
-    <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 grid md:grid-cols-3 gap-4">
-      <div>
-        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Tìm theo tên xe / từ khóa</label>
-        <input id="searchInput" type="text" placeholder="VD: Cẩu Palfinger, Foton, 29 chỗ..." class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-600 text-sm" />
-      </div>
-      <div>
-        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Phân loại chuyên sâu (Danh mục)</label>
-        <select id="subCategorySelect" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-600 text-sm">
-          <option value="all">Tất cả dải sản phẩm</option>
-          <optgroup label="Xe Tải Chuyên Dùng">
-            <option value="Xe Tải Gắn Cẩu">Xe Tải Gắn Cẩu Tự Hành</option>
-            <option value="Xe Bồn Chuyên Dùng">Xe Bồn Chuyên Dùng (Nước, Hút chất thải)</option>
-            <option value="Xe Nâng Đầu Chở Xe">Xe Nâng Đầu Chở Xe / Máy</option>
-            <option value="Xe Ép Rác Môi Trường">Xe Cuốn Ép Rác Môi Trường</option>
-          </optgroup>
-          <optgroup label="Ô Tô Khách">
-            <option value="Xe Khách 16 Chỗ">Xe Khách 16 Chỗ</option>
-            <option value="Xe Khách 29-34 Chỗ">Xe Khách 29 - 34 Chỗ Bầu Hơi</option>
-            <option value="Xe Khách 47 Chỗ & Giường Nằm">Xe Khách 47 Chỗ & Giường Nằm</option>
-          </optgroup>
-        </select>
-      </div>
-      <div>
-        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Hãng xe nền / Thương hiệu</label>
-        <select id="brandSelect" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-600 text-sm">
-          <option value="all">Tất cả các hãng</option>
-          <option value="Dongfeng">Dongfeng</option>
-          <option value="Foton">Foton</option>
-          <option value="Weichai">Weichai / Thaco</option>
-        </select>
-      </div>
-    </div>
-  </section>
-
-  <!-- Danh sách xe hiển thị -->
-  <section class="max-w-7xl mx-auto px-4 py-10">
-    <div id="vehicleGrid" class="grid md:grid-cols-3 gap-6">
-      {vehicles.map((v) => (
-        <article 
-          class="vehicle-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-md transition"
-          data-name={v.name.toLowerCase()}
-          data-subcategory={v.subCategory}
-          data-brand={v.brand}
-        >
-          <div>
-            <div class="relative">
-              <img src={v.images[0]} alt={v.name} class="w-full h-52 object-cover" loading="lazy" />
-              <span class="absolute top-3 left-3 bg-blue-900 text-white text-xs font-bold px-2.5 py-1 rounded">
-                {v.subCategory}
-              </span>
+    <!-- HERO SECTION -->
+    <section class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white py-12 lg:py-16 px-4">
+      <div class="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-6">
+          <span class="bg-red-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider inline-block">
+            Đại Lý Phân Phối & Đóng Mới Độc Quyền
+          </span>
+          <h1 class="text-3xl md:text-5xl font-black leading-tight">
+            Ô Tô Chuyên Dùng <span class="text-red-500">Phú Cường</span>
+          </h1>
+          <p class="text-white/90 text-base md:text-lg max-w-xl leading-relaxed">
+            Chuyên cung cấp và đóng mới các dòng xe tải chuyên dùng, xe bồn, xe cẩu, xe cứu hộ và ô tô khách chất lượng cao. Hỗ trợ trả góp lên đến 90%, bảo hành toàn quốc.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-2">
+            <a href="/san-pham" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-8 py-3.5 rounded-xl transition shadow-lg shadow-red-600/30 text-base">
+              🚗 Khám Phá Kho Xe ({vehicleList.length}+ Mẫu)
+            </a>
+            <a href="/tinh-lan-banh" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold px-6 py-3.5 rounded-xl transition text-base">
+              🧮 Tính Giá Lăn Bánh
+            </a>
+          </div>
+        </div>
+        <div class="lg:col-span-5">
+          <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-xl space-y-4">
+            <h3 class="text-xl font-bold border-b border-white/20 pb-2">📍 Hệ Thống Showroom Miền Nam</h3>
+            <div class="space-y-3 text-sm text-white/90">
+              <p><strong>Showroom 1:</strong> 2466 Lê Khả Phiêu, Xã Bình Chánh, TP. HCM</p>
+              <p><strong>Showroom 2:</strong> 95 Quốc lộ 1A, Nhị Quý, Tiền Giang</p>
+              <p><strong>Showroom 3:</strong> 26 Trần Hưng Đạo, Bình Đức, An Giang</p>
             </div>
-            <div class="p-5">
-              <h2 class="font-bold text-lg text-slate-900 hover:text-blue-800">
-                <a href={`/san-pham/${v.slug}`}>{v.name}</a>
-              </h2>
-              <p class="text-2xl font-extrabold text-red-600 mt-2">{formatVND(v.price)}</p>
-              <p class="text-xs text-emerald-700 bg-emerald-50 p-2 rounded mt-2 font-medium">
-                🎁 {v.promo}
-              </p>
-              <div class="mt-3 text-xs text-slate-500">
-                📍 Sẵn xe: {v.showrooms.join(' • ')}
+            <a href="tel:0922777703" class="block bg-red-600 hover:bg-red-700 text-white font-extrabold py-3 rounded-xl text-center transition shadow">
+              📞 Hotline Tư Vấn: 0922 77 77 03
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KHỐI SẢN PHẨM NỔI BẬT & ƯU ĐÃI LỚN (VÒNG TRÒN VÔ TẬN) -->
+    <section class="container mx-auto px-4 max-w-7xl">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 border-b pb-4 gap-4">
+        <div>
+          <span class="text-blue-600 font-bold text-sm uppercase tracking-wider">Showroom Trung Tâm</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 mt-1">Sản Phẩm Nổi Bật & Ưu Đãi Lớn</h2>
+        </div>
+        <div class="flex items-center gap-3 self-end md:self-auto">
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              id="btnPrevVehicles"
+              aria-label="Sản phẩm trước"
+              class="w-10 h-10 rounded-full border border-gray-300 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 text-gray-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold"
+            >
+              &#10094;
+            </button>
+            <button
+              type="button"
+              id="btnNextVehicles"
+              aria-label="Sản phẩm tiếp theo"
+              class="w-10 h-10 rounded-full border border-gray-300 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 text-gray-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold"
+            >
+              &#10095;
+            </button>
+          </div>
+          <a href="/san-pham" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 ml-2">
+            Xem tất cả ({vehicleList.length} mẫu) &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div
+        id="vehicleCarousel"
+        class="flex gap-6 overflow-x-auto no-scrollbar pb-2"
+      >
+        {safeVehicles.map((vehicle: any) => (
+          <div class="shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md transition group">
+            <div>
+              <div class="relative overflow-hidden bg-gray-100 h-48">
+                <span class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-md z-10">🔥 Nổi Bật & Ưu Đãi</span>
+                <img src={vehicle.images?.[0] || 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80'} alt={vehicle.name} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+              </div>
+              <div class="p-4 space-y-2">
+                <span class="text-xs font-bold text-gray-500 uppercase">{vehicle.brand}</span>
+                <h3 class="font-bold text-base text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition">
+                  <a href={`/san-pham/${vehicle.slug}`}>{vehicle.name}</a>
+                </h3>
+                <p class="text-xs text-gray-600 font-medium bg-gray-50 p-1.5 rounded line-clamp-1">
+                  {vehicle.specialSpecs ? Object.values(vehicle.specialSpecs)[0] : 'Chính hãng chất lượng cao'}
+                </p>
+                <p class="text-red-600 font-black text-lg">{Number(vehicle.price || 0).toLocaleString('vi-VN')} đ</p>
+                {vehicle.promo && (
+                  <p class="text-xs text-red-700 bg-red-50 p-2 rounded border border-red-100 font-medium line-clamp-1">🎁 {vehicle.promo}</p>
+                )}
               </div>
             </div>
+            <div class="p-4 pt-0">
+              <a href={`/san-pham/${vehicle.slug}`} class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-center transition text-sm shadow-sm">
+                Xem thông số & Nhận ưu đãi
+              </a>
+            </div>
           </div>
-          <div class="p-5 pt-0 grid grid-cols-2 gap-2">
-            <a href={`/san-pham/${v.slug}`} class="text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2.5 rounded-lg text-sm">
-              Thông số & Lăn bánh
-            </a>
-            <a href="tel:0922777703" data-gtm-event="click_call_card" class="text-center bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg text-sm">
-              Báo Giá Tốt Nhất
-            </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- KHỐI DỊCH VỤ KỸ THUẬT -->
+    <section class="bg-slate-900 text-white py-16 px-4">
+      <div class="container mx-auto max-w-7xl">
+        <div class="text-center max-w-2xl mx-auto mb-12 space-y-2">
+          <span class="text-red-500 font-bold text-sm uppercase tracking-wider">Hậu Mãi & Kỹ Thuật Chuyên Sâu</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold">Dịch Vụ Kỹ Thuật & Pháp Lý Hàng Đầu</h2>
+          <p class="text-slate-400 text-sm">Cam kết đồng hành trọn đời cùng xe của quý khách với trạm bảo dưỡng và cứu hộ trực chiến 24/7.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {coreServices.map((service) => (
+            <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl flex flex-col justify-between hover:border-blue-500 transition">
+              <div class="space-y-3">
+                <div class="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl font-bold">{service.icon}</div>
+                <h3 class="font-bold text-lg text-white">{service.title}</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">{service.desc}</p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-slate-700">
+                <a href={service.link} class="text-blue-400 hover:text-blue-300 font-bold text-sm flex items-center gap-1">
+                  Xem chi tiết dịch vụ &rarr;
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- KHỐI TIN TỨC ĐỘNG TỪ POSTS.JSON (6 TIN MỚI NHẤT VÒNG TRÒN VÔ TẬN) -->
+    <section class="container mx-auto px-4 max-w-7xl">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 border-b pb-4 gap-4">
+        <div>
+          <span class="text-blue-600 font-bold text-sm uppercase tracking-wider">Kiến Thức & Cập Nhật</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 mt-1">Tin Tức & Bàn Giao Xe Mới Nhất</h2>
+        </div>
+        <div class="flex items-center gap-3 self-end md:self-auto">
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              id="btnPrevPosts"
+              aria-label="Tin trước"
+              class="w-10 h-10 rounded-full border border-gray-300 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 text-gray-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold"
+            >
+              &#10094;
+            </button>
+            <button
+              type="button"
+              id="btnNextPosts"
+              aria-label="Tin tiếp theo"
+              class="w-10 h-10 rounded-full border border-gray-300 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 text-gray-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold"
+            >
+              &#10095;
+            </button>
           </div>
-        </article>
-      ))}
-    </div>
-  </section>
+          <a href="/tin-tuc" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 ml-2">
+            Xem tất cả tin tức &rarr;
+          </a>
+        </div>
+      </div>
 
-  <script>
-    const searchInput = document.getElementById('searchInput') as HTMLInputElement;
-    const subCategorySelect = document.getElementById('subCategorySelect') as HTMLSelectElement;
-    const brandSelect = document.getElementById('brandSelect') as HTMLSelectElement;
-    const cards = document.querySelectorAll('.vehicle-card');
+      <div
+        id="postCarousel"
+        class="flex gap-6 overflow-x-auto no-scrollbar pb-2"
+      >
+        {latestPosts.map((post: any) => (
+          <div class="shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition group">
+            <div>
+              {post.image && (
+                <div class="overflow-hidden h-48 border-b bg-gray-100">
+                  <img src={post.image} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                </div>
+              )}
+              <div class="p-5 space-y-2">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-md">{post.category}</span>
+                  <span class="text-gray-400">{post.date}</span>
+                </div>
+                <h3 class="font-bold text-base text-gray-900 leading-snug group-hover:text-blue-600 transition line-clamp-2">
+                  <a href={`/tin-tuc/${post.slug}`}>{post.title}</a>
+                </h3>
+                {post.excerpt && (
+                  <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">{post.excerpt}</p>
+                )}
+              </div>
+            </div>
+            <div class="p-5 pt-0">
+              <a href={`/tin-tuc/${post.slug}`} class="text-blue-600 hover:text-blue-700 font-bold text-sm inline-flex items-center gap-1">
+                Đọc bài viết &rarr;
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
 
-    function filterVehicles() {
-      const q = searchInput.value.toLowerCase();
-      const subCat = subCategorySelect.value;
-      const brand = brandSelect.value;
+  </main>
 
-      cards.forEach((card) => {
-        const el = card as HTMLElement;
-        const matchName = el.dataset.name?.includes(q);
-        const matchSubCat = subCat === 'all' || el.dataset.subcategory === subCat;
-        const matchBrand = brand === 'all' || el.dataset.brand === brand;
-        el.style.display = (matchName && matchSubCat && matchBrand) ? 'flex' : 'none';
-      });
+  <script is:inline>
+    // Hàm hiệu ứng cuộn mượt và nhanh tùy chỉnh
+    function fastScrollTo(element, targetLeft, duration = 280) {
+      const startLeft = element.scrollLeft;
+      const distance = targetLeft - startLeft;
+      let startTime = null;
+
+      function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        element.scrollLeft = startLeft + distance * ease;
+        if (elapsed < duration) {
+          requestAnimationFrame(animation);
+        }
+      }
+      requestAnimationFrame(animation);
     }
 
-    searchInput?.addEventListener('input', filterVehicles);
-    subCategorySelect?.addEventListener('change', filterVehicles);
-    brandSelect?.addEventListener('change', filterVehicles);
-  </script>
+    // Khởi tạo băng chuyền vòng tròn vô tận không giựt lùi
+    function initInfiniteCarousel(containerId, prevBtnId, nextBtnId, intervalMs = 2200) {
+      const container = document.getElementById(containerId);
+      const prevBtn = document.getElementById(prevBtnId);
+      const nextBtn = document.getElementById(nextBtnId);
+      if (!container) return;
 
+      // 1. Nhân đôi các phần tử bên trong container để tạo vòng lặp vô tận liền mạch
+      const originalHTML = container.innerHTML;
+      container.innerHTML = originalHTML + originalHTML;
+
+      const getStepWidth = () => {
+        const firstCard = container.firstElementChild;
+        if (!firstCard) return 320;
+        return firstCard.getBoundingClientRect().width + 24; // chiều rộng thẻ + gap 24px
+      };
+
+      const slideNext = () => {
+        const step = getStepWidth();
+        const halfWidth = container.scrollWidth / 2;
+
+        // Nếu đã cuộn qua nửa danh sách (hết một vòng), lập tức dịch chuyển ngầm về vạch xuất phát 0 không qua hiệu ứng để nối tiếp vòng mới mượt mà
+        if (container.scrollLeft >= halfWidth - 5) {
+          container.scrollLeft = 0;
+        }
+
+        fastScrollTo(container, container.scrollLeft + step, 280);
+      };
+
+      const slidePrev = () => {
+        const step = getStepWidth();
+        const halfWidth = container.scrollWidth / 2;
+
+        if (container.scrollLeft <= 5) {
+          container.scrollLeft = halfWidth;
+        }
+
+        fastScrollTo(container, container.scrollLeft - step, 280);
+      };
+
+      nextBtn?.addEventListener('click', slideNext);
+      prevBtn?.addEventListener('click', slidePrev);
+
+      let timer = setInterval(slideNext, intervalMs);
+
+      const pause = () => clearInterval(timer);
+      const resume = () => {
+        clearInterval(timer);
+        timer = setInterval(slideNext, intervalMs);
+      };
+
+      container.addEventListener('mouseenter', pause);
+      container.addEventListener('mouseleave', resume);
+      prevBtn?.addEventListener('mouseenter', pause);
+      prevBtn?.addEventListener('mouseleave', resume);
+      nextBtn?.addEventListener('mouseenter', pause);
+      nextBtn?.addEventListener('mouseleave', resume);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        initInfiniteCarousel('vehicleCarousel', 'btnPrevVehicles', 'btnNextVehicles', 2200);
+        initInfiniteCarousel('postCarousel', 'btnPrevPosts', 'btnNextPosts', 2500);
+      });
+    } else {
+      initInfiniteCarousel('vehicleCarousel', 'btnPrevVehicles', 'btnNextVehicles', 2200);
+      initInfiniteCarousel('postCarousel', 'btnPrevPosts', 'btnNextPosts', 2500);
+    }
+  </script>
 </BaseLayout>

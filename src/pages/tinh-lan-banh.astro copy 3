@@ -1,0 +1,657 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { allVehicles } from '../data/vehicles.js';
+import { FINANCIAL_CONFIG } from '../data/config.js';
+
+const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
+
+const enrichedVehicles = vehicleList.map((v: any) => {
+  const metrics = FINANCIAL_CONFIG.extractVehicleMetrics(v);
+  const firstImg = Array.isArray(v.images) && v.images.length > 0 ? v.images[0] : 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=500&q=80';
+  return {
+    slug: v.slug,
+    name: v.name,
+    brand: v.brand,
+    subCategory: v.subCategory || v.categoryName || 'Xe Chuyên Dùng',
+    price: v.price || 0,
+    image: firstImg,
+    isBus: metrics.isBus,
+    payloadKg: metrics.payloadKg,
+    totalWeightKg: metrics.totalWeightKg,
+    seats: metrics.seats,
+    chassisSpecs: v.chassisSpecs || v.chassis_specs || {},
+    specialSpecs: v.specialSpecs || v.special_specs || {}
+  };
+});
+---
+
+<BaseLayout title="Công cụ dự toán giá lăn bánh & Lưu file PDF | Phú Cường Auto">
+  <style is:inline>
+    .print-page-1, .print-page-2 {
+      display: none;
+    }
+    @media print {
+      header, footer, nav, .no-print {
+        display: none !important;
+      }
+      body {
+        background: white !important;
+        color: #0f172a !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .print-page-1 {
+        display: block !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        box-sizing: border-box !important;
+        padding: 6mm !important;
+        background: white !important;
+      }
+      .print-page-2 {
+        display: block !important;
+        page-break-before: always !important;
+        break-before: page !important;
+        box-sizing: border-box !important;
+        padding: 6mm !important;
+        background: white !important;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+    }
+  </style>
+
+  <main class="container mx-auto px-4 py-8 max-w-6xl">
+    
+    <!-- KHU VỰC IN ẤN ẨN -->
+    <div id="printContainer">
+      
+      <!-- TRANG 1: BÁO GIÁ TỔNG QUAN -->
+      <div class="print-page-1 bg-white p-4 max-w-[210mm] mx-auto text-slate-900 font-sans space-y-2">
+        <div class="border-b-2 border-blue-900 pb-1.5 flex justify-between items-start">
+          <div>
+            <h1 class="text-[11px] font-black text-blue-900">Ô TÔ PHÚ CƯỜNG - NHÀ CUNG CẤP VÀ SẢN XUẤT Ô TÔ CHUYÊN DÙNG</h1>
+            <p class="text-[8px] text-slate-600 mt-0.5">Showroom 1: 2466 Lê Khả Phiêu, Xã Bình Chánh, TP. Hồ Chí Minh</p>
+            <p class="text-[8px] text-slate-600">Showroom 2: 95 Quốc lộ 1A, Nhị Quý, Tiền Giang | Showroom 3: Bình Đức, An Giang</p>
+            <p class="text-[8px] font-bold text-red-600 mt-0.5">Hotline: 0922 77 77 03 | Email: chuyendungphucuong@gmail.com</p>
+          </div>
+          <div class="text-right">
+            <span class="bg-blue-900 text-white text-[7px] font-extrabold px-2 py-0.5 rounded inline-block">BẢNG BÁO GIÁ LĂN BÁNH</span>
+            <p id="printDate1" class="text-[8px] text-slate-500 mt-1 font-semibold"></p>
+          </div>
+        </div>
+
+        <div class="text-center space-y-0">
+          <h2 class="text-[10px] font-black uppercase text-blue-950">Dự Toán Chi Phí Lăn Bánh & Thông Số Kỹ Thuật Trả Góp</h2>
+        </div>
+
+        <!-- Khung hình ảnh sản phẩm kích thước lớn -->
+        <div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex items-center gap-3">
+          <div class="bg-white p-1 rounded-lg border border-slate-200 w-36 h-24 flex items-center justify-center overflow-hidden shrink-0">
+            <img id="printCarImg" src="" alt="Ảnh xe" style="max-height: 90px; width: auto; object-fit: contain;" />
+          </div>
+          <div class="space-y-0.5 flex-1">
+            <span class="text-[7px] font-extrabold text-blue-700 uppercase bg-blue-100 px-1.5 py-0.5 rounded">Mẫu xe lựa chọn</span>
+            <h2 id="printCarName" class="text-[10.5px] font-black text-blue-950 leading-snug"></h2>
+            <p class="text-[8px] text-slate-500">Bảng dự toán chi phí lăn bánh trọn gói & Thông số kỹ thuật chi tiết.</p>
+          </div>
+        </div>
+
+        <!-- Bảng chi phí -->
+        <div class="space-y-0.5 text-[9.5px]">
+          <table class="w-full border-collapse">
+            <tbody>
+              <tr class="border-b"><td class="py-0.5 text-slate-600">Giá niêm yết xe (Đã gồm VAT):</td><td id="printPrice" class="py-0.5 font-bold text-right text-slate-900"></td></tr>
+              <tr class="border-b"><td class="py-0.5 text-slate-600">Lệ phí trước bạ (2%):</td><td id="printRegFee" class="py-0.5 font-semibold text-right text-slate-800"></td></tr>
+              <tr class="border-b"><td class="py-0.5 text-slate-600">Phí sử dụng đường bộ (1 năm):</td><td id="printRoadTax" class="py-0.5 font-semibold text-right text-blue-700"></td></tr>
+              <tr class="border-b"><td class="py-0.5 text-slate-600" id="printLblInsurance">Bảo hiểm TNDS:</td><td id="printInsurance" class="py-0.5 font-semibold text-right text-blue-700"></td></tr>
+              <tr class="border-b"><td class="py-0.5 text-slate-600">Đăng kiểm, Biển số & Dịch vụ trọn gói:</td><td id="printOtherFees" class="py-0.5 font-semibold text-right text-slate-800"></td></tr>
+              <tr class="bg-blue-50 font-black text-[10.5px]"><td class="p-1 text-blue-900">TỔNG GIÁ LĂN BÁNH DỰ KIẾN:</td><td id="printTotalRollout" class="p-1 text-right text-red-600"></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- THÔNG SỐ KỸ THUẬT: XE CƠ SỞ & THIẾT BỊ CHUYÊN DÙNG -->
+        <div class="grid grid-cols-2 gap-2 text-[9px]">
+          <!-- Xe cơ sở -->
+          <div class="bg-slate-50 p-1.5 rounded-lg border border-slate-200 space-y-1">
+            <h3 class="font-extrabold text-blue-900 uppercase tracking-wide text-[8.5px] border-b pb-0.5">🚗 Thông số xe cơ sở (Chassis):</h3>
+            <div id="printChassisSpecs" class="space-y-0.5"></div>
+          </div>
+          <!-- Thiết bị chuyên dùng -->
+          <div class="bg-slate-50 p-1.5 rounded-lg border border-slate-200 space-y-1">
+            <h3 class="font-extrabold text-red-800 uppercase tracking-wide text-[8.5px] border-b pb-0.5">🛠️ Thiết bị chuyên dùng:</h3>
+            <div id="printSpecialSpecs" class="space-y-0.5"></div>
+          </div>
+        </div>
+
+        <!-- Phương án trả góp -->
+        <div class="space-y-0.5 text-[9.5px]">
+          <h3 class="font-extrabold text-slate-900 uppercase tracking-wide text-[8.5px]">Phương án vay mua xe trả góp:</h3>
+          <div class="bg-slate-50 p-1.5 rounded-lg border border-slate-200 space-y-0.5">
+            <div class="flex justify-between"><span class="text-slate-600">Tỷ lệ vay & Thời hạn:</span><span id="printLoanMeta" class="font-bold text-slate-800"></span></div>
+            <div class="flex justify-between"><span class="text-slate-600">Vốn đối ứng ban đầu (Trả trước + Phí):</span><span id="printDownPayment" class="font-bold text-blue-700"></span></div>
+            <div class="flex justify-between"><span class="text-slate-600">Số tiền ngân hàng cho vay:</span><span id="printLoanAmount" class="font-bold text-slate-800"></span></div>
+            <div class="flex justify-between pt-0.5 border-t"><span class="text-slate-700 font-bold">Gốc + Lãi tháng đầu tiên (Cao nhất):</span><span id="printMaxMonthly" class="font-black text-red-600"></span></div>
+          </div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 p-1 rounded-lg text-amber-900 leading-tight font-medium text-[7.5px]">
+          ⚠️ <em>Bảng báo giá chỉ mang tính tham khảo. Liên hệ Hotline: <strong class="text-red-600">0922 77 77 03 - Mr. Hoàng Vũ</strong> để nhận báo giá chính xác nhất.</em>
+        </div>
+
+        <div class="flex justify-between pt-1 text-center text-[8.5px]">
+          <div class="w-[45%]">
+            <p class="font-bold text-slate-700 m-0">Người lập bảng dự toán</p>
+            <p class="font-extrabold text-slate-900 mt-2.5 mb-0">Mr. Hoàng Vũ</p>
+          </div>
+          <div class="w-[45%]">
+            <p class="font-bold text-slate-700 m-0">Xác nhận của Khách hàng</p>
+            <p class="text-slate-400 italic mt-2.5 mb-0">(Ký và ghi rõ họ tên)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRANG 2: BẢNG KÊ CHI TIẾT -->
+      <div class="print-page-2 bg-white p-6 max-w-[210mm] mx-auto text-slate-900 font-sans space-y-3">
+        <div class="border-b-2 border-blue-900 pb-2 flex justify-between items-start">
+          <div>
+            <h1 class="text-xs font-black text-blue-900">Ô TÔ PHÚ CƯỜNG - NHÀ CUNG CẤP VÀ SẢN XUẤT Ô TÔ CHUYÊN DÙNG</h1>
+            <p class="text-[9px] text-slate-600 mt-0.5">Bảng Kê Chi Tiết Dòng Tiền Trả Góp Ngân Hàng</p>
+          </div>
+          <div class="text-right">
+            <span class="bg-blue-900 text-white text-[8px] font-extrabold px-2.5 py-0.5 rounded inline-block">LỊCH TRẢ GÓP CHI TIẾT</span>
+            <p id="printDate2" class="text-[9px] text-slate-500 mt-1 font-semibold"></p>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 p-2 rounded-lg text-blue-950 leading-relaxed font-normal text-[9.5px]">
+          ℹ️ <em>Lãi suất, số tiền thanh toán hàng tháng của bảng tính này chỉ mang tính chất tham khảo. Sau thời gian ưu đãi, lãi suất và số tiền thanh toán của quý khách hàng sẽ có thay đổi tùy thuộc vào chính sách của ngân hàng tài trợ.</em>
+        </div>
+
+        <div class="flex justify-between items-center text-[11px] font-bold text-slate-800">
+          <span>Chi tiết lịch trả góp (Dư nợ giảm dần):</span>
+          <span id="printTotalInterest" class="text-red-600"></span>
+        </div>
+
+        <table class="w-full text-[9.5px] text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-800 text-white uppercase">
+              <th class="p-1 border text-center">Kỳ</th>
+              <th class="p-1 border">Dư nợ đầu kỳ</th>
+              <th class="p-1 border">Tiền gốc</th>
+              <th class="p-1 border">Tiền lãi</th>
+              <th class="p-1 border">Tổng (Gốc + Lãi)</th>
+              <th class="p-1 border">Dư nợ còn lại</th>
+            </tr>
+          </thead>
+          <tbody id="printScheduleTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GIAO DIỆN CHÍNH TRÊN WEB -->
+    <div class="bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6 no-print">
+      <nav class="text-sm text-gray-500 mb-6">
+        <a href="/" class="hover:text-blue-600">Trang chủ</a> &gt; 
+        <span class="text-gray-900 font-semibold">Dự toán tính lăn bánh & Lưu PDF</span>
+      </nav>
+
+      <div class="bg-blue-800 text-white p-6 rounded-2xl mb-6 shadow-md text-center max-w-4xl mx-auto">
+        <h1 class="text-2xl lg:text-3xl font-extrabold mb-2">Công Cụ Dự Toán Giá Lăn Bánh & Lãi Vay</h1>
+        <p class="text-white/90 text-sm max-w-2xl mx-auto">
+          Tự động tính phí bảo hiểm TNDS, phí đường bộ chuẩn nhà nước và hỗ trợ In / Lưu file báo giá PDF chuẩn 2 trang có kèm hình ảnh lớn và đầy đủ thông số chassis & thiết bị chuyên dùng.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Cột trái: Thông số đầu vào -->
+        <div class="lg:col-span-6 space-y-4">
+          <h2 class="text-lg font-bold text-gray-900 border-b pb-3 flex items-center gap-2">
+            <span class="w-2 h-6 bg-blue-600 rounded-full"></span> 1. Chọn xe & Thông số tính phí
+          </h2>
+
+          <div>
+            <label class="block text-xs font-bold uppercase text-gray-700 mb-1.5">Chọn mẫu xe trong kho ({enrichedVehicles.length} xe):</label>
+            <select id="selectCarModel" class="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white font-bold text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none">
+              {enrichedVehicles.map((v) => (
+                <option 
+                  value={v.slug}
+                  data-name={v.name}
+                  data-price={v.price}
+                  data-image={v.image}
+                  data-chassis={JSON.stringify(v.chassisSpecs)}
+                  data-special={JSON.stringify(v.specialSpecs)}
+                  data-isbus={v.isBus ? 'true' : 'false'}
+                  data-payload={v.payloadKg}
+                  data-weight={v.totalWeightKg}
+                  data-seats={v.seats}
+                >
+                  [{v.brand}] {v.name} — {Number(v.price).toLocaleString('vi-VN')} đ
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Giá xe tính phí (VNĐ):</label>
+              <input type="number" id="inputCustomPrice" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm font-bold text-red-600 bg-white" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Phân loại áp biểu phí:</label>
+              <select id="selectVehicleType" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm bg-white font-semibold">
+                <option value="special">Ô tô chuyên dùng (+20% BH TNDS)</option>
+                <option value="bus">Ô tô khách kinh doanh</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="bg-blue-50/70 p-4 rounded-xl border border-blue-200 space-y-3">
+            <p class="text-xs font-bold text-blue-900">⚙️ Thông số tính Bảo hiểm & Đường bộ (Có thể gõ chỉnh):</p>
+            <div class="grid grid-cols-3 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-bold text-gray-700 mb-1">Tải trọng (Kg):</label>
+                <input type="number" id="inputPayload" step="500" class="w-full p-2 border border-gray-300 rounded-lg text-sm font-bold text-blue-800 bg-white" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-gray-700 mb-1">Tổng tải (Kg):</label>
+                <input type="number" id="inputTotalWeight" step="1000" class="w-full p-2 border border-gray-300 rounded-lg text-sm font-bold text-blue-800 bg-white" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-gray-700 mb-1">Số ghế (Chỗ):</label>
+                <input type="number" id="inputSeats" min="1" max="60" class="w-full p-2 border border-gray-300 rounded-lg text-sm font-bold text-blue-800 bg-white" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Khu vực đăng ký biển số:</label>
+            <select id="selectLocation" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm bg-white">
+              <option value="tpcm">TP. Hồ Chí Minh (Phí biển số 500.000 đ)</option>
+              <option value="tinh" selected>Các Tỉnh / Miền Tây (Phí biển số 150.000 đ)</option>
+            </select>
+          </div>
+
+          <div class="pt-3 border-t space-y-3">
+            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <span class="w-2 h-6 bg-red-600 rounded-full"></span> 2. Cấu hình gói vay ngân hàng
+            </h2>
+
+            <div class="grid grid-cols-3 gap-2.5">
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Tỷ lệ vay:</label>
+                <select id="selectLoanRatio" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm bg-white font-semibold">
+                  <option value="0.5">Vay 50%</option>
+                  <option value="0.6">Vay 60%</option>
+                  <option value="0.65">Vay 65%</option>
+                  <option value="0.7">Vay 70%</option>
+                  <option value="0.75" selected>Vay 75%</option>
+                  <option value="0.8">Vay 80%</option>
+                  <option value="0.85">Vay 85%</option>
+                  <option value="0.9">Vay 90%</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Thời hạn:</label>
+                <select id="selectLoanTerm" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm bg-white font-semibold">
+                  <option value="12">1 Năm</option>
+                  <option value="24">2 Năm</option>
+                  <option value="36">3 Năm</option>
+                  <option value="48">4 Năm</option>
+                  <option value="60" selected>5 Năm</option>
+                  <option value="72">6 Năm</option>
+                  <option value="84">7 Năm</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Lãi suất (%):</label>
+                <input type="number" id="inputInterestRate" value="9.5" step="0.1" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm font-bold text-red-600 bg-white" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cột phải: Bảng kết quả dự toán -->
+        <div class="lg:col-span-6 bg-gray-50 border border-gray-200 rounded-2xl p-6 flex flex-col justify-between shadow-inner">
+          <div>
+            <h2 class="text-lg font-bold text-gray-900 mb-4 border-b pb-3">
+              📊 Chi Tiết Dự Toán Giá Lăn Bánh (Dự kiến)
+            </h2>
+
+            <div class="space-y-2.5 text-sm">
+              <div class="flex justify-between border-b pb-2">
+                <span class="text-gray-600">Mẫu xe báo giá:</span>
+                <span id="resCarName" class="font-bold text-blue-900 text-right max-w-xs"></span>
+              </div>
+              <div class="flex justify-between border-b pb-2">
+                <span class="text-gray-600">Giá niêm yết (Đã gồm VAT):</span>
+                <span id="resPrice" class="font-bold text-gray-900">0 đ</span>
+              </div>
+              <div class="flex justify-between border-b pb-2">
+                <span class="text-gray-600">Lệ phí trước bạ (2%):</span>
+                <span id="resRegFee" class="font-semibold text-gray-800">0 đ</span>
+              </div>
+              <div class="flex justify-between border-b pb-2">
+                <span class="text-gray-600">Phí bảo trì đường bộ (1 năm):</span>
+                <span id="resRoadTax" class="font-bold text-blue-700">0 đ</span>
+              </div>
+              <div class="flex justify-between border-b pb-2">
+                <span id="lblInsuranceExplain" class="text-gray-600">Bảo hiểm TNDS bắt buộc + Ghế ngồi:</span>
+                <span id="resInsurance" class="font-bold text-blue-700">0 đ</span>
+              </div>
+              <div class="flex justify-between border-b pb-2">
+                <span class="text-gray-600">Đăng kiểm, Biển số & Dịch vụ trọn gói:</span>
+                <span id="resOtherFees" class="font-semibold text-gray-800">0 đ</span>
+              </div>
+              <div class="flex justify-between bg-blue-100 p-3 rounded-xl font-black text-blue-900 text-base">
+                <span>TỔNG GIÁ LĂN BÁNH DỰ KIẾN:</span>
+                <span id="resTotalRollout" class="text-red-600 text-lg">0 đ</span>
+              </div>
+
+              <!-- Lưu ý pháp lý -->
+              <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-900 leading-relaxed font-medium">
+                ⚠️ <em>Bảng báo giá chỉ mang tính tham khảo. Để có thông tin chi tiết và chính xác vui lòng liên hệ Hotline: <strong class="text-red-600">0922 77 77 03 - Mr. Hoàng Vũ</strong> để được tư vấn.</em>
+              </div>
+
+              <!-- LƯU Ý LÃI SUẤT NGÂN HÀNG -->
+              <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs text-blue-950 leading-relaxed">
+                ℹ️ <em>Lãi suất, số tiền thanh toán hàng tháng của bảng tính này chỉ mang tính chất tham khảo. Sau thời gian ưu đãi, lãi suất và số tiền thanh toán của quý khách hàng sẽ có thay đổi tùy thuộc vào chính sách của ngân hàng tài trợ.</em>
+              </div>
+
+              <!-- Kết quả trả góp -->
+              <div class="pt-2 border-t mt-2 space-y-2">
+                <h3 class="font-bold text-gray-900 text-sm uppercase">Phương án vay mua xe trả góp:</h3>
+                <div class="bg-white p-3.5 rounded-xl border border-gray-200 space-y-1.5 text-sm">
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Vốn đối ứng ban đầu (Trả trước + Phí):</span>
+                    <span id="resDownPayment" class="font-bold text-blue-700 text-base">0 đ</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Số tiền ngân hàng cho vay:</span>
+                    <span id="resLoanAmount" class="font-bold text-gray-800">0 đ</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Tiền gốc cố định hàng tháng:</span>
+                    <span id="resMonthlyPrincipal" class="font-semibold text-gray-800">0 đ</span>
+                  </div>
+                  <div class="flex justify-between pt-1.5 border-t">
+                    <span class="text-gray-700 font-bold">Gốc + Lãi tháng đầu tiên (Cao nhất):</span>
+                    <span id="resMaxMonthly" class="font-black text-red-600 text-base">0 đ</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nút In / Lưu PDF & Lịch trả góp -->
+          <div class="mt-5 pt-3 border-t border-gray-200 space-y-2.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button 
+                type="button" 
+                id="btnPrintPDF" 
+                class="w-full bg-blue-700 hover:bg-blue-800 text-white font-extrabold py-3 px-4 rounded-xl text-center transition text-sm shadow cursor-pointer flex items-center justify-center gap-2"
+              >
+                🖨️ In / Lưu Báo Giá PDF (2 Trang)
+              </button>
+              <button 
+                type="button" 
+                id="btnToggleSchedule" 
+                class="w-full bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 font-bold py-3 px-4 rounded-xl text-center transition text-sm cursor-pointer"
+              >
+                📅 Xem bảng lịch trả góp
+              </button>
+            </div>
+            <a href="tel:0922777703" class="block w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-center transition text-sm shadow-md">
+              📞 Tư vấn hồ sơ vay: 0922 77 77 03
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- BẢNG LỊCH TRẢ GÓP CHI TIẾT -->
+      <div id="scheduleSection" class="mt-8 pt-6 border-t border-gray-200">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-gray-900">📅 Bảng Kê Chi Tiết Dòng Tiền Trả Góp Hàng Tháng</h3>
+          <span id="lblTotalInterest" class="text-xs font-bold text-red-600 bg-red-50 px-3 py-1.5 rounded-lg"></span>
+        </div>
+        <div class="overflow-x-auto max-h-96">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-800 text-white uppercase">
+                <th class="p-2.5 border">Kỳ (Tháng)</th>
+                <th class="p-2.5 border">Dư nợ đầu kỳ</th>
+                <th class="p-2.5 border">Tiền gốc trả</th>
+                <th class="p-2.5 border">Tiền lãi trả</th>
+                <th class="p-2.5 border">Tổng Gốc + Lãi</th>
+                <th class="p-2.5 border">Dư nợ còn lại</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleTableBody" class="divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    import { FINANCIAL_CONFIG } from '../data/config.js';
+
+    const selectModel = document.getElementById('selectCarModel') as HTMLSelectElement;
+    const inputPrice = document.getElementById('inputCustomPrice') as HTMLInputElement;
+    const selectType = document.getElementById('selectVehicleType') as HTMLSelectElement;
+    const inputPayload = document.getElementById('inputPayload') as HTMLInputElement;
+    const inputWeight = document.getElementById('inputTotalWeight') as HTMLInputElement;
+    const inputSeats = document.getElementById('inputSeats') as HTMLInputElement;
+    const selectLocation = document.getElementById('selectLocation') as HTMLSelectElement;
+    const selectRatio = document.getElementById('selectLoanRatio') as HTMLSelectElement;
+    const selectTerm = document.getElementById('selectLoanTerm') as HTMLSelectElement;
+    const inputRate = document.getElementById('inputInterestRate') as HTMLInputElement;
+
+    function loadSelectedCarDefaults() {
+      const opt = selectModel.options[selectModel.selectedIndex];
+      if (!opt) return;
+      inputPrice.value = opt.getAttribute('data-price') || '0';
+      const isBus = opt.getAttribute('data-isbus') === 'true';
+      selectType.value = isBus ? 'bus' : 'special';
+      inputPayload.value = opt.getAttribute('data-payload') || '8000';
+      inputWeight.value = opt.getAttribute('data-weight') || '16000';
+      inputSeats.value = opt.getAttribute('data-seats') || '2';
+      recalculateAll();
+    }
+
+    function recalculateAll() {
+      const opt = selectModel.options[selectModel.selectedIndex];
+      const carName = opt ? opt.getAttribute('data-name') || '' : '';
+      const carImg = opt ? opt.getAttribute('data-image') || '' : '';
+      const chassisJson = opt ? opt.getAttribute('data-chassis') || '{}' : '{}';
+      const specialJson = opt ? opt.getAttribute('data-special') || '{}' : '{}';
+      
+      const price = parseFloat(inputPrice.value) || 0;
+      const isBus = selectType.value === 'bus';
+      const payloadKg = parseFloat(inputPayload.value) || 0;
+      const totalWeightKg = parseFloat(inputWeight.value) || 0;
+      const seats = parseInt(inputSeats.value) || 2;
+
+      const regFee = Math.round(price * FINANCIAL_CONFIG.registrationFeeRate);
+      const roadTax = FINANCIAL_CONFIG.getRoadTax(totalWeightKg, isBus, seats);
+      const insuranceTNDS = FINANCIAL_CONFIG.getInsuranceTNDS(payloadKg, seats, isBus);
+
+      const plateFee = selectLocation.value === 'tpcm' ? FINANCIAL_CONFIG.plateFeeCity : FINANCIAL_CONFIG.plateFeeProvince;
+      const otherFees = FINANCIAL_CONFIG.serviceAndInspectionFee + plateFee;
+      const totalRollout = price + regFee + roadTax + insuranceTNDS + otherFees;
+
+      const loanRatio = parseFloat(selectRatio.value) || 0.75;
+      const loanTermMonths = parseInt(selectTerm.value) || 60;
+      const annualRate = (parseFloat(inputRate.value) || 9.5) / 100;
+
+      const loanAmount = Math.round(price * loanRatio);
+      const downPayment = totalRollout - loanAmount;
+
+      const monthlyRate = annualRate / 12;
+      const monthlyPrincipal = Math.round(loanAmount / loanTermMonths);
+      const firstMonthInterest = Math.round(loanAmount * monthlyRate);
+      const firstMonthPayment = monthlyPrincipal + firstMonthInterest;
+
+      // 1. Hiển thị giao diện web
+      document.getElementById('resCarName')!.innerText = carName;
+      document.getElementById('resPrice')!.innerText = price.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('resRegFee')!.innerText = regFee.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('resRoadTax')!.innerText = roadTax.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('resInsurance')!.innerText = insuranceTNDS.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('lblInsuranceExplain')!.innerText = isBus 
+        ? `Bảo hiểm TNDS Xe khách (${seats} chỗ):` 
+        : `BH TNDS Chuyên dùng (${(payloadKg/1000).toFixed(1)}T + ${seats} ghế):`;
+      document.getElementById('resOtherFees')!.innerText = otherFees.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('resTotalRollout')!.innerText = totalRollout.toLocaleString('vi-VN') + ' đ';
+
+      document.getElementById('resDownPayment')!.innerText = downPayment.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('resLoanAmount')!.innerText = loanAmount.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('resMonthlyPrincipal')!.innerText = monthlyPrincipal.toLocaleString('vi-VN') + ' đ / tháng';
+      document.getElementById('resMaxMonthly')!.innerText = firstMonthPayment.toLocaleString('vi-VN') + ' đ / tháng';
+
+      // 2. Đổ dữ liệu sang bản in Trang 1
+      document.getElementById('printCarName')!.innerText = carName;
+      const printImgEl = document.getElementById('printCarImg') as HTMLImageElement;
+      if (printImgEl) printImgEl.src = carImg;
+
+      document.getElementById('printPrice')!.innerText = price.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('printRegFee')!.innerText = regFee.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('printRoadTax')!.innerText = roadTax.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('printLblInsurance')!.innerText = isBus ? `Bảo hiểm TNDS (${seats} chỗ):` : `BH TNDS Chuyên dùng (${(payloadKg/1000).toFixed(1)}T + ${seats} ghế):`;
+      document.getElementById('printInsurance')!.innerText = insuranceTNDS.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('printOtherFees')!.innerText = otherFees.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('printTotalRollout')!.innerText = totalRollout.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('printLoanMeta')!.innerText = `${(loanRatio * 100)}% giá trị xe trong ${loanTermMonths / 12} năm (${loanTermMonths} tháng)`;
+      document.getElementById('printDownPayment')!.innerText = downPayment.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('printLoanAmount')!.innerText = loanAmount.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('printMaxMonthly')!.innerText = firstMonthPayment.toLocaleString('vi-VN') + ' đ / tháng';
+
+      // Đổ Thông số xe cơ sở (Chassis) và Thiết bị chuyên dùng vào trang 1 bản in
+      const chassisBox = document.getElementById('printChassisSpecs');
+      const specialBox = document.getElementById('printSpecialSpecs');
+
+      if (chassisBox && specialBox) {
+        chassisBox.innerHTML = '';
+        specialBox.innerHTML = '';
+        try {
+          const chassisObj = JSON.parse(chassisJson);
+          const specialObj = JSON.parse(specialJson);
+
+          const chassisEntries = Object.entries(chassisObj);
+          if (chassisEntries.length > 0) {
+            chassisEntries.forEach(([k, v]) => {
+              const div = document.createElement('div');
+              div.className = "flex justify-between border-b border-slate-200 pb-0.5";
+              div.innerHTML = `<span class="text-slate-600">${k}:</span> <strong class="text-slate-900 text-right">${v}</strong>`;
+              chassisBox.appendChild(div);
+            });
+          } else {
+            chassisBox.innerHTML = '<span class="text-slate-400 italic">Đang cập nhật...</span>';
+          }
+
+          const specialEntries = Object.entries(specialObj);
+          if (specialEntries.length > 0) {
+            specialEntries.forEach(([k, v]) => {
+              const div = document.createElement('div');
+              div.className = "flex justify-between border-b border-slate-200 pb-0.5";
+              div.innerHTML = `<span class="text-slate-600">${k}:</span> <strong class="text-slate-900 text-right">${v}</strong>`;
+              specialBox.appendChild(div);
+            });
+          } else {
+            specialBox.innerHTML = '<span class="text-slate-400 italic">Đang cập nhật...</span>';
+          }
+        } catch (e) {
+          chassisBox.innerHTML = '<span class="text-slate-400 italic">Lỗi tải thông số</span>';
+          specialBox.innerHTML = '<span class="text-slate-400 italic">Lỗi tải thông số</span>';
+        }
+      }
+
+      // 3. Tạo bảng lịch trả góp trên web & Trang 2 bản in
+      const tbodyWeb = document.getElementById('scheduleTableBody')!;
+      const tbodyPrint = document.getElementById('printScheduleTableBody')!;
+      tbodyWeb.innerHTML = '';
+      tbodyPrint.innerHTML = '';
+      let balance = loanAmount;
+      let totalInterest = 0;
+
+      for (let m = 1; m <= loanTermMonths; m++) {
+        const interest = Math.round(balance * monthlyRate);
+        const principal = m === loanTermMonths ? balance : monthlyPrincipal;
+        const totalPay = principal + interest;
+        const endBalance = Math.max(0, balance - principal);
+        totalInterest += interest;
+
+        const trWeb = document.createElement('tr');
+        trWeb.className = m % 2 === 0 ? 'bg-gray-50' : 'bg-white';
+        trWeb.innerHTML = `
+          <td class="p-2 border font-bold text-center">Tháng ${m}</td>
+          <td class="p-2 border">${balance.toLocaleString('vi-VN')} đ</td>
+          <td class="p-2 border">${principal.toLocaleString('vi-VN')} đ</td>
+          <td class="p-2 border text-red-600">${interest.toLocaleString('vi-VN')} đ</td>
+          <td class="p-2 border font-bold text-blue-900">${totalPay.toLocaleString('vi-VN')} đ</td>
+          <td class="p-2 border text-gray-500">${endBalance.toLocaleString('vi-VN')} đ</td>
+        `;
+        tbodyWeb.appendChild(trWeb);
+
+        const trPrint = document.createElement('tr');
+        trPrint.className = m % 2 === 0 ? 'bg-slate-50' : 'bg-white';
+        trPrint.innerHTML = `
+          <td class="p-1 border text-center font-bold">${m}</td>
+          <td class="p-1 border">${balance.toLocaleString('vi-VN')} đ</td>
+          <td class="p-1 border">${principal.toLocaleString('vi-VN')} đ</td>
+          <td class="p-1 border text-red-600">${interest.toLocaleString('vi-VN')} đ</td>
+          <td class="p-1 border font-bold">${totalPay.toLocaleString('vi-VN')} đ</td>
+          <td class="p-1 border">${endBalance.toLocaleString('vi-VN')} đ</td>
+        `;
+        tbodyPrint.appendChild(trPrint);
+
+        balance = endBalance;
+      }
+
+      document.getElementById('lblTotalInterest')!.innerText = `Tổng lãi dự kiến suốt kỳ vay: ${totalInterest.toLocaleString('vi-VN')} đ`;
+      document.getElementById('printTotalInterest')!.innerText = `Tổng lãi dự kiến suốt kỳ vay: ${totalInterest.toLocaleString('vi-VN')} đ`;
+    }
+
+    selectModel?.addEventListener('change', loadSelectedCarDefaults);
+    [inputPrice, selectType, inputPayload, inputWeight, inputSeats, selectLocation, selectRatio, selectTerm, inputRate].forEach(el => {
+      el?.addEventListener('input', recalculateAll);
+      el?.addEventListener('change', recalculateAll);
+    });
+
+    // SỰ KIỆN IN VECTOR 2 TRANG
+    document.getElementById('btnPrintPDF')?.addEventListener('click', () => {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const dateStr = `Ngày xuất: ${day}/${month}/${year}`;
+      document.getElementById('printDate1')!.innerText = dateStr;
+      document.getElementById('printDate2')!.innerText = dateStr;
+      
+      const opt = selectModel.options[selectModel.selectedIndex];
+      const rawName = opt ? opt.getAttribute('data-name') || 'Xe-Phu-Cuong' : 'Bao-Gia';
+      const cleanCarName = rawName
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[đĐ]/g, 'd')
+        .replace(/([^0-9a-z-\s])/g, '')
+        .replace(/(\s+)/g, '-');
+
+      document.title = `Bao-Gia-${cleanCarName}-${day}-${month}-${year}`;
+
+      window.print();
+    });
+
+    document.getElementById('btnToggleSchedule')?.addEventListener('click', () => {
+      document.getElementById('scheduleSection')?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    loadSelectedCarDefaults();
+  </script>
+</BaseLayout>

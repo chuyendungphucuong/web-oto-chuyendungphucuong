@@ -1,213 +1,275 @@
 ---
+import navData from '../data/navigation.json';
+
 interface Props {
-  title: string;
-  description: string;
-  schema?: object;
+  title?: string;
+  description?: string;
+  image?: string;
 }
 
-const { title, description, schema } = Astro.props;
+const {
+  title = "Ô TÔ PHÚ CƯỜNG - NHÀ CUNG CẤP VÀ SẢN XUẤT Ô TÔ CHUYÊN DÙNG",
+  description = "Ô Tô Phú Cường chuyên cung cấp và sản xuất các dòng ô tô chuyên dùng, xe tải, xe bồn xitec, xe cẩu, xe cứu hộ và ô tô khách. Hỗ trợ trả góp đến 90%, giao xe toàn quốc. Hotline/Zalo: 0922 77 77 03.",
+  image = "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80"
+} = Astro.props;
 
-const dealerSchema = {
-  "@context": "https://schema.org",
-  "@type": "AutoDealer",
-  "name": "Ô Tô Chuyên Dùng Phú Cường",
-  "url": "https://chuyendungphucuong.com",
-  "telephone": "0922777703",
-  "description": "Chuyên phân phối xe tải chuyên dùng và ô tô khách chính hãng tại miền Nam.",
-  "areaServed": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang", "Đồng Tháp"],
-  "department": [
-    {
-      "@type": "AutoDealer",
-      "name": "Chuyên Dùng Phú Cường - Showroom TP. HCM",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "2466 Lê Khả Phiêu, Ấp 16, Xã Bình Chánh",
-        "addressLocality": "TP. Hồ Chí Minh",
-        "addressCountry": "VN"
-      }
-    },
-    {
-      "@type": "AutoDealer",
-      "name": "Chuyên Dùng Phú Cường - Showroom Tiền Giang",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "95 Quốc lộ 1A, phường Nhị Quý",
-        "addressLocality": "Tiền Giang",
-        "addressCountry": "VN"
-      }
-    },
-    {
-      "@type": "AutoDealer",
-      "name": "Chuyên Dùng Phú Cường - Showroom An Giang",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "26 Trần Hưng Đạo, phường Bình Đức",
-        "addressLocality": "An Giang",
-        "addressCountry": "VN"
+const navigation = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
+const canonicalURL = Astro.url?.href || "https://phucuongauto.vn";
+---
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalURL} />
+
+  <!-- Open Graph / Zalo / Facebook Preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={image} />
+  <meta property="og:site_name" content="Ô Tô Phú Cường" />
+  <meta property="og:locale" content="vi_VN" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={image} />
+
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+
+  <style is:inline>
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+    }
+    .hotline-pulse {
+      animation: pulseRing 2s infinite;
+    }
+    @media print {
+      .no-print {
+        display: none !important;
       }
     }
-  ]
-};
----
-<!doctype html>
-<html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} | Chuyên Dùng Phú Cường</title>
-    <meta name="description" content={description} />
-    <script is:inline src="https://cdn.tailwindcss.com"></script>
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 antialiased pb-16 sm:pb-0">
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm no-print">
+    <div class="container mx-auto px-4 max-w-7xl flex items-center justify-between h-20">
+      <!-- Logo -->
+      <a href="/" class="flex flex-col shrink-0">
+        <span class="text-xl sm:text-2xl font-black text-blue-900 leading-none">
+          Ô TÔ PHÚ CƯỜNG
+        </span>
+        <span class="text-[9px] sm:text-[10px] font-extrabold text-red-600 uppercase tracking-wider mt-1">
+          Cung Cấp & Sản Xuất Ô Tô Chuyên Dùng
+        </span>
+      </a>
 
-    <script type="application/ld+json" set:html={JSON.stringify(dealerSchema)} />
-    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
-  </head>
-  <body class="bg-slate-50 text-slate-900 font-sans pb-20 md:pb-0">
-    <!-- Top Bar 3 Showroom -->
-    <div class="bg-slate-900 text-amber-400 text-xs py-2 px-4">
-      <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
-        <span>📍 Hệ thống Showroom: <strong>Bình Chánh, TP.HCM</strong> | <strong>Nhị Quý, Tiền Giang</strong> | <strong>Bình Đức, An Giang</strong></span>
-        <span class="text-white">Hotline tư vấn & Cứu hộ: <strong class="text-amber-400">0922 77 77 03</strong></span>
+      <!-- Menu Máy Tính (Desktop) -->
+      <nav class="hidden lg:flex items-center gap-7 font-bold text-sm text-slate-700">
+        {navigation.map((menu: any) => (
+          <div class="relative group py-4">
+            <a href={menu.url} class="flex items-center gap-1 hover:text-red-600 transition">
+              {menu.title} {menu.children && '▾'}
+            </a>
+            {menu.children && Array.isArray(menu.children) && (
+              <div class="absolute top-full left-0 w-64 bg-white shadow-xl rounded-xl py-2 border border-slate-100 hidden group-hover:block z-50">
+                {menu.children.map((sub: any) => (
+                  <a href={sub.url} class="block px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition">
+                    {sub.title}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </nav>
+
+      <!-- Cụm nút bên phải: Hotline, Zalo & Nút mở Menu Di Động -->
+      <div class="flex items-center gap-2 sm:gap-2.5">
+        <a 
+          href="https://zalo.me/0922777703" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="hidden sm:flex bg-blue-600 hover:bg-blue-700 text-white font-extrabold px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition shadow-sm items-center gap-1.5"
+        >
+          💬 <span>Zalo</span>
+        </a>
+        <a 
+          href="tel:0922777703" 
+          class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm transition shadow-md flex items-center gap-1.5"
+        >
+          📞 <span>0922 77 77 03</span>
+        </a>
+
+        <!-- Nút Hamburger Menu chỉ hiện trên Điện thoại / Máy tính bảng (< 1024px) -->
+        <button 
+          type="button" 
+          id="btnMobileMenu" 
+          aria-label="Mở menu điều hướng"
+          class="lg:hidden p-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition cursor-pointer"
+        >
+          <svg id="iconMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="iconMenuClose" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
     </div>
 
-    <!-- Header hoàn chỉnh với Menu Đa Cấp Tin Tức Chuẩn Xác -->
-    <header class="bg-white shadow-sm sticky top-0 z-40">
-      <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <a href="/" class="text-2xl font-extrabold text-blue-900 tracking-tight">
-          PHÚ CƯỜNG <span class="text-red-600">AUTO</span>
-        </a>
-        
-        <!-- Menu Desktop -->
-        <nav class="hidden md:flex items-center space-x-5 font-semibold text-slate-700 text-sm">
-          <a href="/" class="hover:text-red-600">Trang chủ</a>
-          
-          <!-- 1. Xe Tải Chuyên Dùng -->
-          <div class="relative group">
-            <button class="flex items-center gap-1 hover:text-red-600 py-2 focus:outline-none cursor-pointer">
-              Xe Tải Chuyên Dùng ▾
-            </button>
-            <div class="absolute top-full left-0 w-80 bg-white shadow-xl rounded-lg py-2 border border-slate-100 hidden group-hover:block">
-              <div class="px-4 py-1 text-xs font-bold text-slate-400 uppercase">Xe Cẩu Tự Hành</div>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=cau-truc" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe tải gắn cẩu trục (Unic, Tadano, Soosan)</a>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=cau-gap" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe tải gắn cẩu gập (Palfinger, Sany)</a>
-              
-              <div class="border-t border-slate-100 my-1"></div>
-              <div class="px-4 py-1 text-xs font-bold text-slate-400 uppercase">Xe Bồn Chuyên Dùng</div>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=bon-nuoc" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe bồn chở nước / tưới cây công cộng</a>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=bon-hut-chat-thai" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe bồn hút chất thải, bùn hầm cầu</a>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=bon-thuc-pham" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe chở cám / bồn chở thực phẩm lỏng</a>
-
-              <div class="border-t border-slate-100 my-1"></div>
-              <div class="px-4 py-1 text-xs font-bold text-slate-400 uppercase">Xe Ép Rác & Môi Trường</div>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=ep-rac" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe cuốn ép rác (6 khối, 9 khối, 14 khối)</a>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=quet-rac" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe quét rác, hút bụi đường</a>
-
-              <div class="border-t border-slate-100 my-1"></div>
-              <div class="px-4 py-1 text-xs font-bold text-slate-400 uppercase">Xe Cứu Hộ & Chở Xe</div>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=nang-dau" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe nâng đầu chở máy / chở xe tải</a>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=cuu-ho" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe cứu hộ giao thông 3 chức năng</a>
-
-              <div class="border-t border-slate-100 my-1"></div>
-              <div class="px-4 py-1 text-xs font-bold text-slate-400 uppercase">Xe Ben & Xe Nặng Khác</div>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=xe-ben" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe ben tự đổ (Hino, Isuzu, Foton, Dongfeng)</a>
-              <a href="/?cat=xe-tai-chuyen-dung&sub=xe-nang-khac" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe đầu kéo gắn cẩu / Chở gia súc gia cầm</a>
-            </div>
-          </div>
-
-          <!-- 2. Ô Tô Khách -->
-          <div class="relative group">
-            <button class="flex items-center gap-1 hover:text-red-600 py-2 focus:outline-none cursor-pointer">
-              Ô Tô Khách ▾
-            </button>
-            <div class="absolute top-full left-0 w-72 bg-white shadow-xl rounded-lg py-2 border border-slate-100 hidden group-hover:block">
-              <div class="px-4 py-1 text-xs font-bold text-slate-400 uppercase">Xe Khách Nhỏ & Trung</div>
-              <a href="/?cat=xe-khach&sub=16-cho" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe khách 16 chỗ (Limousine / Tiêu chuẩn)</a>
-              <a href="/?cat=xe-khach&sub=29-cho" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe khách 29 chỗ (Bầu hơi, Weichai/Hyundai)</a>
-              <a href="/?cat=xe-khach&sub=34-cho" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe khách 34 chỗ ngồi rộng</a>
-
-              <div class="border-t border-slate-100 my-1"></div>
-              <div class="px-4 py-1 text-xs font-bold text-slate-400 uppercase">Xe Khách Lớn & Giường Nằm</div>
-              <a href="/?cat=xe-khach&sub=47-cho" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe khách 47 chỗ du lịch đường dài</a>
-              <a href="/?cat=xe-khach&sub=giuong-nam" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Xe giường nằm Limousine cao cấp</a>
-            </div>
-          </div>
-
-          <!-- 3. Dịch Vụ -->
-          <div class="relative group">
-            <a href="/dich-vu" class="flex items-center gap-1 hover:text-red-600 py-2 focus:outline-none cursor-pointer">
-              Dịch Vụ ▾
+    <!-- Khung Menu Di Động Xổ Xuống (Mobile Drawer) -->
+    <div id="mobileMenuDrawer" class="hidden lg:hidden bg-white border-t border-gray-200 px-4 py-4 space-y-2 shadow-xl max-h-[80vh] overflow-y-auto">
+      {navigation.map((menu: any, idx: number) => (
+        <div class="border-b border-gray-100 last:border-0 pb-2">
+          <div class="flex items-center justify-between">
+            <a href={menu.url} class="py-2 font-bold text-slate-800 hover:text-blue-600 text-sm flex-1">
+              {menu.title}
             </a>
-            <div class="absolute top-full left-0 w-72 bg-white shadow-xl rounded-lg py-2 border border-slate-100 hidden group-hover:block">
-              <a href="/dich-vu" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600 font-bold">Tổng Quan Dịch Vụ</a>
-              <div class="border-t border-slate-100 my-1"></div>
-              <a href="/dich-vu/cuu-ho-chuyen-dung" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600 text-red-600 font-bold">Cứu Hộ Chuyên Dùng 24/7</a>
-              <a href="/dich-vu/sua-xe-chuyen-dung" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Sửa Chữa Xe Chuyên Dùng & Động Cơ</a>
-              <a href="/dich-vu/sua-thung-bon" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Sửa Chữa & Gia Cố Thùng, Bồn Chuyên Dùng</a>
-              <a href="/dich-vu/cai-tao-ho-so" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Đăng Kiểm & Cải Tạo Hồ Sơ Thiết Kế</a>
-            </div>
+            {menu.children && Array.isArray(menu.children) && (
+              <button 
+                type="button" 
+                data-target={`mobSub-${idx}`}
+                class="btn-mob-sub px-3 py-1.5 text-xs font-bold bg-slate-100 text-slate-700 rounded-lg cursor-pointer"
+              >
+                Mở rộng ▾
+              </button>
+            )}
           </div>
-
-          <!-- 4. Tính Lăn Bánh -->
-          <a href="/#bao-gia" class="hover:text-red-600">Tính Lăn Bánh</a>
-
-          <!-- 5. Kiến Thức & Tin Tức (Đã sửa liên kết lọc chuẩn xác qua tham số ?cat=) -->
-          <div class="relative group">
-            <a href="/tin-tuc" class="flex items-center gap-1 hover:text-red-600 py-2 focus:outline-none cursor-pointer">
-              Kiến Thức & Tin Tức ▾
-            </a>
-            <div class="absolute top-full left-0 w-72 bg-white shadow-xl rounded-lg py-2 border border-slate-100 hidden group-hover:block">
-              <a href="/tin-tuc" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600 font-bold">Xem Tất Cả Bài Viết</a>
-              <div class="border-t border-slate-100 my-1"></div>
-              <a href="/tin-tuc?cat=danh-gia-xe" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Đánh Giá & So Sánh Xe</a>
-              <a href="/tin-tuc?cat=phap-ly" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Thủ Tục Pháp Lý & Đăng Kiểm</a>
-              <a href="/tin-tuc?cat=kinh-nghiem" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Kinh Nghiệm Vận Tải & Đầu Tư</a>
-              <a href="/tin-tuc?cat=tin-tuc" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-red-600">Tin Tức & Bàn Giao Xe Showroom</a>
+          {menu.children && Array.isArray(menu.children) && (
+            <div id={`mobSub-${idx}`} class="hidden pl-4 mt-1 space-y-1 border-l-2 border-blue-600 bg-slate-50/60 rounded-r-xl py-2">
+              {menu.children.map((sub: any) => (
+                <a href={sub.url} class="block py-2 px-3 text-xs font-semibold text-slate-600 hover:text-blue-600">
+                  • {sub.title}
+                </a>
+              ))}
             </div>
-          </div>
-
-          <!-- 6. Liên Hệ -->
-          <a href="/lien-he" class="hover:text-red-600">Liên Hệ</a>
-        </nav>
-
-        <a href="tel:0922777703" data-gtm-event="click_call_header" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition">
-          📞 0922 77 77 03
-        </a>
-      </div>
-    </header>
-
-    <main>
-      <slot />
-    </main>
-
-    <!-- Footer Chi tiết 3 Showroom chính thức -->
-    <footer id="he-thong-showroom" class="bg-slate-900 text-slate-300 py-12 mt-16">
-      <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8">
-        <div>
-          <h3 class="text-white font-bold text-lg mb-3">Showroom 1: TP. Hồ Chí Minh</h3>
-          <p class="text-sm leading-relaxed">📍 2466 Lê Khả Phiêu, Ấp 16, Xã Bình Chánh, TP. HCM</p>
-          <p class="text-sm mt-2 text-amber-400 font-semibold">Hotline: 0922 77 77 03</p>
+          )}
         </div>
-        <div>
-          <h3 class="text-white font-bold text-lg mb-3">Showroom 2: Tiền Giang</h3>
-          <p class="text-sm leading-relaxed">📍 95 Quốc lộ 1A, phường Nhị Quý, tỉnh Đồng Tháp (Tiền Giang cũ)</p>
-          <p class="text-sm mt-2 text-amber-400 font-semibold">Hotline: 0922 77 77 03</p>
-        </div>
-        <div>
-          <h3 class="text-white font-bold text-lg mb-3">Showroom 3: An Giang</h3>
-          <p class="text-sm leading-relaxed">📍 26 Trần Hưng Đạo, phường Bình Đức, tỉnh An Giang</p>
-          <p class="text-sm mt-2 text-amber-400 font-semibold">Hotline: 0922 77 77 03</p>
-        </div>
-      </div>
-      <div class="max-w-7xl mx-auto px-4 border-t border-slate-800 mt-8 pt-6 text-center text-xs text-slate-500">
-        © 2026 Ô Tô Chuyên Dùng Phú Cường. All rights reserved. Hỗ trợ tài chính trả góp 80% toàn miền Nam.
-      </div>
-    </footer>
-
-    <!-- Thanh Sticky Mobile Bar -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 grid grid-cols-3 md:hidden z-50 shadow-lg">
-      <a href="tel:0922777703" class="py-3 text-center bg-red-600 text-white font-bold text-sm">📞 Gọi Ngay</a>
-      <a href="https://zalo.me/0922777703" class="py-3 text-center bg-blue-600 text-white font-bold text-sm">💬 Chat Zalo</a>
-      <a href="/lien-he" class="py-3 text-center bg-amber-500 text-slate-900 font-bold text-sm">📍 Liên Hệ</a>
+      ))}
     </div>
-  </body>
+  </header>
+
+  <slot />
+
+  <footer class="bg-slate-900 text-slate-400 py-12 px-4 mt-20 no-print">
+    <div class="container mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+      <div>
+        <span class="text-lg font-black text-white block mb-1">Ô TÔ PHÚ CƯỜNG</span>
+        <span class="text-xs font-bold text-red-400 uppercase block mb-3">Nhà Cung Cấp Và Sản Xuất Ô Tô Chuyên Dùng</span>
+        <p class="leading-relaxed">Đơn vị uy tín hàng đầu trong lĩnh vực phân phối, đóng mới xe chuyên dùng và ô tô khách tại miền Nam. Hỗ trợ vay ngân hàng đến 90%.</p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-3">Hệ thống Showroom</h4>
+        <p class="mb-2">📍 Showroom 1: 2466 Lê Khả Phiêu, Xã Bình Chánh, TP. Hồ Chí Minh</p>
+        <p class="mb-2">📍 Showroom 2: 95 Quốc lộ 1A, Nhị Quý, Tiền Giang</p>
+        <p>📍 Showroom 3: 26 Trần Hưng Đạo, Bình Đức, An Giang</p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-3">Tổng đài liên hệ 24/7</h4>
+        <p class="mb-2">Hotline / Zalo: <a href="tel:0922777703" class="text-white font-extrabold hover:text-red-400">0922 77 77 03 (Mr. Hoàng Vũ)</a></p>
+        <p class="mb-3">Email: <a href="mailto:chuyendungphucuong@gmail.com" class="text-white hover:underline">chuyendungphucuong@gmail.com</a></p>
+        <a href="/tinh-lan-banh" class="inline-block bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition">
+          🧮 Công Cụ Tính Giá Lăn Bánh & Xuất PDF
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CỤM NÚT NỔI TRÊN MÁY TÍNH (DESKTOP FLOATING BUTTONS) -->
+  <div class="hidden sm:flex fixed right-5 bottom-6 z-40 flex-col gap-3 no-print">
+    <a
+      href="/tinh-lan-banh"
+      title="Tính giá lăn bánh & Trả góp"
+      class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2 text-xs transition hover:-translate-x-1 border border-slate-700"
+    >
+      <span>🧮</span>
+      <span>Tính Lăn Bánh</span>
+    </a>
+    <a
+      href="https://zalo.me/0922777703"
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Chat Zalo với Mr. Hoàng Vũ"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-extrabold px-4 py-3 rounded-full shadow-lg flex items-center gap-2 text-xs transition hover:-translate-x-1"
+    >
+      <span class="bg-white text-blue-600 font-black px-1.5 py-0.5 rounded text-[10px]">Zalo</span>
+      <span>Chat Báo Giá</span>
+    </a>
+    <a
+      href="tel:0922777703"
+      title="Gọi Hotline 0922 77 77 03"
+      class="hotline-pulse bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-3 rounded-full shadow-xl flex items-center gap-2 text-xs transition"
+    >
+      <span>📞</span>
+      <span>0922 77 77 03</span>
+    </a>
+  </div>
+
+  <!-- THANH CÔNG CỤ CỐ ĐỊNH DƯỚI ĐÁY TRÊN ĐIỆN THOẠI (MOBILE STICKY BAR) -->
+  <div class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-2xl grid grid-cols-3 gap-1 p-1.5 no-print">
+    <a
+      href="/tinh-lan-banh"
+      class="bg-slate-100 active:bg-slate-200 text-slate-800 font-bold py-2.5 rounded-xl flex flex-col items-center justify-center text-[11px]"
+    >
+      <span class="text-sm">🧮</span>
+      <span>Tính Giá</span>
+    </a>
+    <a
+      href="https://zalo.me/0922777703"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="bg-blue-600 active:bg-blue-700 text-white font-extrabold py-2.5 rounded-xl flex flex-col items-center justify-center text-[11px]"
+    >
+      <span class="text-sm">💬</span>
+      <span>Chat Zalo</span>
+    </a>
+    <a
+      href="tel:0922777703"
+      class="bg-red-600 active:bg-red-700 text-white font-extrabold py-2.5 rounded-xl flex flex-col items-center justify-center text-[11px]"
+    >
+      <span class="text-sm">📞</span>
+      <span>Gọi Ngay</span>
+    </a>
+  </div>
+
+  <!-- Script điều khiển Menu Di Động -->
+  <script is:inline>
+    const btnMobileMenu = document.getElementById('btnMobileMenu');
+    const mobileMenuDrawer = document.getElementById('mobileMenuDrawer');
+    const iconOpen = document.getElementById('iconMenuOpen');
+    const iconClose = document.getElementById('iconMenuClose');
+
+    btnMobileMenu?.addEventListener('click', () => {
+      const isHidden = mobileMenuDrawer.classList.contains('hidden');
+      if (isHidden) {
+        mobileMenuDrawer.classList.remove('hidden');
+        iconOpen.classList.add('hidden');
+        iconClose.classList.remove('hidden');
+      } else {
+        mobileMenuDrawer.classList.add('hidden');
+        iconOpen.classList.remove('hidden');
+        iconClose.classList.add('hidden');
+      }
+    });
+
+    document.querySelectorAll('.btn-mob-sub').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const targetId = e.currentTarget.getAttribute('data-target');
+        const subEl = document.getElementById(targetId);
+        if (subEl) {
+          subEl.classList.toggle('hidden');
+        }
+      });
+    });
+  </script>
+</body>
 </html>

@@ -1,0 +1,120 @@
+[
+  {
+    "slug": "xe-nang-daucang-keo-foton",
+    "name": "Xe Nâng Đầu Càng Kéo Foton Chở Máy Công Trình (Tải Trọng 5.3 Tấn)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Nâng Đầu Chở Xe",
+    "subKey": "nang-dau",
+    "brand": "Foton",
+    "price": 1750000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng tời kéo thủy lực 8 tấn & Định vị GPS",
+    "images": [
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe nâng đầu càng kéo Foton tải trọng 5.3 tấn, động cơ Yuchai 220HP, sàn thép Q690D 6.5m, chân nâng đầu chịu tải 20 tấn và càng kéo sau 10 tấn.",
+    "description": "I. Tổng quan Xe Nâng Đầu Càng Kéo Foton 5.3 Tấn\nVừa chở máy công trình trên sàn thép Q690D (6.500 x 2.500 mm), vừa dùng càng nâng phao sau 10 tấn để kéo cứu hộ phương tiện khác.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 7080000,
+    "insuranceTNDS": 3520000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Foton nhập khẩu",
+      "Tải trọng cho phép chở": "5.300 kg",
+      "Dung tích xi-lanh": "6.870 cc",
+      "Động cơ": "YC6JA220-50 (Yuchai - 220 Mã lực)"
+    },
+    "specialSpecs": {
+      "Vật liệu chế tạo": "Thép cường lực Q690D",
+      "Chân chống nâng đầu": "Chịu tải nâng tối đa 20 tấn",
+      "Tời kéo & Càng kéo": "Tời kéo 8 tấn + Càng nâng phao sau 10 tấn"
+    },
+    "faqs": [
+      {
+        "question": "Chân chống nâng đầu xe Foton 5.3 tấn chịu tải bao nhiêu?",
+        "answer": "Chịu tải nâng tối đa lên đến 20 tấn."
+      }
+    ]
+  },
+  {
+    "slug": "xe-nang-dau-dongfeng-captain-c-cho-xe-may-cong-trinh",
+    "name": "Xe Nâng Đầu Chở Máy Công Trình Dongfeng Captain C (Tải Trọng 8 Tấn)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Nâng Đầu Chở Xe",
+    "subKey": "nang-dau",
+    "brand": "Dongfeng",
+    "price": 1620000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng tời kéo thủy lực & Định vị GPS",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe nâng đầu Dongfeng Captain C chở máy công trình tải trọng 8 tấn, sàn dài 7m, động cơ Yuchai 170HP kết hợp hộp số FAST 2 tầng 8 tiến - 2 lùi.",
+    "description": "I. Tổng quan Xe Nâng Đầu Dongfeng Captain C 8 Tấn\nKhung gầm chassis lồng 2 lớp nhập khẩu, sàn chở dài 7.000 x 2.380 mm, hộp số 2 tầng giúp bò dốc công trình cực khỏe.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 2600000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "Dongfeng Captain C",
+      "Tải trọng cho phép chở": "8.000 kg",
+      "Dung tích xi-lanh": "3.767 cc",
+      "Động cơ": "YC4S170-50 (Yuchai - 170 Mã lực)"
+    },
+    "specialSpecs": {
+      "Hệ thống chuyên dùng": "Sàn thép 7 mét + Chân chống nâng đầu & Cầu dẫn gập thủy lực",
+      "Kích thước lòng thùng": "7.000 x 2.380 mm"
+    },
+    "faqs": [
+      {
+        "question": "Xe nâng đầu Dongfeng Captain C có tải trọng bao nhiêu?",
+        "answer": "Tải trọng chuyên chở cho phép là 8.000 kg (8 tấn)."
+      }
+    ]
+  },
+  {
+    "slug": "xe-nang-dau-jac-n900e5-cho-xe-may-cong-trinh",
+    "name": "Xe Nâng Đầu Chở Máy Công Trình JAC N900E5 (Tải Trọng 8.15 Tấn)",
+    "category": "xe-tai-chuyen-dung",
+    "categoryName": "Xe Tải Chuyên Dùng",
+    "subCategory": "Xe Nâng Đầu Chở Xe",
+    "subKey": "nang-dau",
+    "brand": "JAC",
+    "price": 1580000000,
+    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng tời kéo thủy lực & Định vị GPS",
+    "images": [
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    ],
+    "summary": "Xe nâng đầu JAC N900E5 chở xe đào, máy xúc, xe lu tải trọng 8.15 tấn, động cơ Cummins 210HP Euro 5, sàn chở dài 6.52m.",
+    "description": "I. Tổng quan Xe Nâng Đầu JAC N900E5\nTải trọng cho phép chở 8.150 kg, động cơ Cummins B4.5EV210 210HP, chân chống nâng hạ đầu xe và cầu dẫn gập thủy lực phía sau.",
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
+    "roadTaxPerYear": 4680000,
+    "insuranceTNDS": 2002000,
+    "chassisSpecs": {
+      "Model xe cơ sở": "JAC N900 PLUS E5",
+      "Tải trọng cho phép chở": "8.150 kg",
+      "Dung tích xi-lanh": "4.460 cc",
+      "Động cơ": "Cummins B4.5EV210 (210 Mã lực, Euro 5)"
+    },
+    "specialSpecs": {
+      "Hệ thống chuyên dùng": "Sàn thép chịu lực + Chân chống nâng đầu & Cầu dẫn gập thủy lực",
+      "Kích thước lòng thùng": "6.520 x 2.400 mm"
+    },
+    "faqs": [
+      {
+        "question": "Xe nâng đầu JAC N900E5 chở được bao nhiêu tấn?",
+        "answer": "Tải trọng chuyên chở thiết kế cho phép là 8.150 kg."
+      }
+    ]
+  }
+]
