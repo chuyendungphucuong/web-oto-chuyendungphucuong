@@ -9,16 +9,16 @@
       "url": "/san-pham?cat=xe-tai-chuyen-dung",
       "children": [
         {
+          "title": "Xe bồn cám thức ăn chăn nuôi",
+          "url": "/san-pham?cat=bon-thuc-pham"
+        },
+        {
           "title": "Xe cứu hộ giao thông",
           "url": "/san-pham?cat=cuu-ho"
         },
         {
           "title": "Xe nâng đầu chở máy công trình",
           "url": "/san-pham?cat=nang-dau"
-        },
-        {
-          "title": "Xe bồn cám thức ăn chăn nuôi",
-          "url": "/san-pham?cat=bon-thuc-pham"
         },
         {
           "title": "Xe bồn chở nước tưới cây",

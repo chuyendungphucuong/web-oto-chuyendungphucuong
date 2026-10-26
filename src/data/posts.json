@@ -1,16 +1,5 @@
 [
   {
-    "slug": "test-bai-viet",
-    "title": "test bài viết",
-    "category": "Đánh Giá & So Sánh Xe",
-    "date": "22 tháng 10, 2026",
-    "author": "Chuyên gia Phú Cường 1",
-    "views": "1 lượt xem",
-    "summary": "Tóm tắt",
-    "image": "/images/posts/test-bai-viet-1.webp",
-    "content": "<p>Nội dung</p><p><br></p><p>hình</p><p><br></p><p><img src=\"/images/posts/test-bai-viet-2.webp\"></p>"
-  },
-  {
     "slug": "thu-tuc-mua-xe-tai-xe-chuyen-dung-tra-gop",
     "title": "Thủ tục mua xe tải, xe chuyên dùng trả góp qua ngân hàng mới nhất: Cần chuẩn bị những gì?",
     "category": "Kinh Nghiệm Vận Tải & Đầu Tư",
