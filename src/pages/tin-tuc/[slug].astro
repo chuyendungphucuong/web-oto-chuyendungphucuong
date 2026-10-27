@@ -27,7 +27,7 @@ const cleanContent = (post.content || '')
 const related = posts.filter((p: any) => p.slug !== slug).slice(0, 3);
 ---
 
-<BaseLayout title={`${post.title} | Kiến thức Ô Tô Chuyên Dùng Phú Cường`}>
+<BaseLayout title={`${post.title} | Kiến thức Ô Tô Chuyên Dùng Phú Cường`} description={post.excerpt || post.summary || post.title} image={post.image}>
   <main class="container mx-auto px-4 py-8 max-w-7xl">
     <nav class="text-sm text-gray-500 mb-6">
       <a href="/" class="hover:text-blue-600">Trang chủ</a> &gt; 

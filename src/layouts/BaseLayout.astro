@@ -14,7 +14,9 @@ const {
 } = Astro.props;
 
 const navigation = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
-const canonicalURL = Astro.url?.href || "https://phucuongauto.vn";
+const siteOrigin = Astro.url?.origin || "https://chuyendungphucuong.vn";
+const canonicalURL = Astro.url?.href || "https://chuyendungphucuong.vn";
+const ogImageUrl = image && image.startsWith("/") ? `${siteOrigin}${image}` : image;
 ---
 
 <!DOCTYPE html>
@@ -31,7 +33,7 @@ const canonicalURL = Astro.url?.href || "https://phucuongauto.vn";
   <meta property="og:url" content={canonicalURL} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={image} />
+  <meta property="og:image" content={ogImageUrl} />
   <meta property="og:site_name" content="Ô Tô Phú Cường" />
   <meta property="og:locale" content="vi_VN" />
 
@@ -39,7 +41,7 @@ const canonicalURL = Astro.url?.href || "https://phucuongauto.vn";
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={image} />
+  <meta name="twitter:image" content={ogImageUrl} />
 
   <script is:inline src="https://cdn.tailwindcss.com"></script>
 
