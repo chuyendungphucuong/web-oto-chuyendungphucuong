@@ -77,11 +77,7 @@ const faqSchema = faqs.length > 0 ? {
 } : null;
 ---
 
-<BaseLayout 
-  title={`${vehicle.name} | Ô Tô Phú Cường`}
-  description={vehicle.summary || `Báo giá lăn bánh và thông số kỹ thuật ${vehicle.name} tại Ô Tô Phú Cường. Hỗ trợ vay trả góp lên đến 90%. Hotline/Zalo: 0922 77 77 03.`}
-  image={images[0]}
->
+<BaseLayout title={`${vehicle.name} | Ô Tô Chuyên Dùng Phú Cường`} description={vehicle.summary || vehicle.name} image={images[0]}>
   <!-- NHÚNG MÃ JSON-LD SCHEMA ẨN CHO SEO & AI OVERVIEWS -->
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
   {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
