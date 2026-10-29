@@ -142,23 +142,23 @@ const rawPostContent = (post?.content || '')
                   <div id="editor-container" style="height: 300px; background: white;"></div>
         </div>
 
-        <!-- KHỐI QUẢN LÝ MÃ HTML & BẢNG BIỂU RIÊNG BIỆT (KHÔNG SỢ VỠ KHI SỬA) -->
+                <!-- KHỐI QUẢN LÝ MÃ HTML & BẢNG BIỂU RIÊNG BIỆT -->
         <div class="bg-slate-900 text-white p-5 rounded-xl border border-slate-700 space-y-3 mt-4">
           <div class="flex items-center justify-between">
             <label class="block font-extrabold text-amber-400 text-xs uppercase tracking-wider">
-              🛠️ Hộp Chỉnh Sửa Mã HTML Trực Tiếp (Dành riêng cho Bảng biểu & Khối đặc biệt):
+              🛠️ Hộp Chỉnh Sửa Mã HTML Trực Tiếp (Dành riêng cho Bảng biểu):
             </label>
             <button type="button" id="btnSyncToEditor" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer">
-              🔄 Đồng bộ HTML vào trình soạn thảo chính
+              🔄 Đồng bộ HTML vào trình soạn thảo
             </button>
           </div>
           <p class="text-xs text-slate-300">
-            Anh có thể dán hoặc chỉnh sửa trực tiếp mã thẻ bảng (<code class="text-amber-300">&lt;table&gt;&lt;tr&gt;&lt;td&gt;...</code>) tại đây để đảm bảo an toàn tuyệt đối, không sợ bị xóa mất ký tự khi thao tác.
+            Dán hoặc chỉnh sửa trực tiếp mã thẻ bảng (<code class="text-amber-300">&lt;table&gt;&lt;tr&gt;&lt;td&gt;...</code>) tại đây để an toàn tuyệt đối.
           </p>
           <textarea 
             id="inputRawHtml" 
             rows="6" 
-            placeholder="Mã HTML chi tiết của bài viết sẽ hiển thị ở đây..."
+            placeholder="Mã HTML chi tiết..."
             class="w-full p-3 rounded-lg bg-slate-950 border border-slate-700 text-emerald-400 font-mono text-xs outline-none focus:border-amber-400"
           ></textarea>
         </div>
