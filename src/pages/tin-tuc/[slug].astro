@@ -61,7 +61,7 @@ const related = posts.filter((p: any) => p.slug !== slug).slice(0, 3);
 
         <!-- Render HTML chuẩn xác (biến thẻ <img> thành hình ảnh thật) -->
         <div 
-          class="prose max-w-none text-gray-800 leading-relaxed space-y-4 text-base [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:border [&_img]:border-gray-200 [&_p]:mb-3" 
+          class="prose max-w-none text-gray-800 leading-relaxed space-y-4 text-base [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:border [&_img]:border-gray-200 [&_p]:mb-3 [&_table]:w-full [&_table]:border-collapse [&_table]:my-6 [&_table]:text-sm [&_th]:bg-blue-900 [&_th]:text-white [&_th]:font-bold [&_th]:p-3 [&_th]:border [&_th]:border-slate-300 [&_th]:text-left [&_td]:p-3 [&_td]:border [&_td]:border-slate-300 [&_tr:nth-child(even)_td]:bg-slate-50 [&_h2]:text-2xl [&_h2]:font-extrabold [&_h2]:text-slate-900 [&_h2]:mt-6 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-blue-900 [&_h3]:mt-5 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-1.5" 
           set:html={cleanContent} 
         />
 

@@ -1,45 +1,61 @@
 ---
-import AdminLayout from '../../../layouts/AdminLayout.astro';
-import postsData from '../../../data/posts.json';
-import navData from '../../../data/navigation.json';
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import postsData from "../../../data/posts.json";
+import navData from "../../../data/navigation.json";
 
 const url = new URL(Astro.request.url);
-const slug = url.searchParams.get('slug');
+const slug = url.searchParams.get("slug");
 
 const posts = Array.isArray(postsData) ? postsData : [];
-const post = posts.find((p: any) => p.slug === slug) || null;
+const post = posts.find((p) => p.slug === slug) || null;
 const isEditMode = !!post;
 
 const mainMenu = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
-const newsMenu = mainMenu.find((m: any) => typeof m.url === 'string' && m.url.includes('/tin-tuc'));
-const dynamicPostCategories: string[] = [];
+const newsMenu = mainMenu.find((m) => typeof m.url === "string" && m.url.includes("/tin-tuc"));
+const dynamicPostCategories = [];
 
 if (newsMenu && Array.isArray(newsMenu.children)) {
-  newsMenu.children.forEach((child: any) => {
-    if (child.title && !child.title.toLowerCase().includes('xem tất cả')) {
+  newsMenu.children.forEach((child) => {
+    if (child.title && !child.title.toLowerCase().includes("xem tất cả")) {
       dynamicPostCategories.push(child.title);
     }
   });
 }
 
 const defaultCategories = [
-  'Đánh Giá & So Sánh Xe',
-  'Thủ Tục Pháp Lý & Đăng Kiểm',
-  'Kinh Nghiệm Vận Tải & Đầu Tư',
-  'Tin Tức & Bàn Giao Xe Showroom'
+  "Đánh Giá & So Sánh Xe",
+  "Thủ Tục Pháp Lý & Đăng Kiểm",
+  "Kinh Nghiệm Vận Tải & Đầu Tư",
+  "Tin Tức & Bàn Giao Xe Showroom"
 ];
 
 const postCategories = dynamicPostCategories.length > 0 ? dynamicPostCategories : defaultCategories;
 
-const rawPostContent = (post?.content || '')
-  .replace(/&lt;/g, '<')
-  .replace(/&gt;/g, '>');
+const rawPostContent = (post?.content || "")
+  .replace(/&lt;/g, "<")
+  .replace(/&gt;/g, ">");
 ---
 
 <AdminLayout title={isEditMode ? "Chỉnh Sửa Bài Viết Tin Tức" : "Viết Bài Viết Mới"} activeTab="posts">
-  <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+  <style is:global>
+    #visualEditor { min-height: 460px; max-height: 720px; overflow-y: auto; outline: none; line-height: 1.75; color: #1e293b; font-size: 15px; }
+    #visualEditor h2 { font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 1.25rem 0 0.6rem; }
+    #visualEditor h3 { font-size: 1.2rem; font-weight: 700; color: #1e3a8a; margin: 1rem 0 0.5rem; }
+    #visualEditor h4 { font-size: 1.05rem; font-weight: 700; color: #334155; margin: 0.8rem 0 0.4rem; }
+    #visualEditor p { margin-bottom: 0.75rem; }
+    #visualEditor ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.85rem; }
+    #visualEditor ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 0.85rem; }
+    #visualEditor li { margin-bottom: 0.35rem; }
+    #visualEditor a { color: #2563eb; text-decoration: underline; font-weight: 600; }
+    #visualEditor img { max-width: 100%; height: auto; border-radius: 0.75rem; margin: 1rem auto; border: 1px solid #cbd5e1; }
+    #visualEditor table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 14px; background: #fff; }
+    #visualEditor th { background-color: #1e3a8a; color: #ffffff; font-weight: 700; padding: 10px 12px; border: 1px solid #94a3b8; text-align: left; }
+    #visualEditor td { padding: 10px 12px; border: 1px solid #cbd5e1; vertical-align: top; }
+    #visualEditor tr:nth-child(even) td { background-color: #f8fafc; }
+    #visualEditor td:focus, #visualEditor th:focus { outline: 2px solid #f59e0b; background-color: #fffbeb !important; color: #0f172a; }
+  </style>
 
-  <div class="max-w-4xl mx-auto space-y-6 pb-12">
+  <div class="max-w-5xl mx-auto space-y-6 pb-12">
     <div class="flex items-center justify-between">
       <a href="/admin/posts" class="text-sm font-bold text-blue-600 hover:underline">&larr; Quay lại danh sách bài viết</a>
       <button type="button" id="btnSavePost" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-8 py-3 rounded-xl shadow-lg cursor-pointer transition text-sm">
@@ -49,7 +65,7 @@ const rawPostContent = (post?.content || '')
 
     <input type="hidden" id="isEditMode" value={isEditMode ? "true" : "false"} />
 
-    <!-- KHỐI TRỢ LÝ AI NHẬP LIỆU NHANH 1-CLICK CHO BÀI VIẾT TIN TỨC -->
+    <!-- KHỐI TRỢ LÝ AI NHẬP LIỆU NHANH 1-CLICK -->
     <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-6 rounded-2xl shadow-lg border border-blue-800 space-y-4">
       <div class="border-b border-white/15 pb-3">
         <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded uppercase tracking-wider">⚡ Trợ Lý Tin Tức Siêu Tốc</span>
@@ -61,27 +77,14 @@ const rawPostContent = (post?.content || '')
           <label class="block text-xs font-bold text-blue-200">
             Dán "Mã Nhập Liệu Bài Viết (JSON)" từ trợ lý AI vào đây:
           </label>
-          <textarea 
-            id="aiPostQuickInput" 
-            rows="4" 
-            placeholder='Dán khối mã JSON bài viết vào đây rồi bấm nút "🚀 Tự Động Điền Bài Viết"...'
-            class="w-full p-3 rounded-xl bg-slate-800/90 border border-slate-600 text-white font-mono text-xs focus:border-amber-400 outline-none"
-          ></textarea>
+          <textarea id="aiPostQuickInput" rows="4" placeholder="Dán khối mã JSON bài viết vào đây..." class="w-full p-3 rounded-xl bg-slate-800/90 border border-slate-600 text-white font-mono text-xs focus:border-amber-400 outline-none"></textarea>
         </div>
 
         <div class="lg:col-span-4 flex flex-col justify-end gap-2.5">
-          <button 
-            type="button" 
-            id="btnApplyPostJson" 
-            class="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-3 px-4 rounded-xl shadow-md transition cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-2"
-          >
+          <button type="button" id="btnApplyPostJson" class="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-3 px-4 rounded-xl shadow-md transition cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-2">
             🚀 Tự Động Điền Bài Viết (1-Click)
           </button>
-          <button 
-            type="button" 
-            id="btnGeneratePostTemplate" 
-            class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl transition cursor-pointer text-xs flex items-center justify-center gap-1.5"
-          >
+          <button type="button" id="btnGeneratePostTemplate" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl transition cursor-pointer text-xs flex items-center justify-center gap-1.5">
             ✍️ Tự Dựng Khung Bài Từ Tiêu Đề
           </button>
           <p id="aiPostStatus" class="text-[11px] text-emerald-400 font-bold hidden"></p>
@@ -89,19 +92,20 @@ const rawPostContent = (post?.content || '')
       </div>
     </div>
 
+    <!-- TRÌNH SOẠN THẢO VÀ BẢNG TÍNH TRỰC QUAN -->
     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-      <h2 class="text-base font-bold text-white bg-blue-700 p-3 rounded-xl">Trình Soạn Thảo Bài Viết Chuẩn SEO & AI Overviews</h2>
-      
+      <h2 class="text-base font-bold text-white bg-blue-700 p-3 rounded-xl">Trình Soạn Thảo Bài Viết & Bảng So Sánh Trực Quan</h2>
+
       <div class="space-y-4 text-sm">
         <div>
           <label class="block font-bold text-slate-700 mb-1">Tiêu đề bài viết (*):</label>
-          <input type="text" id="inputTitle" value={post?.title || ''} placeholder="Nhập tiêu đề chuẩn SEO..." class="w-full p-3 border rounded-xl font-bold text-slate-900 text-base outline-none focus:ring-2 focus:ring-blue-600" />
+          <input type="text" id="inputTitle" value={post?.title || ""} placeholder="Nhập tiêu đề chuẩn SEO..." class="w-full p-3 border rounded-xl font-bold text-slate-900 text-base outline-none focus:ring-2 focus:ring-blue-600" />
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block font-bold text-slate-700 mb-1">Mã định danh URL (Slug) (*):</label>
-            <input type="text" id="inputSlug" value={post?.slug || ''} placeholder="vd: thu-tuc-dang-kiem-xe" class={`w-full p-3 border rounded-xl font-mono text-xs ${isEditMode ? 'bg-slate-100' : ''}`} readonly={isEditMode} />
+            <input type="text" id="inputSlug" value={post?.slug || ""} placeholder="vd: thu-tuc-dang-kiem-xe" class={"w-full p-3 border rounded-xl font-mono text-xs " + (isEditMode ? "bg-slate-100" : "")} readonly={isEditMode} />
           </div>
           <div>
             <label class="block font-bold text-slate-700 mb-1">Chuyên mục bài viết:</label>
@@ -118,12 +122,12 @@ const rawPostContent = (post?.content || '')
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block font-bold text-slate-700 mb-1">Tác giả:</label>
-            <input type="text" id="inputAuthor" value={post?.author || 'Chuyên gia Phú Cường'} class="w-full p-3 border rounded-xl outline-none" />
+            <input type="text" id="inputAuthor" value={post?.author || "Chuyên gia Phú Cường"} class="w-full p-3 border rounded-xl outline-none" />
           </div>
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Ảnh đại diện bài viết (Tự động nén WebP 1200px):</label>
+            <label class="block font-bold text-slate-700 mb-1">Ảnh đại diện bài viết:</label>
             <div class="flex gap-2">
-              <input type="text" id="inputImage" value={post?.image || ''} placeholder="/images/posts/..." class="flex-1 p-3 border rounded-xl font-mono text-xs outline-none" />
+              <input type="text" id="inputImage" value={post?.image || ""} placeholder="/images/posts/..." class="flex-1 p-3 border rounded-xl font-mono text-xs outline-none" />
               <input type="file" id="fileBannerPost" accept="image/*" class="hidden" />
               <button type="button" id="btnUploadBanner" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 rounded-xl text-xs cursor-pointer shrink-0 transition">
                 📤 Chọn ảnh
@@ -134,278 +138,310 @@ const rawPostContent = (post?.content || '')
 
         <div>
           <label class="block font-bold text-slate-700 mb-1">Tóm tắt ngắn chuẩn AI Overviews (Summary):</label>
-          <textarea id="inputSummary" rows="3" class="w-full p-3 border rounded-xl outline-none">{post?.summary || ''}</textarea>
+          <textarea id="inputSummary" rows="3" class="w-full p-3 border rounded-xl outline-none">{post?.summary || ""}</textarea>
         </div>
 
-        <div>
-          <label class="block font-bold text-slate-700 mb-2">Nội dung chi tiết (Ảnh chèn vào bài tự động Resize 1200px & đổi tên chuẩn SEO):</label>
-                  <div id="editor-container" style="height: 300px; background: white;"></div>
+        <!-- THANH CÔNG CỤ SOẠN THẢO & QUẢN LÝ BẢNG TÍNH -->
+        <div class="border border-slate-300 rounded-2xl overflow-hidden shadow-sm">
+          <div class="bg-slate-100 p-2.5 border-b border-slate-300 flex flex-wrap items-center gap-1.5">
+            <button type="button" data-cmd="formatBlock" data-val="H2" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg font-extrabold text-xs hover:bg-blue-50 cursor-pointer">H2</button>
+            <button type="button" data-cmd="formatBlock" data-val="H3" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg font-bold text-xs hover:bg-blue-50 cursor-pointer">H3</button>
+            <button type="button" data-cmd="formatBlock" data-val="P" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs hover:bg-blue-50 cursor-pointer">Đoạn văn</button>
+            <span class="h-5 w-px bg-slate-300 mx-1"></span>
+            <button type="button" data-cmd="bold" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg font-black text-xs hover:bg-blue-50 cursor-pointer">B</button>
+            <button type="button" data-cmd="italic" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg italic text-xs hover:bg-blue-50 cursor-pointer">I</button>
+            <button type="button" data-cmd="underline" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg underline text-xs hover:bg-blue-50 cursor-pointer">U</button>
+            <span class="h-5 w-px bg-slate-300 mx-1"></span>
+            <button type="button" data-cmd="insertUnorderedList" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs hover:bg-blue-50 cursor-pointer">• Danh sách</button>
+            <button type="button" data-cmd="insertOrderedList" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs hover:bg-blue-50 cursor-pointer">1. Danh sách</button>
+            <button type="button" id="btnAddLink" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs hover:bg-blue-50 cursor-pointer font-semibold text-blue-700">🔗 Chèn Link</button>
+            <button type="button" id="btnAddInlineImg" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs hover:bg-blue-50 cursor-pointer font-semibold text-emerald-700">🖼️ Chèn Ảnh</button>
+            <input type="file" id="fileInlineImg" accept="image/*" class="hidden" />
+          </div>
+
+          <!-- THANH CÔNG CỤ CHUYÊN BIỆT CHO BẢNG TÍNH (TABLE TOOLS) -->
+          <div class="bg-blue-50/90 p-2.5 border-b border-blue-200 flex flex-wrap items-center gap-2 text-xs">
+            <span class="font-extrabold text-blue-900 uppercase tracking-wider flex items-center gap-1">📊 Công cụ Bảng so sánh:</span>
+            <div class="flex items-center gap-1 bg-white px-2 py-1 rounded-lg border border-blue-200">
+              <span>Dòng:</span>
+              <input type="number" id="tblRows" value="5" min="1" max="30" class="w-11 p-1 border rounded text-center font-bold" />
+              <span>Cột:</span>
+              <input type="number" id="tblCols" value="3" min="1" max="10" class="w-11 p-1 border rounded text-center font-bold" />
+              <button type="button" id="btnInsertTable" class="bg-blue-700 hover:bg-blue-800 text-white font-bold px-2.5 py-1 rounded-md cursor-pointer transition">+ Tạo Bảng Mới</button>
+            </div>
+            <button type="button" id="btnAddRow" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition">+ Thêm dòng dưới</button>
+            <button type="button" id="btnDelRow" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition">- Xóa dòng đang chọn</button>
+            <button type="button" id="btnAddCol" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition">+ Thêm cột phải</button>
+            <button type="button" id="btnDelCol" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition">- Xóa cột đang chọn</button>
+            <button type="button" id="btnDelTable" class="bg-slate-700 hover:bg-slate-900 text-white font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition">🗑️ Xóa bảng</button>
+          </div>
+
+          <!-- VÙNG SOẠN THẢO TRỰC QUAN CONTENTEDITABLE (GIỮ 100% BẢNG BIỂU) -->
+          <div id="visualEditor" contenteditable="true" class="p-5 bg-white"></div>
         </div>
 
-                        <!-- KHỐI QUẢN LÝ MÃ HTML & BẢNG BIỂU RIÊNG BIỆT -->
+        <!-- KHỐI QUẢN LÝ MÃ HTML ĐỒNG BỘ 2 CHIỀU TỨC THÌ -->
         <div class="bg-slate-900 text-white p-5 rounded-xl border border-slate-700 space-y-3 mt-4">
           <div class="flex items-center justify-between">
             <label class="block font-extrabold text-amber-400 text-xs uppercase tracking-wider">
-              🛠️ Hộp Chỉnh Sửa Mã HTML Trực Tiếp (Dành riêng cho Bảng biểu):
+              🛠️ Mã Nguồn HTML Bài Viết (Tự động đồng bộ 2 chiều với khung soạn thảo):
             </label>
-            <button type="button" id="btnSyncToEditor" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer">
-              🔄 Đồng bộ HTML vào trình soạn thảo
-            </button>
           </div>
-          <p class="text-xs text-slate-300">
-            Dán hoặc chỉnh sửa trực tiếp mã thẻ bảng (<code class="text-amber-300">&lt;table&gt;&lt;tr&gt;&lt;td&gt;...</code>) tại đây để an toàn tuyệt đối.
-          </p>
-          <textarea 
-            id="inputRawHtml" 
-            rows="6" 
-            placeholder="Mã HTML chi tiết..."
-            class="w-full p-3 rounded-lg bg-slate-950 border border-slate-700 text-emerald-400 font-mono text-xs outline-none focus:border-amber-400"
-          ></textarea>
+          <textarea id="inputRawHtml" rows="6" placeholder="Mã HTML chi tiết..." class="w-full p-3 rounded-lg bg-slate-950 border border-slate-700 text-emerald-400 font-mono text-xs outline-none focus:border-amber-400"></textarea>
         </div>
       </div>
     </div>
+  </div>
 
-  <script is:inline src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
   <script is:inline define:vars={{ savedHtml: rawPostContent }}>
-    const inputTitle = document.getElementById('inputTitle');
-    const inputSlug = document.getElementById('inputSlug');
-    const inputImage = document.getElementById('inputImage');
-    const isEditMode = document.getElementById('isEditMode').value === 'true';
+    const inputTitle = document.getElementById("inputTitle");
+    const inputSlug = document.getElementById("inputSlug");
+    const inputImage = document.getElementById("inputImage");
+    const visualEditor = document.getElementById("visualEditor");
+    const inputRawHtml = document.getElementById("inputRawHtml");
+    const isEditMode = document.getElementById("isEditMode").value === "true";
+
+    let activeTableCell = null;
+
+    function setEditorHtml(html) {
+      visualEditor.innerHTML = html || "";
+      inputRawHtml.value = html || "";
+    }
+
+    if (savedHtml) {
+      setEditorHtml(savedHtml);
+    }
+
+    visualEditor.addEventListener("input", () => {
+      inputRawHtml.value = visualEditor.innerHTML;
+    });
+
+    inputRawHtml.addEventListener("input", () => {
+      visualEditor.innerHTML = inputRawHtml.value;
+    });
+
+    visualEditor.addEventListener("click", (e) => {
+      const cell = e.target.closest("td, th");
+      if (cell) activeTableCell = cell;
+    });
 
     function makeSlug(str) {
-      return (str || '').toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/[đĐ]/g, 'd')
-        .replace(/([^0-9a-z-\s])/g, '')
+      return (str || "").toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[đĐ]/g, "d")
+        .replace(/([^0-9a-z-\s])/g, "")
         .trim()
-        .replace(/(\s+)/g, '-');
+        .replace(/(\s+)/g, "-");
     }
 
     if (!isEditMode && inputTitle) {
-      inputTitle.addEventListener('input', () => {
+      inputTitle.addEventListener("input", () => {
         inputSlug.value = makeSlug(inputTitle.value);
       });
     }
 
-    const fileBanner = document.getElementById('fileBannerPost');
-    document.getElementById('btnUploadBanner')?.addEventListener('click', () => {
-      fileBanner.click();
+    // Các nút định dạng văn bản
+    document.querySelectorAll(".tb-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cmd = btn.getAttribute("data-cmd");
+        const val = btn.getAttribute("data-val") || null;
+        visualEditor.focus();
+        document.execCommand(cmd, false, val);
+        inputRawHtml.value = visualEditor.innerHTML;
+      });
     });
 
-    fileBanner?.addEventListener('change', async () => {
+    document.getElementById("btnAddLink")?.addEventListener("click", () => {
+      const url = prompt("Nhập đường dẫn liên kết (URL):", "https://chuyendungphucuong.vn/san-pham/");
+      if (url) {
+        visualEditor.focus();
+        document.execCommand("createLink", false, url);
+        inputRawHtml.value = visualEditor.innerHTML;
+      }
+    });
+
+    // Tải ảnh đại diện
+    const fileBanner = document.getElementById("fileBannerPost");
+    document.getElementById("btnUploadBanner")?.addEventListener("click", () => fileBanner.click());
+    fileBanner?.addEventListener("change", async () => {
       const file = fileBanner.files[0];
       if (!file) return;
-      const currentTitle = inputTitle.value.trim() || 'tin-tuc-phu-cuong';
       const formData = new FormData();
-      formData.append('image', file);
-      formData.append('title', currentTitle);
-      formData.append('type', 'posts');
-
+      formData.append("image", file);
+      formData.append("title", inputTitle.value.trim() || "tin-tuc-phu-cuong");
+      formData.append("type", "posts");
       try {
-        const res = await fetch('/api/upload-image', { method: 'POST', body: formData });
+        const res = await fetch("/api/upload-image", { method: "POST", body: formData });
+        const result = await res.json();
+        if (result.success) inputImage.value = result.url;
+        else alert("❌ Lỗi tải ảnh: " + result.message);
+      } catch (err) {
+        alert("❌ Lỗi kết nối khi tải ảnh đại diện!");
+      }
+    });
+
+    // Chèn ảnh vào giữa bài viết
+    const fileInlineImg = document.getElementById("fileInlineImg");
+    document.getElementById("btnAddInlineImg")?.addEventListener("click", () => fileInlineImg.click());
+    fileInlineImg?.addEventListener("change", async () => {
+      const file = fileInlineImg.files[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("title", inputTitle.value.trim() || "phu-cuong-auto");
+      formData.append("type", "posts");
+      try {
+        const res = await fetch("/api/upload-image", { method: "POST", body: formData });
         const result = await res.json();
         if (result.success) {
-          inputImage.value = result.url;
-        } else {
-          alert('❌ Lỗi tải ảnh: ' + result.message);
-        }
+          visualEditor.focus();
+          document.execCommand("insertImage", false, result.url);
+          inputRawHtml.value = visualEditor.innerHTML;
+        } else alert("❌ Tải ảnh thất bại: " + result.message);
       } catch (err) {
-        alert('❌ Lỗi kết nối khi tải ảnh đại diện!');
+        alert("❌ Lỗi kết nối khi tải ảnh!");
       }
     });
 
-    // Đăng ký bảng biểu cho Quill
-    const BlockEmbed = Quill.import('blots/block/embed');
-    class TableBlot extends BlockEmbed {
-      static create(value) {
-        let node = super.create();
-        node.innerHTML = value;
-        return node;
+    // CÔNG CỤ XỬ LÝ BẢNG TÍNH (TẠO BẢNG, THÊM/XÓA DÒNG CỘT)
+    document.getElementById("btnInsertTable")?.addEventListener("click", () => {
+      const rows = parseInt(document.getElementById("tblRows").value, 10) || 4;
+      const cols = parseInt(document.getElementById("tblCols").value, 10) || 3;
+      let html = "<div style=\"overflow-x:auto;margin:20px 0;\"><table><thead><tr>";
+      for (let c = 1; c <= cols; c++) {
+        html += "<th>Tiêu đề cột " + c + "</th>";
       }
-      static value(node) {
-        return node.innerHTML;
-      }
-    }
-    TableBlot.blotName = 'html-content';
-    TableBlot.tagName = 'div';
-    Quill.register(TableBlot);
-
-    const quill = new Quill('#editor-container', {
-      theme: 'snow',
-      modules: {
-        toolbar: {
-          container: [
-            [{ header: [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ color: [] }, { background: [] }],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image'],
-            ['clean']
-          ],
-          handlers: {
-            image: function() {
-              const input = document.createElement('input');
-              input.setAttribute('type', 'file');
-              input.setAttribute('accept', 'image/*');
-              input.click();
-
-              input.onchange = async () => {
-                const file = input.files[0];
-                const currentTitle = inputTitle.value.trim() || 'phu-cuong-auto';
-
-                if (file) {
-                  const formData = new FormData();
-                  formData.append('image', file);
-                  formData.append('title', currentTitle);
-                  formData.append('type', 'posts');
-
-                  try {
-                    const res = await fetch('/api/upload-image', {
-                      method: 'POST',
-                      body: formData
-                    });
-                    const result = await res.json();
-                    if (result.success) {
-                      const range = quill.getSelection(true);
-                      quill.insertEmbed(range.index, 'image', result.url);
-                    } else {
-                      alert('❌ Tải ảnh lên thất bại: ' + result.message);
-                    }
-                  } catch (err) {
-                    alert('❌ Lỗi kết nối khi tải ảnh lên!');
-                  }
-                }
-              };
-            }
-          }
+      html += "</tr></thead><tbody>";
+      for (let r = 1; r <= rows; r++) {
+        html += "<tr>";
+        for (let c = 1; c <= cols; c++) {
+          html += "<td>Nội dung ô " + r + "." + c + "</td>";
         }
+        html += "</tr>";
+      }
+      html += "</tbody></table></div><p><br></p>";
+      visualEditor.focus();
+      document.execCommand("insertHTML", false, html);
+      inputRawHtml.value = visualEditor.innerHTML;
+    });
+
+    document.getElementById("btnAddRow")?.addEventListener("click", () => {
+      if (!activeTableCell) return alert("⚠️ Hãy nhấp chuột vào 1 ô bất kỳ trong bảng trước!");
+      const tr = activeTableCell.closest("tr");
+      if (!tr) return;
+      const newRow = tr.cloneNode(true);
+      newRow.querySelectorAll("td, th").forEach((cell) => { cell.innerHTML = "Nhập nội dung..."; });
+      tr.parentNode.insertBefore(newRow, tr.nextSibling);
+      inputRawHtml.value = visualEditor.innerHTML;
+    });
+
+    document.getElementById("btnDelRow")?.addEventListener("click", () => {
+      if (!activeTableCell) return alert("⚠️ Hãy nhấp chuột vào 1 ô thuộc dòng cần xóa!");
+      const tr = activeTableCell.closest("tr");
+      if (tr) {
+        tr.remove();
+        activeTableCell = null;
+        inputRawHtml.value = visualEditor.innerHTML;
       }
     });
 
-    if (savedHtml) {
-      quill.clipboard.dangerouslyPasteHTML(savedHtml);
-    }
+    document.getElementById("btnAddCol")?.addEventListener("click", () => {
+      if (!activeTableCell) return alert("⚠️ Hãy nhấp chuột vào 1 ô trong bảng trước!");
+      const table = activeTableCell.closest("table");
+      const colIndex = Array.from(activeTableCell.parentNode.children).indexOf(activeTableCell);
+      table.querySelectorAll("tr").forEach((row) => {
+        const refCell = row.children[colIndex];
+        if (refCell) {
+          const newCell = document.createElement(refCell.tagName);
+          newCell.innerHTML = refCell.tagName === "TH" ? "Cột mới" : "Nội dung...";
+          refCell.parentNode.insertBefore(newCell, refCell.nextSibling);
+        }
+      });
+      inputRawHtml.value = visualEditor.innerHTML;
+    });
 
-    // Nút 1: Tự động điền bài viết từ khối JSON 1-Click
-    document.getElementById('btnApplyPostJson')?.addEventListener('click', () => {
-      const rawText = document.getElementById('aiPostQuickInput').value.trim();
-      const statusEl = document.getElementById('aiPostStatus');
+    document.getElementById("btnDelCol")?.addEventListener("click", () => {
+      if (!activeTableCell) return alert("⚠️ Hãy nhấp chuột vào 1 ô thuộc cột cần xóa!");
+      const table = activeTableCell.closest("table");
+      const colIndex = Array.from(activeTableCell.parentNode.children).indexOf(activeTableCell);
+      table.querySelectorAll("tr").forEach((row) => {
+        if (row.children[colIndex]) row.children[colIndex].remove();
+      });
+      activeTableCell = null;
+      inputRawHtml.value = visualEditor.innerHTML;
+    });
 
-      if (!rawText) {
-        alert('⚠️ Vui lòng dán gói mã JSON bài viết vào ô trước khi bấm!');
-        return;
+    document.getElementById("btnDelTable")?.addEventListener("click", () => {
+      if (!activeTableCell) return alert("⚠️ Hãy nhấp chuột vào bảng cần xóa!");
+      const table = activeTableCell.closest("table");
+      if (table && confirm("Bạn chắc chắn muốn xóa bảng này?")) {
+        table.remove();
+        activeTableCell = null;
+        inputRawHtml.value = visualEditor.innerHTML;
       }
+    });
 
+    // 1-Click JSON
+    document.getElementById("btnApplyPostJson")?.addEventListener("click", () => {
+      const rawText = document.getElementById("aiPostQuickInput").value.trim();
+      const statusEl = document.getElementById("aiPostStatus");
+      if (!rawText) return alert("⚠️ Vui lòng dán gói mã JSON bài viết vào ô trước khi bấm!");
       try {
-        const cleanedJson = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+        const cleanedJson = rawText.replace(/^```json\s*/i, "").replace(/```\s*$/, "").trim();
         const data = JSON.parse(cleanedJson);
-
         if (data.title) {
           inputTitle.value = data.title;
-          if (!isEditMode) {
-            inputSlug.value = data.slug || makeSlug(data.title);
-          }
+          if (!isEditMode) inputSlug.value = data.slug || makeSlug(data.title);
         }
-        if (!isEditMode && data.slug) {
-          inputSlug.value = data.slug;
-        }
-        if (data.author) {
-          document.getElementById('inputAuthor').value = data.author;
-        }
-        if (data.image) {
-          inputImage.value = data.image;
-        }
-        if (data.summary) {
-          document.getElementById('inputSummary').value = data.summary;
-        }
+        if (!isEditMode && data.slug) inputSlug.value = data.slug;
+        if (data.author) document.getElementById("inputAuthor").value = data.author;
+        if (data.image) inputImage.value = data.image;
+        if (data.summary) document.getElementById("inputSummary").value = data.summary;
         if (data.category) {
-          const selectCat = document.getElementById('inputCategory');
+          const selectCat = document.getElementById("inputCategory");
           for (let i = 0; i < selectCat.options.length; i++) {
-            if (selectCat.options[i].value.toLowerCase().includes(data.category.toLowerCase())) {
+            if (selectCat.options[i].value.toLowerCase().includes(data.category.toLowerCase()) || data.category.toLowerCase().includes("so sánh") && selectCat.options[i].value.toLowerCase().includes("so sánh")) {
               selectCat.selectedIndex = i;
               break;
             }
           }
         }
         if (data.content) {
-          quill.root.innerHTML = data.content;
-          if (inputRawHtml) inputRawHtml.value = data.content;
+          setEditorHtml(data.content);
         }
-
         if (statusEl) {
-          statusEl.classList.remove('hidden');
-          statusEl.innerText = '✅ Đã điền tự động toàn bộ bài viết Tin tức! Anh kiểm tra lại rồi bấm Xuất bản nhé.';
+          statusEl.classList.remove("hidden");
+          statusEl.innerText = "✅ Đã điền tự động toàn bộ bài viết và giữ nguyên 100% Bảng biểu!";
         }
       } catch (e) {
-        alert('❌ Định dạng mã JSON chưa khớp. Anh hãy copy nguyên khối mã JSON trong khung code nhé!');
+        alert("❌ Định dạng mã JSON chưa khớp!");
       }
     });
 
-    // Nút 2: Tự dựng khung bài viết chuẩn SEO từ Tiêu đề đã gõ
-    document.getElementById('btnGeneratePostTemplate')?.addEventListener('click', () => {
-      const title = inputTitle.value.trim() || 'Kinh Nghiệm Chọn Mua & Vận Hành Xe Chuyên Dùng Hiệu Quả';
-      const category = document.getElementById('inputCategory').value;
-      const statusEl = document.getElementById('aiPostStatus');
-
-      if (!inputTitle.value.trim()) {
-        inputTitle.value = title;
-        if (!isEditMode) inputSlug.value = makeSlug(title);
-      }
-
-      document.getElementById('inputSummary').value = `${title} - Phân tích chi tiết từ chuyên gia Ô Tô Phú Cường giúp doanh nghiệp tối ưu chi phí đầu tư, nắm vững quy định đăng kiểm và khai thác vận hành bền bỉ.`;
-
-      quill.root.innerHTML = `
-        <h2>${title}</h2>
-        <p>Trong lĩnh vực vận tải thương mại và khai thác phương tiện chuyên dùng, việc nắm rõ thông tin về <strong>${title.toLowerCase()}</strong> đóng vai trò then chốt giúp chủ xe và doanh nghiệp tối ưu hóa hiệu quả đầu tư cũng như tuân thủ đúng các quy định kỹ thuật hiện hành.</p>
-        <h3>1. Những Điểm Quan Trọng Cần Lưu Ý</h3>
-        <p>Theo đội ngũ kỹ thuật tại <strong>Ô Tô Phú Cường - Nhà Cung Cấp Và Sản Xuất Ô Tô Chuyên Dùng</strong>, khi đánh giá và triển khai thực tế, quý khách hàng cần đặc biệt quan tâm đến các yếu tố cốt lõi sau:</p>
-        <ul>
-          <li><strong>Thông số kỹ thuật &amp; Tải trọng thiết kế:</strong> Đảm bảo sự đồng bộ giữa xe cơ sở (Chassis) và hệ thống thiết bị chuyên dùng theo đúng giấy chứng nhận chất lượng của Cục Đăng kiểm Việt Nam.</li>
-          <li><strong>Hiệu quả khai thác &amp; Chi phí vận hành:</strong> Lựa chọn cấu hình động cơ tiết kiệm nhiên liệu, phụ tùng sẵn có và kết cấu bồn/thùng bền bỉ.</li>
-          <li><strong>Bài toán tài chính &amp; Vay trả góp:</strong> Tận dụng các gói vay ưu đãi từ 50% đến 90% giá trị xe để giữ dòng tiền lưu động cho doanh nghiệp.</li>
-        </ul>
-        <h3>2. Giải Pháp Đồng Hành Trọn Gói Tại Ô Tô Phú Cường</h3>
-        <p>Với hệ thống 3 Showroom và Trạm dịch vụ quy mô lớn tại <strong>TP. Hồ Chí Minh, Tiền Giang và An Giang</strong>, <strong>Ô Tô Phú Cường</strong> cam kết hỗ trợ trọn gói từ khâu tư vấn thiết kế đóng mới, hoàn thiện hồ sơ đăng kiểm đến bảo hành – cứu hộ kỹ thuật 24/7.</p>
-        <p>Quý khách hàng cần tư vấn chi tiết hơn hoặc nhận bảng tính giá lăn bánh kèm lịch trả góp cụ thể, vui lòng liên hệ trực tiếp Hotline/Zalo: <strong>0922 77 77 03 (Mr. Hoàng Vũ)</strong>.</p>
-      `;
-
-      if (statusEl) {
-        statusEl.classList.remove('hidden');
-        statusEl.innerText = '✅ Đã dựng sẵn khung bài viết chuẩn SEO theo tiêu đề!';
-      }
-    });
-
-    document.getElementById('btnSavePost')?.addEventListener('click', async () => {
+    // Lưu bài viết
+    document.getElementById("btnSavePost")?.addEventListener("click", async () => {
       const title = inputTitle.value.trim();
       const slug = inputSlug.value.trim();
-      const category = document.getElementById('inputCategory').value;
-      const author = document.getElementById('inputAuthor').value.trim();
+      const category = document.getElementById("inputCategory").value;
+      const author = document.getElementById("inputAuthor").value.trim();
       const image = inputImage.value.trim();
-      const summary = document.getElementById('inputSummary').value.trim();
-      const content = quill.root.innerHTML;
-
-      if (!title || !slug) {
-        alert('❌ Vui lòng nhập đầy đủ Tiêu đề và Slug bài viết!');
-        return;
-      }
-
+      const summary = document.getElementById("inputSummary").value.trim();
+      const content = visualEditor.innerHTML;
+      if (!title || !slug) return alert("❌ Vui lòng nhập đầy đủ Tiêu đề và Slug bài viết!");
       const payload = { slug, title, category, author, image, summary, content };
-
       try {
-        const res = await fetch('/api/update-post', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("/api/update-post", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
         const result = await res.json();
         if (result.success) {
-          alert('🎉 ' + result.message);
-          window.location.href = '/admin/posts';
-        } else {
-          alert('❌ Lỗi: ' + result.message);
-        }
+          alert("🎉 " + result.message);
+          window.location.href = "/admin/posts";
+        } else alert("❌ Lỗi: " + result.message);
       } catch (err) {
-        alert('❌ Lỗi kết nối đến máy chủ!');
+        alert("❌ Lỗi kết nối đến máy chủ!");
       }
     });
   </script>
