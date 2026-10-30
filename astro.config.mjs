@@ -7,7 +7,7 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  site: https://chuyendungphucuong.vn,
+  site: 'https://chuyendungphucuong.vn',
   output: 'server',
   adapter: node({
     mode: 'standalone'
