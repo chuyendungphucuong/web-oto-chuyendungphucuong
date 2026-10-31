@@ -1,15 +1,42 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import postsData from '../../data/posts.json';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import postsData from "../../data/posts.json";
 
-const posts = Array.isArray(postsData) ? postsData : [];
+const rawPosts = Array.isArray(postsData) ? postsData : [];
+
+// Làm sạch văn bản khỏi mã HTML để phục vụ tìm kiếm sâu trong nội dung bài viết
+function stripHtml(html) {
+  return String(html || "")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Chuẩn hóa nhóm chuyên mục để bài mới và bài cũ luôn khớp 100% với Menu
+function normalizeCatKey(cat) {
+  const s = String(cat || "").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d");
+  if (s.includes("so sanh") || s.includes("danh gia") || s.includes("tu van")) return "danh-gia-so-sanh";
+  if (s.includes("phap ly") || s.includes("dang kiem") || s.includes("thu tuc")) return "phap-ly-dang-kiem";
+  if (s.includes("kinh nghiem") || s.includes("dau tu") || s.includes("van tai")) return "kinh-nghiem-van-tai";
+  if (s.includes("ban giao") || s.includes("showroom") || s.includes("tin tuc")) return "tin-tuc-ban-giao";
+  return "khac";
+}
+
+const posts = rawPosts.map((p) => ({
+  ...p,
+  catKey: normalizeCatKey(p.category),
+  plainContent: stripHtml([p.title, p.summary, p.excerpt, p.category, p.content].join(" "))
+}));
 
 const categories = [
-  'Tất Cả Chuyên Mục',
-  'Đánh Giá & So Sánh Xe',
-  'Thủ Tục Pháp Lý & Đăng Kiểm',
-  'Kinh Nghiệm Vận Tải & Đầu Tư',
-  'Tin Tức & Bàn Giao Xe Showroom'
+  { label: "Tất Cả Chuyên Mục", key: "all" },
+  { label: "Đánh Giá & So Sánh Xe", key: "danh-gia-so-sanh" },
+  { label: "Thủ Tục Pháp Lý & Đăng Kiểm", key: "phap-ly-dang-kiem" },
+  { label: "Kinh Nghiệm Vận Tải & Đầu Tư", key: "kinh-nghiem-van-tai" },
+  { label: "Tin Tức & Bàn Giao Xe Showroom", key: "tin-tuc-ban-giao" }
 ];
 ---
 
@@ -20,74 +47,248 @@ const categories = [
       <span class="text-gray-900 font-semibold">Kiến Thức & Tin Tức</span>
     </nav>
 
-    <div class="bg-blue-800 text-white p-8 rounded-2xl mb-8 shadow-md">
-      <h1 class="text-3xl lg:text-4xl font-extrabold mb-2">Kiến Thức Chuyên Ngành & Tin Tức Phú Cường</h1>
-      <p class="text-white/90 text-sm lg:text-base">Cập nhật các thông tin đăng kiểm, đánh giá xe chuyên dùng và kinh nghiệm đầu tư vận tải thực tế.</p>
+    <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900 text-white p-8 rounded-2xl mb-8 shadow-md">
+      <h1 class="text-2xl lg:text-4xl font-extrabold mb-2">Kiến Thức Chuyên Ngành & Tin Tức Phú Cường</h1>
+      <p class="text-white/90 text-sm lg:text-base mb-6">Cập nhật quy định đăng kiểm, so sánh chuyên sâu các dòng xe chuyên dùng và bài toán đầu tư vận tải thực tế.</p>
+
+      <!-- Ô TÌM KIẾM THÔNG MINH (TÌM TIÊU ĐỀ + NỘI DUNG + CHẤP NHẬN KHÔNG DẤU / SAI CHÍNH TẢ) -->
+      <div class="relative max-w-2xl">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 text-lg pointer-events-none">🔍</span>
+        <input
+          type="text"
+          id="postSearchInput"
+          placeholder="Tìm kiếm tiêu đề hoặc nội dung trong bài (vd: bồn cám, trục vít, chenglong 4 chân, đăng kiểm...)"
+          class="w-full pl-12 pr-24 py-3.5 bg-white text-slate-900 border-2 border-transparent focus:border-amber-400 rounded-xl shadow-lg text-sm font-medium outline-none transition"
+        />
+        <button
+          type="button"
+          id="btnClearSearch"
+          class="hidden absolute inset-y-1.5 right-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold px-3 rounded-lg transition cursor-pointer"
+        >
+          ✕ Xóa
+        </button>
+      </div>
+      <p id="searchStatusText" class="text-xs text-amber-300 font-semibold mt-2.5 hidden"></p>
     </div>
 
-    <!-- Thanh lọc chuyên mục tin tức -->
-    <div class="flex overflow-x-auto gap-2 pb-4 mb-8 no-scrollbar">
+    <!-- THANH LỌC CHUYÊN MỤC TIN TỨC -->
+    <div class="flex overflow-x-auto gap-2.5 pb-4 mb-6 no-scrollbar">
       {categories.map((cat, idx) => (
-        <button 
+        <button
           type="button"
-          data-category={cat}
-          class={`cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer ${idx === 0 ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'}`}
+          data-cat-key={cat.key}
+          data-cat-label={cat.label}
+          class={"cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer " + (idx === 0 ? "bg-blue-600 text-white shadow-md" : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-100")}
         >
-          {cat}
+          {cat.label}
         </button>
       ))}
     </div>
 
-    <!-- Lưới bài viết -->
-    <div id="postGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-      {posts.map((post: any) => (
-        <article class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm flex flex-col justify-between post-card" data-category={post.category}>
-          <div>
-            <div class="overflow-hidden h-60 bg-gray-100">
-              <img src={post.image} alt={post.title} class="w-full h-full object-cover hover:scale-105 transition duration-300" />
-            </div>
-            <div class="p-6 space-y-3">
-              <div class="flex justify-between items-center text-xs">
-                <span class="bg-blue-100 text-blue-800 font-extrabold px-3 py-1 rounded-md">{post.category}</span>
-                <span class="text-gray-400">{post.date}</span>
+    <!-- DANH SÁCH BÀI VIẾT -->
+    <div id="postsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {posts.map((post) => (
+        <article
+          class="post-card bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition overflow-hidden flex flex-col"
+          data-cat-key={post.catKey}
+          data-title={post.title}
+          data-fulltext={post.plainContent}
+        >
+          <a href={"/tin-tuc/" + post.slug} class="block overflow-hidden h-52 bg-slate-100 relative group">
+            <img
+              src={post.image || "/images/default-news.jpg"}
+              alt={post.title}
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+              loading="lazy"
+            />
+            <span class="absolute top-3 left-3 bg-blue-700/95 text-white text-[11px] font-bold px-3 py-1 rounded-lg shadow">
+              {post.category}
+            </span>
+          </a>
+          <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+            <div class="space-y-2.5">
+              <div class="flex items-center gap-3 text-xs text-gray-400">
+                <span>📅 {post.date}</span>
+                <span>•</span>
+                <span>✍️ {post.author || "Phú Cường Auto"}</span>
               </div>
-              <h2 class="text-xl font-extrabold text-gray-900 leading-snug hover:text-blue-600 transition">
-                <a href={`/tin-tuc/${post.slug}`}>{post.title}</a>
+              <h2 class="text-lg font-extrabold text-gray-900 hover:text-blue-600 transition line-clamp-2 leading-snug">
+                <a href={"/tin-tuc/" + post.slug}>{post.title}</a>
               </h2>
-              <p class="text-gray-600 text-sm line-clamp-2 leading-relaxed">{post.summary}</p>
+              <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                {post.summary || post.excerpt || ""}
+              </p>
             </div>
-          </div>
-          <div class="p-6 pt-0">
-            <a href={`/tin-tuc/${post.slug}`} class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-bold text-sm transition">
-              Đọc bài viết chi tiết &rarr;
-            </a>
+            <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
+              <a href={"/tin-tuc/" + post.slug} class="text-sm font-bold text-blue-600 hover:text-red-600 transition">
+                Đọc chi tiết &rarr;
+              </a>
+            </div>
           </div>
         </article>
       ))}
     </div>
+
+    <!-- THÔNG BÁO KHI KHÔNG TÌM THẤY BÀI VIẾT -->
+    <div id="emptySearchState" class="hidden bg-white border border-slate-200 rounded-2xl p-12 text-center my-6 space-y-3">
+      <div class="text-4xl">🔎</div>
+      <h3 class="text-lg font-extrabold text-slate-800">Không tìm thấy bài viết nào khớp với yêu cầu</h3>
+      <p class="text-sm text-slate-500 max-w-md mx-auto">Hãy thử tìm bằng từ khóa ngắn gọn hơn (ví dụ: "bồn cám", "chenglong", "đăng kiểm") hoặc chọn lại "Tất Cả Chuyên Mục".</p>
+      <button type="button" id="btnResetFilter" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition cursor-pointer">
+        Xem toàn bộ bài viết
+      </button>
+    </div>
   </main>
 
   <script is:inline>
-    document.querySelectorAll('.cat-tab').forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        document.querySelectorAll('.cat-tab').forEach(t => {
-          t.className = 'cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer bg-white text-gray-700 border border-gray-200 hover:bg-gray-100';
-        });
-        const target = e.currentTarget;
-        target.className = 'cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer bg-blue-600 text-white shadow-md shadow-blue-600/20';
+    (function() {
+      function toUnsigned(str) {
+        return String(str || "").toLowerCase()
+          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          .replace(/[đĐ]/g, "d")
+          .replace(/[^a-z0-9\s]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
 
-        const selectedCat = target.getAttribute('data-category');
-        const cards = document.querySelectorAll('.post-card');
+      // Hàm đo khoảng cách sai chính tả Levenshtein (cho phép gõ nhầm 1-2 ký tự)
+      function editDistance(a, b) {
+        if (Math.abs(a.length - b.length) > 2) return 99;
+        const dp = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+        for (let j = 1; j <= b.length; j++) dp[0][j] = j;
+        for (let i = 1; i <= a.length; i++) {
+          for (let j = 1; j <= b.length; j++) {
+            dp[i][j] = a[i - 1] === b[j - 1]
+              ? dp[i - 1][j - 1]
+              : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+          }
+        }
+        return dp[a.length][b.length];
+      }
 
-        cards.forEach(card => {
-          const cardCat = card.getAttribute('data-category');
-          if (selectedCat === 'Tất Cả Chuyên Mục' || cardCat === selectedCat) {
-            card.style.display = 'flex';
+      // Kiểm tra khớp gần đúng (hỗ trợ cả có dấu, không dấu và sai chính tả)
+      function fuzzyMatch(queryRaw, targetTextRaw) {
+        const q = toUnsigned(queryRaw);
+        if (!q) return true;
+        const text = toUnsigned(targetTextRaw);
+        if (text.includes(q)) return true;
+
+        const qWords = q.split(" ").filter(Boolean);
+        const tWords = text.split(" ").filter(Boolean);
+
+        // Đếm số từ trong câu tìm kiếm khớp (hoặc gần giống) với các từ trong bài viết
+        let matchedWords = 0;
+        for (const qw of qWords) {
+          if (text.includes(qw)) {
+            matchedWords++;
+            continue;
+          }
+          if (qw.length >= 4) {
+            const maxDist = qw.length >= 6 ? 2 : 1;
+            const foundTypo = tWords.some((tw) => tw.length >= 3 && editDistance(qw, tw) <= maxDist);
+            if (foundTypo) matchedWords++;
+          }
+        }
+        return matchedWords === qWords.length;
+      }
+
+      const searchInput = document.getElementById("postSearchInput");
+      const btnClear = document.getElementById("btnClearSearch");
+      const btnReset = document.getElementById("btnResetFilter");
+      const statusText = document.getElementById("searchStatusText");
+      const emptyState = document.getElementById("emptySearchState");
+      const catTabs = Array.from(document.querySelectorAll(".cat-tab"));
+      const cards = Array.from(document.querySelectorAll(".post-card"));
+
+      let currentCatKey = "all";
+
+      function setActiveTab(catKey) {
+        currentCatKey = catKey || "all";
+        catTabs.forEach((btn) => {
+          const isMatch = btn.getAttribute("data-cat-key") === currentCatKey;
+          if (isMatch) {
+            btn.className = "cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer bg-blue-600 text-white shadow-md";
           } else {
-            card.style.display = 'none';
+            btn.className = "cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer bg-white text-gray-700 border border-gray-200 hover:bg-gray-100";
           }
         });
+      }
+
+      function applyFilter() {
+        const query = searchInput ? searchInput.value.trim() : "";
+        if (btnClear) {
+          btnClear.classList.toggle("hidden", !query);
+        }
+
+        let visibleCount = 0;
+        cards.forEach((card) => {
+          const cardCat = card.getAttribute("data-cat-key") || "";
+          const fullText = card.getAttribute("data-fulltext") || "";
+
+          const catOk = currentCatKey === "all" || cardCat === currentCatKey;
+          const searchOk = fuzzyMatch(query, fullText);
+
+          if (catOk && searchOk) {
+            card.style.display = "";
+            visibleCount++;
+          } else {
+            card.style.display = "none";
+          }
+        });
+
+        if (emptyState) {
+          emptyState.classList.toggle("hidden", visibleCount > 0);
+        }
+
+        if (statusText) {
+          if (query || currentCatKey !== "all") {
+            statusText.classList.remove("hidden");
+            statusText.innerText = "✅ Đang hiển thị " + visibleCount + " / " + cards.length + " bài viết phù hợp";
+          } else {
+            statusText.classList.add("hidden");
+          }
+        }
+      }
+
+      // Tự động đọc tham số ?cat=... hoặc ?category=... khi bấm từ Menu chính trên Header
+      const params = new URLSearchParams(window.location.search);
+      const urlCat = params.get("cat") || params.get("category") || "";
+      if (urlCat) {
+        const u = toUnsigned(urlCat);
+        if (u.includes("so sanh") || u.includes("danh gia")) setActiveTab("danh-gia-so-sanh");
+        else if (u.includes("phap ly") || u.includes("dang kiem") || u.includes("thu tuc")) setActiveTab("phap-ly-dang-kiem");
+        else if (u.includes("kinh nghiem") || u.includes("van tai") || u.includes("dau tu")) setActiveTab("kinh-nghiem-van-tai");
+        else if (u.includes("ban giao") || u.includes("showroom") || u.includes("tin tuc")) setActiveTab("tin-tuc-ban-giao");
+      }
+
+      catTabs.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          setActiveTab(btn.getAttribute("data-cat-key"));
+          applyFilter();
+        });
       });
-    });
+
+      if (searchInput) {
+        searchInput.addEventListener("input", applyFilter);
+      }
+
+      if (btnClear) {
+        btnClear.addEventListener("click", () => {
+          searchInput.value = "";
+          applyFilter();
+          searchInput.focus();
+        });
+      }
+
+      if (btnReset) {
+        btnReset.addEventListener("click", () => {
+          if (searchInput) searchInput.value = "";
+          setActiveTab("all");
+          applyFilter();
+        });
+      }
+
+      applyFilter();
+    })();
   </script>
 </BaseLayout>
