@@ -127,6 +127,28 @@
     {
       "title": "Liên Hệ",
       "url": "/lien-he"
+    },
+    {
+      "title": "Xe Cũ",
+      "url": "/san-pham?cat=xe-cu",
+      "children": [
+        {
+          "title": "Xe 4 - 7 chỗ",
+          "url": "/san-pham?cat=xe-4-7-cho-cu"
+        },
+        {
+          "title": "Xe tải cũ",
+          "url": "/san-pham?cat=xe-tai-cu"
+        },
+        {
+          "title": "Xe chuyên dùng cũ",
+          "url": "/san-pham?cat=xe-chuyen-dung-cu"
+        },
+        {
+          "title": "Xe khách cũ",
+          "url": "/san-pham?cat=xe-khach-cu"
+        }
+      ]
     }
   ]
 }

@@ -14,7 +14,7 @@ const dynamicCategories: { title: string; subKey: string; parentCat: string; gro
 
 mainMenu.forEach((menu: any) => {
   if (typeof menu.url === 'string' && menu.url.includes('/san-pham') && Array.isArray(menu.children)) {
-    const parentCat = menu.url.includes('xe-khach') ? 'xe-khach' : 'xe-tai-chuyen-dung';
+    const parentCat = menu.url.includes('xe-cu') ? 'xe-cu' : (menu.url.includes('xe-khach') ? 'xe-khach' : 'xe-tai-chuyen-dung');
     menu.children.forEach((child: any) => {
       let subKey = '';
       if (typeof child.url === 'string' && child.url.includes('cat=')) {
