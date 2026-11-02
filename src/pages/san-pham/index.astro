@@ -178,7 +178,7 @@ const categories = [
                 <div>
                   <div class="relative overflow-hidden bg-gray-100 h-48">
                     <span class={`absolute top-3 left-3 text-white text-xs font-bold px-2.5 py-1 rounded-md z-10 ${isUsedCar ? "bg-amber-600" : "bg-blue-600"}`}>{catSub}</span>
-                    <img src={product.images?.[0] || product.image || "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80"} alt={product.name} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                    <img src={product.images?.[0] || product.image || "/Logo.png"} alt={product.name} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                   </div>
                   <div class="p-4 space-y-2">
                     <span class="text-xs font-bold text-gray-500 uppercase">{product.brand || "Phú Cường"}</span>

@@ -43,7 +43,7 @@ export async function POST({ request }) {
         author: author || 'Chuyên gia Phú Cường',
         views: '1 lượt xem',
         summary: summary || '',
-        image: image || 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80',
+        image: image || '/Logo.png',
         content: content || ''
       };
       posts.unshift(newPost);

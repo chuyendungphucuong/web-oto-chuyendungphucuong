@@ -7,7 +7,7 @@ const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
 
 const enrichedVehicles = vehicleList.map((v: any) => {
   const metrics = FINANCIAL_CONFIG.extractVehicleMetrics(v);
-  const firstImg = Array.isArray(v.images) && v.images.length > 0 ? v.images[0] : 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=500&q=80';
+  const firstImg = Array.isArray(v.images) && v.images.length > 0 ? v.images[0] : '/Logo.png';
   return {
     slug: v.slug,
     name: v.name,

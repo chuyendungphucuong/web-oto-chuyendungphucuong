@@ -1,4 +1,6 @@
 ---
+const rawImg = Astro.props?.image || "/Logo.png";
+const resolvedOgImage = rawImg.startsWith("http") ? rawImg : `https://chuyendungphucuong.vn${rawImg.startsWith("/") ? "" : "/"}${rawImg}?v=2026`;
 import navData from '../data/navigation.json';
 
 interface Props {
@@ -10,7 +12,7 @@ interface Props {
 const {
   title = "Ô TÔ PHÚ CƯỜNG - NHÀ CUNG CẤP VÀ SẢN XUẤT Ô TÔ CHUYÊN DÙNG",
   description = "Ô Tô Phú Cường chuyên cung cấp và sản xuất các dòng ô tô chuyên dùng, xe tải, xe bồn xitec, xe cẩu, xe cứu hộ và ô tô khách. Hỗ trợ trả góp đến 90%, giao xe toàn quốc. Hotline/Zalo: 0922 77 77 03.",
-  image = "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80"
+  image = "/Logo.png"
 } = Astro.props;
 
 const navigation = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
@@ -33,7 +35,9 @@ const ogImageUrl = image && image.startsWith("/") ? `${siteOrigin}${image}` : im
   <meta property="og:url" content={canonicalURL} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:image" content={resolvedOgImage} />
+    <meta property="og:image:secure_url" content={resolvedOgImage} />
+    <meta name="twitter:image" content={resolvedOgImage} />
   <meta property="og:site_name" content="Ô Tô Phú Cường" />
   <meta property="og:locale" content="vi_VN" />
 

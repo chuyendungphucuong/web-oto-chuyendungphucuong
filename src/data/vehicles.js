@@ -20,7 +20,7 @@ const safeArray = (arr) => (Array.isArray(arr) ? arr : [
     promo: "Tặng 100% lệ phí trước bạ & Miễn phí bảo dưỡng định kỳ 2 năm",
     summary: "Xe bồn cám trục vít FAW JH6 4 chân dung tích 30 khối, động cơ 370HP mạnh mẽ, hệ thống xả cám thủy lực khép kín, giải pháp vận chuyển thức ăn chăn nuôi toàn diện.",
     images: [
-      "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80"
+      "/Logo.png"
     ],
     showrooms: ["Bình Chánh, TP.HCM", "Nhị Quý, Tiền Giang", "Bình Đức, An Giang"],
     chassisSpecs: {

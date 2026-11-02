@@ -114,7 +114,7 @@ const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 6) : [];
             <div>
               <div class="relative overflow-hidden bg-gray-100 h-48">
                 <span class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-md z-10">🔥 Nổi Bật & Ưu Đãi</span>
-                <img src={vehicle.images?.[0] || 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80'} alt={vehicle.name} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                <img src={vehicle.images?.[0] || '/Logo.png'} alt={vehicle.name} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
               </div>
               <div class="p-4 space-y-2">
                 <span class="text-xs font-bold text-gray-500 uppercase">{vehicle.brand}</span>
