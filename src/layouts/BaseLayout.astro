@@ -1,6 +1,6 @@
 ---
-const rawImg = Astro.props?.image || "/Logo.png";
-const resolvedOgImage = rawImg.startsWith("http") ? rawImg : `https://chuyendungphucuong.vn${rawImg.startsWith("/") ? "" : "/"}${rawImg}?v=2026`;
+const rawImg = Astro.props?.image || "/og-logo.jpg";
+const resolvedOgImage = rawImg.startsWith("http") ? rawImg : `https://chuyendungphucuong.vn${rawImg.startsWith("/") ? "" : "/"}${rawImg}?v=20262`;
 import navData from '../data/navigation.json';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 const {
   title = "Ô TÔ PHÚ CƯỜNG - NHÀ CUNG CẤP VÀ SẢN XUẤT Ô TÔ CHUYÊN DÙNG",
   description = "Ô Tô Phú Cường chuyên cung cấp và sản xuất các dòng ô tô chuyên dùng, xe tải, xe bồn xitec, xe cẩu, xe cứu hộ và ô tô khách. Hỗ trợ trả góp đến 90%, giao xe toàn quốc. Hotline/Zalo: 0922 77 77 03.",
-  image = "/Logo.png"
+  image = "/og-logo.jpg"
 } = Astro.props;
 
 const navigation = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
