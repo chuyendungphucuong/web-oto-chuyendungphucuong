@@ -65,7 +65,7 @@ mainMenu.forEach((menu: any) => {
             return (
               <tr 
                 class="hover:bg-slate-50 transition product-row" 
-                data-name={`${v.name || ''} ${v.slug || ''} ${v.brand || ''}`.toLowerCase()} 
+                data-name={`${v.name || ''} ${v.slug || ''} ${v.brand || ''}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d")} 
                 data-cat={v.subCategory || ''}
                 data-subkey={v.subKey || ''}
               >
@@ -215,18 +215,18 @@ mainMenu.forEach((menu: any) => {
     const rows = document.querySelectorAll('.product-row');
 
     function filterTable() {
-      const q = searchInput.value.toLowerCase().trim();
+      const q = searchInput.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d").trim();
       const selectedVal = filterCat.value;
       const selectedOpt = filterCat.options[filterCat.selectedIndex];
-      const selectedTitle = (selectedOpt ? selectedOpt.getAttribute('data-title') || '' : '').toLowerCase();
+      const selectedTitle = (selectedOpt ? selectedOpt.getAttribute('data-title') || '' : '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d");
 
       rows.forEach(row => {
         const matchName = row.getAttribute('data-name').includes(q);
-        const rowCat = (row.getAttribute('data-cat') || '').toLowerCase();
-        const rowSubKey = (row.getAttribute('data-subkey') || '').toLowerCase();
+        const rowCat = (row.getAttribute('data-cat') || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d");
+        const rowSubKey = (row.getAttribute('data-subkey') || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d");
 
         const matchCat = selectedVal === 'all' 
-          || rowSubKey === selectedVal.toLowerCase() 
+          || rowSubKey === selectedVal.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d") 
           || rowCat === selectedTitle
           || (selectedVal === 'bon-thuc-pham' && rowCat.includes('bồn cám'))
           || (selectedVal === 'bon-hut-chat-thai' && (rowCat.includes('hút chất thải') || rowCat.includes('bồn chuyên dùng')))

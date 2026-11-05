@@ -4,7 +4,7 @@ import { allVehicles } from "../../data/vehicles.js";
 import navData from "../../data/navigation.json";
 
 const productList = Array.isArray(allVehicles) ? allVehicles : [];
-const availableBrands = Array.from(new Set(productList.map((v: any) => v.brand).filter(Boolean)));
+const availableBrands = Array.from(new Set(productList.map((v: any) => String(v.brand || "").trim().toUpperCase()).filter(Boolean))).sort();
 
 // Tự động đọc cấu trúc Menu Cha - Con từ navigation.json
 const mainMenu = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
@@ -169,7 +169,7 @@ const categories = [
                 class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md transition group product-card"
                 data-name={product.name?.toLowerCase() || ""}
                 data-search={fullSearchableText}
-                data-brand={product.brand || ""}
+                data-brand={String(product.brand || "").trim().toUpperCase()}
                 data-category={catSub.toLowerCase()}
                 data-subkey={subKey}
                 data-type={categoryType.toLowerCase()}
@@ -358,7 +358,7 @@ const categories = [
 
     function filterProducts() {
       const searchVal = document.getElementById("quickSearchInput")?.value || "";
-      const selectedBrands = Array.from(document.querySelectorAll(".brand-checkbox:checked")).map(cb => cb.value);
+      const selectedBrands = Array.from(document.querySelectorAll(".brand-checkbox:checked")).map(cb => String(cb.value || "").trim().toUpperCase());
       const selectedPriceIdx = parseInt(document.querySelector(".price-radio:checked")?.value || "0");
       const currentRange = priceRanges[selectedPriceIdx];
 
@@ -368,7 +368,7 @@ const categories = [
       cards.forEach(card => {
         const name = card.getAttribute("data-name") || "";
         const fullSearch = card.getAttribute("data-search") || "";
-        const brand = card.getAttribute("data-brand") || "";
+        const brand = String(card.getAttribute("data-brand") || "").trim().toUpperCase();
         const category = card.getAttribute("data-category") || "";
         const subkey = card.getAttribute("data-subkey") || "";
         const type = card.getAttribute("data-type") || "";
