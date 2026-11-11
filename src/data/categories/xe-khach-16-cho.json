@@ -7,7 +7,7 @@
     "subCategory": "Xe khách 16 chỗ (Solati, Sunray)",
     "subKey": "16-cho",
     "brand": "JAC",
-    "price": 699000000,
+    "price": 679000000,
     "promo": "Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm",
     "images": [
       "/images/products/xe-khach-16-cho-jac-sunray/xe-khach-16-cho-jac-sunray-1.webp",
@@ -74,7 +74,7 @@
         "answer": "Xe trang bị động cơ Diesel 4 kỳ, 4 xi-lanh thẳng hàng tăng áp HFC4DE1-1D đạt tiêu chuẩn khí thải Euro 5 hiện đại, tích hợp công nghệ phun nhiên liệu điện tử Common Rail áp suất cao giúp xe vận hành êm ái, bốc máy ở dải tốc độ thấp và tối ưu hóa mức tiêu hao nhiên liệu trên đường trường."
       }
     ],
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "slug": "xe-khach-16-cho-hyundai-solati",
