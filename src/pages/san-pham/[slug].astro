@@ -181,13 +181,17 @@ function extractShortBadge(v) {
 }
 
 // Lọc tối đa 4 xe cùng phân khúc (ưu tiên trùng subKey hoặc subCategory)
-const relatedVehicles = vehicles
-  .filter((item) => item.slug !== vehicle.slug && (
-    (vehicle.subKey && item.subKey === vehicle.subKey) ||
-    (vehicle.subCategory && item.subCategory === vehicle.subCategory) ||
-    (vehicle.category && item.category === vehicle.category)
-  ))
-  .slice(0, 4);
+// Lọc xe cùng phân khúc chuẩn xác (Ưu tiên tuyệt đối xe trùng subKey, sau đó đến subCategory)
+  let relatedVehicles = vehicles.filter((item) => item.slug !== vehicle.slug && vehicle.subKey && item.subKey === vehicle.subKey);
+  if (relatedVehicles.length < 4) {
+    const backupByCat = vehicles.filter((item) => item.slug !== vehicle.slug && !relatedVehicles.includes(item) && vehicle.subCategory && item.subCategory === vehicle.subCategory);
+    relatedVehicles = [...relatedVehicles, ...backupByCat];
+  }
+  if (relatedVehicles.length < 4) {
+    const backupGeneral = vehicles.filter((item) => item.slug !== vehicle.slug && !relatedVehicles.includes(item) && item.category === (vehicle.category || "xe-tai-chuyen-dung"));
+    relatedVehicles = [...relatedVehicles, ...backupGeneral];
+  }
+  relatedVehicles = relatedVehicles.slice(0, 4);
 // === END B2B & AI OVERVIEW HELPERS ===
 ---
 
