@@ -1,0 +1,525 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { allVehicles } from '../data/vehicles.js';
+import postsData from '../data/posts.json';
+
+const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
+
+// Ưu tiên xe có isFeatured === true, nếu ít hơn 8 xe thì tự động lấy bù thêm xe trong kho
+const explicitlyFeatured = vehicleList.filter((v: any) => v.isFeatured === true);
+const nonFeatured = vehicleList.filter((v: any) => v.isFeatured !== true);
+const combinedVehicles = [...explicitlyFeatured, ...nonFeatured];
+const safeVehicles = combinedVehicles.slice(0, Math.max(explicitlyFeatured.length, 8));
+
+const coreServices = [
+  { title: "Cứu Hộ Chuyên Dùng 24/7", desc: "Đội ngũ xe sàn trượt và cẩu trực chiến hỗ trợ khẩn cấp mọi lúc mọi nơi.", icon: "🚨", link: "/dich-vu/cuu-ho-chuyen-dung" },
+  { title: "Sửa Chữa Động Cơ & Thủy Lực", desc: "Đại tu động cơ Cummins, Yuchai, Hino và phục hồi hệ thống bơm van.", icon: "⚙️", link: "/dich-vu/sua-xe-chuyen-dung" },
+  { title: "Sửa Chữa & Gia Cố Thùng Bồn", desc: "Hàn vá bồn xitec, gia cố khung xương thùng xe tải, chống rò rỉ.", icon: "🚛", link: "/dich-vu/sua-thung-bon" },
+  { title: "Đăng Kiểm & Cải Tạo Hồ Sơ", desc: "Trọn gói thủ tục thiết kế hoán cải, đăng kiểm và cấp biển số vàng.", icon: "📄", link: "/dich-vu/cai-tao-ho-so" }
+];
+
+// Lấy 6 tin tức mới nhất để chạy ngang
+const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 24) : [];
+
+// === START HAS VIDEO HELPER ===
+function itemHasVideo(item) {
+  if (!item) return false;
+  if (item.videoUrl && String(item.videoUrl).trim() !== "") return true;
+  if (item.youtubeUrl && String(item.youtubeUrl).trim() !== "") return true;
+  const bodyText = String(item.description || item.content || "");
+  return /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)[a-zA-Z0-9_-]{11}/i.test(bodyText);
+}
+// === END HAS VIDEO HELPER ===
+
+// === START SPEC BADGE EXTRACTOR ===
+function getCardSpecBadges(p) {
+  if (!p) return [];
+  if (p.customBadges) {
+    const manualList = Array.isArray(p.customBadges)
+      ? p.customBadges.map(s => String(s).trim()).filter(Boolean)
+      : String(p.customBadges).split(/[,|]/).map(s => s.trim()).filter(Boolean);
+    if (manualList.length > 0) return manualList.slice(0, 3);
+  }
+  const badges = [];
+  const chassis = p.chassisSpecs || {};
+  const special = p.specialSpecs || {};
+  const all = [...Object.entries(chassis), ...Object.entries(special)];
+
+  // 1. Tìm Thể tích bồn (Khối / m3) hoặc Kích thước sàn
+  for (const [k, v] of all) {
+    const kl = String(k).toLowerCase();
+    const vs = String(v);
+    if (kl.includes("thể tích") || kl.includes("dung tích")) {
+      const m = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+      if (m) {
+        badges.push(`🛢️ Bồn ${m[1]} Khối`);
+        break;
+      }
+    }
+  }
+
+  // 2. Tìm Tải trọng cho phép chở (quy về Tấn gọn gàng)
+  for (const [k, v] of all) {
+    const kl = String(k).toLowerCase();
+    const vs = String(v);
+    if (kl.includes("tải trọng cho phép") || kl.includes("tải trọng chuyên chở") || kl.includes("khối lượng hàng") || kl.includes("tải trọng chở")) {
+      const kgMatch = vs.match(/(\d{1,2}\.\d{3}|\d{3,5})\s*kg/i);
+      if (kgMatch) {
+        const ton = (parseFloat(kgMatch[1].replace(".", "")) / 1000).toFixed(2).replace(/\.?0+$/, "");
+        badges.push(`⚖️ Tải ${ton} Tấn`);
+        break;
+      }
+      const tonMatch = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan)/i);
+      if (tonMatch) {
+        badges.push(`⚖️ Tải ${tonMatch[1]} Tấn`);
+        break;
+      }
+    }
+  }
+
+  // 3. Tìm Vật liệu bồn (Inox 304 / SS400) hoặc Cơ cấu chuyên dùng (Sàn trượt / Càng kéo / Cẩu)
+  for (const [k, v] of all) {
+    if (badges.length >= 2) break;
+    const vs = String(v);
+    if (/inoxs*304/i.test(vs)) {
+      badges.push("🛡️ Inox 304");
+      break;
+    } else if (/sàn trượt/i.test(vs) && /càng kéo/i.test(vs)) {
+      badges.push("🔧 Sàn trượt + Càng kéo");
+      break;
+    } else if (/kích thước.*sàn|lòng thùng/i.test(String(k))) {
+      const dim = vs.match(/(\d[.,]\d+|\d{4})\s*x\s*(\d[.,]\d+|\d{4})/i);
+      if (dim) {
+        const d1 = dim[1].length === 4 ? (parseInt(dim[1]) / 1000).toFixed(1) + "m" : dim[1] + "m";
+        badges.push(`📏 Sàn dài ${d1}`);
+        break;
+      }
+    }
+  }
+
+  // 4. Fallback đọc từ tên xe nếu xe chưa điền bảng chassisSpecs chi tiết
+  const nameStr = String(p.name || "");
+  if (badges.length === 0) {
+    const vMatch = nameStr.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+    if (vMatch) badges.push(`🛢️ Bồn ${vMatch[1]} Khối`);
+
+    const tMatch1 = nameStr.match(/(\d+)t(\d+)/i);
+    if (tMatch1) badges.push(`⚖️ Tải ${tMatch1[1]}.${tMatch1[2]} Tấn`);
+    else {
+      const tMatch2 = nameStr.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan|t\b)/i);
+      if (tMatch2) badges.push(`⚖️ Tải ${tMatch2[1]} Tấn`);
+    }
+
+    const sMatch = nameStr.match(/(\d+)\s*chỗ/i);
+    if (sMatch) badges.push(`💺 ${sMatch[1]} Chỗ ngồi`);
+  }
+
+  if (badges.length < 2) {
+    if (/2 chức năng/i.test(nameStr) && !badges.some(b => b.includes("Sàn trượt"))) {
+      badges.push("🔧 Sàn trượt + Càng kéo");
+    } else if (/3 chức năng/i.test(nameStr)) {
+      badges.push("🏗️ Cẩu + Sàn + Càng kéo");
+    } else if (/trục vít/i.test(nameStr)) {
+      badges.push("⚙️ Bơm trục vít");
+    } else if (/cám thổi|khí nén/i.test(nameStr)) {
+      badges.push("💨 Bơm khí nén");
+    }
+  }
+
+  return badges.slice(0, 2);
+}
+// === END SPEC BADGE EXTRACTOR ===
+---
+
+<BaseLayout title="Ô Tô Chuyên Dùng Phú Cường | Xe Tải, Xe Bồn, Xe Cứu Hộ Hàng Đầu">
+  <style is:inline>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+
+  <main class="space-y-12 pb-16">
+
+    <!-- HERO SECTION -->
+    <section class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white py-12 lg:py-16 px-4">
+      <div class="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-6">
+          <span class="bg-red-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider inline-block">
+            Đại Lý Phân Phối & Đóng Mới Độc Quyền
+          </span>
+          <h1 class="text-3xl md:text-5xl font-black leading-tight">
+            Ô Tô Chuyên Dùng <span class="text-red-500">Phú Cường</span>
+          </h1>
+          <p class="text-white/90 text-base md:text-lg max-w-xl leading-relaxed">
+            Chuyên cung cấp và đóng mới các dòng xe tải chuyên dùng, xe bồn, xe cẩu, xe cứu hộ và ô tô khách chất lượng cao. Hỗ trợ trả góp lên đến 90%, bảo hành toàn quốc.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-2">
+            <a href="/san-pham" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-8 py-3.5 rounded-xl transition shadow-lg shadow-red-600/30 text-base">
+              🚗 Khám Phá Kho Xe ({vehicleList.length}+ Mẫu)
+            </a>
+            <a href="/tinh-lan-banh" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold px-6 py-3.5 rounded-xl transition text-base">
+              🧮 Tính Giá Lăn Bánh
+            </a>
+          </div>
+        </div>
+        <div class="lg:col-span-5">
+          <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-xl space-y-4">
+            <h3 class="text-xl font-bold border-b border-white/20 pb-2">📍 Hệ Thống Showroom Miền Nam</h3>
+            <div class="space-y-3 text-sm text-white/90">
+              <p><strong>Showroom 1:</strong> 2466 Lê Khả Phiêu, Xã Bình Chánh, TP. HCM</p>
+              <p><strong>Showroom 2:</strong> 95 Quốc lộ 1A, Nhị Quý, Tiền Giang</p>
+              <p><strong>Showroom 3:</strong> 26 Trần Hưng Đạo, Bình Đức, An Giang</p>
+            </div>
+            <a href="tel:0922777703" class="block bg-red-600 hover:bg-red-700 text-white font-extrabold py-3 rounded-xl text-center transition shadow">
+              📞 Hotline Tư Vấn: 0922 77 77 03
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KHỐI SẢN PHẨM NỔI BẬT & ƯU ĐÃI LỚN (VÒNG TRÒN VÔ TẬN) -->
+    <!-- KHỐI SẢN PHẨM TRANG CHỦ (THANH TAB CHUYÊN MỤC KHÔNG ICON + LƯỚI SẢN PHẨM) -->
+    <section class="container mx-auto px-4 max-w-7xl mb-16">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-6 border-b border-gray-200 pb-4 gap-4">
+        <div>
+          <span class="text-blue-600 font-bold text-sm uppercase tracking-wider">Danh Mục &amp; Sản Phẩm Chủ Lực</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 mt-1">Sản Phẩm Nổi Bật &amp; Ưu Đãi Lớn</h2>
+        </div>
+        <a href="/san-pham" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 shrink-0">
+          Xem toàn bộ kho xe (&gt;50 mẫu) &rarr;
+        </a>
+      </div>
+
+      <!-- Thanh Tab Lọc Nhanh Phân Khúc Sản Phẩm (Đã bỏ icon) -->
+      <div id="homeProductTabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-6">
+        <button
+          type="button"
+          data-prod-tab="featured"
+          class="prod-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-blue-600 text-white shadow-sm"
+        >
+          Nổi bật &amp; Ưu đãi
+        </button>
+        <button
+          type="button"
+          data-prod-tab="all"
+          class="prod-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-gray-700 border border-gray-200"
+        >
+          Tất cả sản phẩm
+        </button>
+        {Array.from(new Set(allVehicles.map((v: any) => v.subCategory || v.categoryName).filter(Boolean))).map((subCatName: any) => (
+          <button
+            type="button"
+            data-prod-tab={String(subCatName).trim()}
+            class="prod-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-gray-700 border border-gray-200"
+          >
+            {subCatName}
+          </button>
+        ))}
+      </div>
+
+      <!-- Lưới Sản Phẩm Trang Chủ -->
+      <div id="homeProductGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {allVehicles.map((v: any, idx: number) => {
+          const isFeaturedItem = Boolean(v.isFeatured) || idx < 4;
+          const subCatVal = String(v.subCategory || v.categoryName || "").trim();
+          const specBadges = getCardSpecBadges(v);
+          return (
+            <div
+              data-is-featured={isFeaturedItem ? "true" : "false"}
+              data-prod-cat={subCatVal}
+              class={`home-prod-card bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md hover:border-blue-500 transition group ` + (!isFeaturedItem ? "hidden" : "")}
+            >
+              <div>
+                <a href={`/san-pham/${v.slug}`} class="block relative h-48 bg-white overflow-hidden border-b border-gray-100">
+                  <img
+                    src={v.images?.[0] || "/Logo.png"}
+                    alt={v.name}
+                    loading="lazy"
+                    class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                  />
+                  <span class="absolute top-2 left-2 bg-slate-900/85 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase z-10">
+                    {v.brand || "Phú Cường"}
+                  </span>
+                  {itemHasVideo(v) && (
+                    <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                  )}
+                </a>
+                <div class="p-4 space-y-2">
+                  {specBadges.length > 0 && (
+                    <div class="flex flex-wrap gap-1">
+                      {specBadges.map((badge: string) => (
+                        <span class="inline-flex items-center bg-slate-100 text-slate-800 border border-slate-200/80 text-[10px] font-bold px-2 py-0.5 rounded">
+                          {badge}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <h3 class="font-bold text-gray-900 text-sm line-clamp-2 group-hover:text-blue-600 transition">
+                    <a href={`/san-pham/${v.slug}`}>{v.name}</a>
+                  </h3>
+                </div>
+              </div>
+              <div class="px-4 pb-4 pt-2 border-t border-gray-100 flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] text-gray-400 block uppercase">Giá niêm yết</span>
+                  <span class="text-xs sm:text-sm font-black text-red-600">
+                    {v.price && Number(v.price) > 0 ? `${Number(v.price).toLocaleString("vi-VN")} đ` : "Liên hệ"}
+                  </span>
+                </div>
+                <a href={`/san-pham/${v.slug}`} class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold px-3 py-1.5 rounded-lg text-xs transition">
+                  Chi tiết &rarr;
+                </a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <script is:inline>
+        (function() {
+          const tabBtns = document.querySelectorAll(".prod-tab-btn");
+          const cards = document.querySelectorAll(".home-prod-card");
+          if (!tabBtns.length || !cards.length) return;
+
+          tabBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+              const selectedTab = btn.getAttribute("data-prod-tab") || "featured";
+
+              // Đổi style các nút Tab
+              tabBtns.forEach(b => {
+                if (b === btn) {
+                  b.className = "prod-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-blue-600 text-white shadow-sm";
+                } else {
+                  b.className = "prod-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-gray-700 border border-gray-200";
+                }
+              });
+
+              // Lọc hiển thị sản phẩm theo Tab
+              cards.forEach(card => {
+                const isFeat = card.getAttribute("data-is-featured") === "true";
+                const cat = card.getAttribute("data-prod-cat") || "";
+
+                let show = false;
+                if (selectedTab === "featured") {
+                  show = isFeat;
+                } else if (selectedTab === "all") {
+                  show = true;
+                } else {
+                  show = (cat === selectedTab);
+                }
+
+                if (show) {
+                  card.classList.remove("hidden");
+                } else {
+                  card.classList.add("hidden");
+                }
+              });
+            });
+          });
+        })();
+      </script>
+    </section>
+    <!-- KHỐI TIN TỨC ĐỘNG TỪ POSTS.JSON (THANH TAB CHUYÊN MỤC + HIỂN THỊ 6 BÀI / TAB CHUẨN SEO AI OVERVIEW) -->
+    <section class="container mx-auto px-4 max-w-7xl">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-6 border-b border-gray-200 pb-4 gap-4">
+        <div>
+          <span class="text-blue-600 font-bold text-sm uppercase tracking-wider">Kiến Thức Chuyên Sâu &amp; Cập Nhật</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 mt-1">Tin Tức, Kỹ Thuật &amp; Kinh Nghiệm Đầu Tư Xe</h2>
+        </div>
+        <a href="/tin-tuc" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 shrink-0">
+          Xem toàn bộ kho bài viết &rarr;
+        </a>
+      </div>
+
+      <!-- Thanh Tab Lọc Nhanh Theo Chuyên Mục -->
+      <div id="homeNewsTabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-6">
+        <button
+          type="button"
+          data-news-tab="all"
+          class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-blue-600 text-white shadow-sm"
+        >
+          🔥 Tất cả mới nhất
+        </button>
+        {Array.from(new Set(latestPosts.map((p: any) => p.category).filter(Boolean))).map((catName: any) => (
+          <button
+            type="button"
+            data-news-tab={String(catName).trim()}
+            class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-gray-700 border border-gray-200"
+          >
+            {catName}
+          </button>
+        ))}
+      </div>
+
+      <!-- Lưới 6 bài viết (3 cột x 2 hàng trên Desktop) -->
+      <div id="homeNewsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {latestPosts.map((post: any, idx: number) => (
+          <article
+            data-post-cat={String(post.category || "").trim()}
+            class={`home-news-card bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group ${idx >= 6 ? "hidden" : ""}`}
+          >
+            <div>
+              {post.image && (
+                <a href={`/tin-tuc/${post.slug}`} class="block relative overflow-hidden h-48 border-b bg-gray-100">
+                  <img src={post.image} alt={post.title} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                  {itemHasVideo(post) && (
+                    <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                  )}
+                </a>
+              )}
+              <div class="p-5 space-y-2.5">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-md">{post.category || "Tin tức"}</span>
+                  <span class="text-gray-400">{post.date}</span>
+                </div>
+                <h3 class="font-bold text-base text-gray-900 leading-snug group-hover:text-blue-600 transition line-clamp-2">
+                  <a href={`/tin-tuc/${post.slug}`}>{post.title}</a>
+                </h3>
+                {post.excerpt && (
+                  <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">{post.excerpt}</p>
+                )}
+              </div>
+            </div>
+            <div class="px-5 pb-5 pt-2 border-t border-gray-50 flex items-center justify-between">
+              <a href={`/tin-tuc/${post.slug}`} class="text-blue-600 hover:text-blue-700 font-bold text-xs sm:text-sm inline-flex items-center gap-1 group-hover:translate-x-0.5 transition">
+                Đọc chi tiết &rarr;
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <script is:inline>
+        (function() {
+          const tabBtns = document.querySelectorAll(".news-tab-btn");
+          const cards = document.querySelectorAll(".home-news-card");
+          if (!tabBtns.length || !cards.length) return;
+
+          tabBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+              const selectedTab = btn.getAttribute("data-news-tab") || "all";
+
+              // Cập nhật màu nút Tab đang chọn
+              tabBtns.forEach(b => {
+                if (b === btn) {
+                  b.className = "news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-blue-600 text-white shadow-sm";
+                } else {
+                  b.className = "news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-gray-700 border border-gray-200";
+                }
+              });
+
+              // Lọc và hiển thị tối đa 6 bài viết thuộc Tab đã chọn
+              let shownCount = 0;
+              cards.forEach(card => {
+                const cardCat = card.getAttribute("data-post-cat") || "";
+                const isMatch = (selectedTab === "all") || (cardCat === selectedTab);
+                if (isMatch && shownCount < 6) {
+                  card.classList.remove("hidden");
+                  shownCount++;
+                } else {
+                  card.classList.add("hidden");
+                }
+              });
+            });
+          });
+        })();
+      </script>
+    </section>
+
+  </main>
+
+  <script is:inline>
+    // Hàm hiệu ứng cuộn mượt và nhanh tùy chỉnh
+    function fastScrollTo(element, targetLeft, duration = 280) {
+      const startLeft = element.scrollLeft;
+      const distance = targetLeft - startLeft;
+      let startTime = null;
+
+      function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        element.scrollLeft = startLeft + distance * ease;
+        if (elapsed < duration) {
+          requestAnimationFrame(animation);
+        }
+      }
+      requestAnimationFrame(animation);
+    }
+
+    // Khởi tạo băng chuyền vòng tròn vô tận không giựt lùi
+    function initInfiniteCarousel(containerId, prevBtnId, nextBtnId, intervalMs = 2200) {
+      const container = document.getElementById(containerId);
+      const prevBtn = document.getElementById(prevBtnId);
+      const nextBtn = document.getElementById(nextBtnId);
+      if (!container) return;
+
+      // 1. Nhân đôi các phần tử bên trong container để tạo vòng lặp vô tận liền mạch
+      const originalHTML = container.innerHTML;
+      container.innerHTML = originalHTML + originalHTML;
+
+      const getStepWidth = () => {
+        const firstCard = container.firstElementChild;
+        if (!firstCard) return 320;
+        return firstCard.getBoundingClientRect().width + 24; // chiều rộng thẻ + gap 24px
+      };
+
+      const slideNext = () => {
+        const step = getStepWidth();
+        const halfWidth = container.scrollWidth / 2;
+
+        // Nếu đã cuộn qua nửa danh sách (hết một vòng), lập tức dịch chuyển ngầm về vạch xuất phát 0 không qua hiệu ứng để nối tiếp vòng mới mượt mà
+        if (container.scrollLeft >= halfWidth - 5) {
+          container.scrollLeft = 0;
+        }
+
+        fastScrollTo(container, container.scrollLeft + step, 280);
+      };
+
+      const slidePrev = () => {
+        const step = getStepWidth();
+        const halfWidth = container.scrollWidth / 2;
+
+        if (container.scrollLeft <= 5) {
+          container.scrollLeft = halfWidth;
+        }
+
+        fastScrollTo(container, container.scrollLeft - step, 280);
+      };
+
+      nextBtn?.addEventListener('click', slideNext);
+      prevBtn?.addEventListener('click', slidePrev);
+
+      let timer = setInterval(slideNext, intervalMs);
+
+      const pause = () => clearInterval(timer);
+      const resume = () => {
+        clearInterval(timer);
+        timer = setInterval(slideNext, intervalMs);
+      };
+
+      container.addEventListener('mouseenter', pause);
+      container.addEventListener('mouseleave', resume);
+      prevBtn?.addEventListener('mouseenter', pause);
+      prevBtn?.addEventListener('mouseleave', resume);
+      nextBtn?.addEventListener('mouseenter', pause);
+      nextBtn?.addEventListener('mouseleave', resume);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        initInfiniteCarousel('vehicleCarousel', 'btnPrevVehicles', 'btnNextVehicles', 2200);
+        initInfiniteCarousel('postCarousel', 'btnPrevPosts', 'btnNextPosts', 2500);
+      });
+    } else {
+      initInfiniteCarousel('vehicleCarousel', 'btnPrevVehicles', 'btnNextVehicles', 2200);
+      initInfiniteCarousel('postCarousel', 'btnPrevPosts', 'btnNextPosts', 2500);
+    }
+  </script>
+</BaseLayout>
