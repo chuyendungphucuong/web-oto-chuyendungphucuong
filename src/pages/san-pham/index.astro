@@ -55,6 +55,111 @@ const categories = [
   { id: "xe-4-7-cho-cu", name: "Xe 4 - 7 Chỗ Cũ" }
 ];
 
+// === START PAYLOAD & VOLUME EXTRACTOR (CHUẨN ĐĂNG KIỂM) ===
+function parseVietnameseNumber(rawStr) {
+  if (!rawStr) return 0;
+  const s = String(rawStr).trim();
+  // Nếu có dạng 17.100 kg hoặc 12.770 (dấu chấm ngăn cách hàng nghìn: sau dấu chấm có đúng 3 chữ số)
+  if (/^\d{1,3}(\.\d{3})+$/.test(s)) {
+    return parseFloat(s.replace(/\./g, ""));
+  }
+  // Nếu có dấu phẩy thập phân kiểu VN: 16,5
+  return parseFloat(s.replace(",", "."));
+}
+
+function getExactPayloadTons(p) {
+  if (!p) return 0;
+  const chassis = p.chassisSpecs || {};
+  const special = p.specialSpecs || {};
+  const allEntries = [...Object.entries(chassis), ...Object.entries(special)];
+
+  // Bước 1: Quét chính xác trường Tải trọng cho phép chở / Khối lượng chuyên chở (Loại trừ Tổng tải & Tự trọng)
+  for (const [k, v] of allEntries) {
+    const kl = String(k).toLowerCase();
+    const vs = String(v).toLowerCase();
+
+    const isTotalOrCurb =
+      kl.includes("toàn bộ") ||
+      kl.includes("tổng tải") ||
+      kl.includes("tổng khối lượng") ||
+      kl.includes("bản thân") ||
+      kl.includes("tự trọng") ||
+      kl.includes("không tải");
+
+    const isAllowedPayload =
+      kl.includes("cho phép") ||
+      kl.includes("chuyên chở") ||
+      kl.includes("khối lượng hàng") ||
+      kl.includes("tải trọng chở") ||
+      kl.includes("tải trọng hàng") ||
+      (kl.includes("tải trọng") && !isTotalOrCurb);
+
+    if (isAllowedPayload && !isTotalOrCurb) {
+      // Tìm số đi kèm kg
+      const kgMatch = vs.match(/(\d{1,3}(?:\.\d{3})+|\d{3,6})\s*kg/i);
+      if (kgMatch) {
+        const kgVal = parseVietnameseNumber(kgMatch[1]);
+        if (kgVal > 100) return +(kgVal / 1000).toFixed(3);
+      }
+      // Tìm số đi kèm tấn
+      const tonMatch = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan)/i);
+      if (tonMatch) {
+        return parseVietnameseNumber(tonMatch[1]);
+      }
+      // Nếu chỉ ghi số thuần (VD: "17.100" hoặc "17100")
+      const rawNumMatch = vs.match(/(\d{1,3}(?:\.\d{3})+|\d+(?:[.,]\d+)?)/);
+      if (rawNumMatch) {
+        const val = parseVietnameseNumber(rawNumMatch[1]);
+        return val > 100 ? +(val / 1000).toFixed(3) : val;
+      }
+    }
+  }
+
+  // Bước 2: Nếu xe chưa có bảng chassisSpecs, đọc từ customBadges hoặc tên xe (nhưng tránh chữ "tổng tải")
+  const badgeText = Array.isArray(p.customBadges) ? p.customBadges.join(" ") : String(p.customBadges || "");
+  const nameClean = (badgeText + " " + String(p.name || "")).replace(/tổng\s*tải\s*\d+(?:[.,]\d+)?\s*(?:tấn|tan|t\b)/gi, "");
+
+  const tMatch1 = nameClean.match(/(\d+)t(\d+)/i);
+  if (tMatch1) return parseFloat(tMatch1[1] + "." + tMatch1[2]);
+
+  const tMatch2 = nameClean.match(/(?:tải\s*)?(\d+(?:[.,]\d+)?)\s*(?:tấn|tan|t\b)/i);
+  if (tMatch2) return parseFloat(tMatch2[1].replace(",", "."));
+
+  return 0;
+}
+
+function getExactVolumeM3(p) {
+  if (!p) return 0;
+  const chassis = p.chassisSpecs || {};
+  const special = p.specialSpecs || {};
+  const allEntries = [...Object.entries(special), ...Object.entries(chassis)];
+
+  for (const [k, v] of allEntries) {
+    const kl = String(k).toLowerCase();
+    const vs = String(v).toLowerCase();
+    // Không lấy thể tích làm việc của động cơ (cm3)
+    if (kl.includes("động cơ") || kl.includes("làm việc") || vs.includes("cm³") || vs.includes("cm3") || vs.includes("cc")) continue;
+
+    if (kl.includes("thể tích") || kl.includes("dung tích") || kl.includes("bồn") || kl.includes("xi téc")) {
+      const m3Match = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+      if (m3Match) return parseVietnameseNumber(m3Match[1]);
+
+      const litMatch = vs.match(/(\d{1,3}(?:\.\d{3})+|\d{4,6})\s*(?:lít|lit)/i);
+      if (litMatch) {
+        const litVal = parseVietnameseNumber(litMatch[1]);
+        if (litVal >= 500) return +(litVal / 1000).toFixed(2);
+      }
+    }
+  }
+
+  const nameStr = String(p.name || "") + " " + (Array.isArray(p.customBadges) ? p.customBadges.join(" ") : String(p.customBadges || ""));
+  const vMatch = nameStr.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+  if (vMatch) return parseFloat(vMatch[1].replace(",", "."));
+
+  return 0;
+}
+// === END PAYLOAD & VOLUME EXTRACTOR ===
+
 // === START HAS VIDEO HELPER ===
 function itemHasVideo(item) {
   if (!item) return false;
@@ -278,11 +383,11 @@ function getCardSpecBadges(p) {
                 class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md transition group product-card"
                 data-name={product.name?.toLowerCase() || ""}
                 data-search={fullSearchableText}
-                data-brand={String(product.brand || "").trim().toUpperCase()}
+                data-payload={getExactPayloadTons(product)} data-volume={getExactVolumeM3(product)} data-brand={String(product.brand || "").trim().toUpperCase()}
                 data-category={catSub.toLowerCase()}
                 data-subkey={subKey}
                 data-type={categoryType.toLowerCase()}
-                data-price={product.price || 0}
+                data-price={product.price || 0} data-payload={getExactPayloadTons(product)} data-volume={getExactVolumeM3(product)}
               >
                 <div>
                   <div class="relative overflow-hidden bg-gray-100 h-48">
@@ -592,8 +697,10 @@ function getCardSpecBadges(p) {
           <label for="sort-select" class="text-sm font-semibold text-slate-700 whitespace-nowrap">Sắp xếp theo:</label>
           <select id="sort-select" class="text-sm border border-slate-300 rounded-lg px-3 py-2 bg-slate-50 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 cursor-pointer">
             <option value="default">Mới cập nhật (Mặc định)</option>
-            <option value="cap-desc">Tải trọng / Thể tích: Lớn → Nhỏ</option>
-            <option value="cap-asc">Tải trọng / Thể tích: Nhỏ → Lớn</option>
+            <option value="cap-desc">Tải trọng cho phép chở: Lớn → Nhỏ</option>
+            <option value="cap-asc">Tải trọng cho phép chở: Nhỏ → Lớn</option>
+            <option value="vol-desc">Thể tích bồn (Khối): Lớn → Nhỏ</option>
+            <option value="vol-asc">Thể tích bồn (Khối): Nhỏ → Lớn</option>
             <option value="price-asc">Giá tham khảo: Thấp → Cao</option>
             <option value="price-desc">Giá tham khảo: Cao → Thấp</option>
           </select>
@@ -609,18 +716,30 @@ function getCardSpecBadges(p) {
       }
     });
 
-    function extractCapacityScore(card) {
-      const text = (card.getAttribute("data-name") || card.textContent || "").toLowerCase();
-      // 1. Tìm số Khối / m3 (VD: 36 khối, 28m3)
-      const volMatch = text.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
-      if (volMatch) return parseFloat(volMatch[1].replace(",", "."));
-      // 2. Tìm dạng 2t45, 3t5
+    function extractCapacityScore(card, mode = "payload") {
+      // Ưu tiên tuyệt đối dữ liệu chuẩn trích xuất từ chassisSpecs / specialSpecs
+      const payloadAttr = parseFloat(card.getAttribute("data-payload") || "0");
+      const volumeAttr = parseFloat(card.getAttribute("data-volume") || "0");
+
+      if (mode === "volume") {
+        if (volumeAttr > 0) return volumeAttr;
+        if (payloadAttr > 0) return payloadAttr;
+      } else {
+        // Mặc định sắp xếp chuẩn theo Tải trọng cho phép chở (Tấn)
+        if (payloadAttr > 0) return payloadAttr;
+        if (volumeAttr > 0) return volumeAttr;
+      }
+
+      // Fallback nếu thẻ không có attribute
+      const text = (card.getAttribute("data-name") || card.textContent || "")
+        .toLowerCase()
+        .replace(/tổng\s*tải\s*\d+(?:[.,]\d+)?\s*(?:tấn|tan|t\b)/gi, "");
       const tonMatch1 = text.match(/(\d+)t(\d+)/i);
       if (tonMatch1) return parseFloat(tonMatch1[1] + "." + tonMatch1[2]);
-      // 3. Tìm số Tấn / T (VD: 3.35 tấn, 2.9t, 15 tấn)
       const tonMatch2 = text.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan|t\b)/i);
       if (tonMatch2) return parseFloat(tonMatch2[1].replace(",", "."));
-      // 4. Tìm số Chỗ ngồi (VD: 47 chỗ, 29 chỗ)
+      const volMatch = text.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+      if (volMatch) return parseFloat(volMatch[1].replace(",", "."));
       const seatMatch = text.match(/(\d+)\s*(?:chỗ|cho)/i);
       if (seatMatch) return parseFloat(seatMatch[1]);
       return 0;
@@ -650,13 +769,15 @@ function getCardSpecBadges(p) {
         if (sortVal === "default") {
           return parseInt(a.getAttribute("data-orig-index") || "0") - parseInt(b.getAttribute("data-orig-index") || "0");
         }
-        if (sortVal === "cap-desc" || sortVal === "cap-asc") {
-          const capA = extractCapacityScore(a);
-          const capB = extractCapacityScore(b);
+        if (sortVal === "cap-desc" || sortVal === "cap-asc" || sortVal === "vol-desc" || sortVal === "vol-asc") {
+          const isVol = sortVal.startsWith("vol-");
+          const isDesc = sortVal.endsWith("-desc");
+          const capA = extractCapacityScore(a, isVol ? "volume" : "payload");
+          const capB = extractCapacityScore(b, isVol ? "volume" : "payload");
           if (capA === 0 && capB === 0) return 0;
           if (capA === 0) return 1;
           if (capB === 0) return -1;
-          return sortVal === "cap-desc" ? capB - capA : capA - capB;
+          return isDesc ? capB - capA : capA - capB;
         }
         if (sortVal === "price-asc" || sortVal === "price-desc") {
           const priceA = extractPriceScore(a);
