@@ -38,6 +38,16 @@ const categories = [
   { label: "Kinh Nghiệm Vận Tải & Đầu Tư", key: "kinh-nghiem-van-tai" },
   { label: "Tin Tức & Bàn Giao Xe Showroom", key: "tin-tuc-ban-giao" }
 ];
+
+// === START HAS VIDEO HELPER ===
+function itemHasVideo(item) {
+  if (!item) return false;
+  if (item.videoUrl && String(item.videoUrl).trim() !== "") return true;
+  if (item.youtubeUrl && String(item.youtubeUrl).trim() !== "") return true;
+  const bodyText = String(item.description || item.content || "");
+  return /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)[a-zA-Z0-9_-]{11}/i.test(bodyText);
+}
+// === END HAS VIDEO HELPER ===
 ---
 
 <BaseLayout title="Kiến Thức & Tin Tức Ô Tô Chuyên Dùng | Phú Cường Auto">
@@ -101,6 +111,9 @@ const categories = [
               class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
               loading="lazy"
             />
+                  {itemHasVideo(post) && (
+                    <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                  )}
             <span class="absolute top-3 left-3 bg-blue-700/95 text-white text-[11px] font-bold px-3 py-1 rounded-lg shadow">
               {post.category}
             </span>

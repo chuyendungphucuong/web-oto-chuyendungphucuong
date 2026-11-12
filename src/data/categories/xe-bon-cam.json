@@ -146,8 +146,8 @@
       "Nhãn hiệu & Mã kiểu loại": "HOWO - Model: CLW5092TQZZ6",
       "Loại phương tiện": "Ô tô kéo, chở xe (Xe cứu hộ giao thông)",
       "Khối lượng bản thân": "5.530 kg",
-      "Tải trọng cho phép chở": "2.930 / 2.930 kg",
-      "Khối lượng toàn bộ (Tổng tải)": "8.655 / 8.655 kg",
+      "Tải trọng cho phép chở": "2.930 kg",
+      "Khối lượng toàn bộ (Tổng tải)": "8.655 kg",
       "Số người cho phép chở": "02 người (ngồi)",
       "Kích thước tổng thể (D x R x C)": "7.580 x 2.280 x 2.650 mm",
       "Kích thước lòng thùng xe": "5.400 x 2.250 mm",
@@ -743,7 +743,8 @@
         "answer": "Lòng sàn chở xe có kích thước thực tế đạt 5.400 x 2.100 mm. Chiều dài sàn 5,4 mét đáp ứng thoải mái việc cõng các dòng xe du lịch 4 - 7 chỗ, xe SUV cỡ lớn, xe bán tải (Pick-up), xe khách 16 chỗ hoặc các dòng xe tải nhẹ, xe nâng hàng đi sửa chữa."
       }
     ],
-    "isFeatured": true
+    "isFeatured": true,
+    "videoUrl": "https://www.youtube.com/watch?v=Sd-C8c_8Rm0"
   },
   {
     "slug": "xe-cau-tu-hanh-howo-4-chan-cau-xcmg-20-tan",

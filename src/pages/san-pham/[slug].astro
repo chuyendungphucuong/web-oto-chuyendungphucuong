@@ -75,6 +75,120 @@ const faqSchema = faqs.length > 0 ? {
     }
   }))
 } : null;
+
+// === START YOUTUBE HELPER ===
+function extractYouTubeId(url) {
+  if (!url || typeof url !== "string") return null;
+  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|Spin\/|v\/|e(?:mbed)?\/|.*[?&]v=|shorts\/)|youtu\.be\/)([^"&?\/\s]{11})/i;
+  const match = url.match(regExp);
+  return match ? match[1] : null;
+}
+const ytVideoId = extractYouTubeId(vehicle?.videoUrl || vehicle?.youtubeUrl || "");
+const videoSchema = ytVideoId ? {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": `Video thực tế ${vehicle?.name || "Xe chuyên dùng Phú Cường"}`,
+  "description": vehicle?.summary || vehicle?.name || "Video quay thực tế tại bãi xe Ô Tô Chuyên Dùng Phú Cường",
+  "thumbnailUrl": [`https://i.ytimg.com/vi/${ytVideoId}/hqdefault.jpg`],
+  "uploadDate": "2026-11-01T08:00:00+07:00",
+  "embedUrl": `https://www.youtube.com/embed/${ytVideoId}`
+} : null;
+// === END YOUTUBE HELPER ===
+
+// === START B2B & AI OVERVIEW HELPERS ===
+function buildKeyTakeaways(v, specsObj, specialObj) {
+  const all = { ...(specsObj || {}), ...(specialObj || {}) };
+  let payload = "";
+  let totalWeight = "";
+  let engine = "";
+  let bodySpec = "";
+
+  for (const [k, val] of Object.entries(all)) {
+    const kl = k.toLowerCase();
+    const vs = String(val).trim();
+    if (!vs) continue;
+    if (!payload && (kl.includes("tải trọng cho phép") || kl.includes("tải trọng chuyên chở") || kl.includes("khối lượng hàng") || kl.includes("tải trọng chở") || kl.includes("thể tích"))) {
+      payload = `${k}: ${vs}`;
+    }
+    if (!totalWeight && (kl.includes("tổng tải") || kl.includes("khối lượng toàn bộ"))) {
+      totalWeight = vs;
+    }
+    if (!engine && (kl.includes("động cơ") || kl.includes("công suất"))) {
+      engine = vs;
+    }
+    if (!bodySpec && (kl.includes("kích thước lòng") || kl.includes("kích thước sàn") || kl.includes("vật liệu") || kl.includes("hệ thống chuyên dùng") || kl.includes("loại thiết bị"))) {
+      bodySpec = `${k}: ${vs}`;
+    }
+  }
+
+  // Tự động phân tích gợi ý hạng bằng lái dựa trên Tổng tải trọng (metrics.totalWeightKg)
+  let licenseHint = "Phù hợp quy chuẩn đăng kiểm hiện hành";
+  if (metrics && metrics.isBus) {
+    licenseHint = metrics.seats <= 30 ? "Bằng D2 / D (theo số chỗ ngồi đăng kiểm)" : "Bằng D (xe khách trên 30 chỗ)";
+  } else if (metrics && metrics.totalWeightKg > 0) {
+    if (metrics.totalWeightKg <= 3500) {
+      licenseHint = `Tổng tải ${totalWeight || metrics.totalWeightKg + " kg"} — Phù hợp bằng B / B2 cũ hoặc C1 mới`;
+    } else if (metrics.totalWeightKg <= 7500) {
+      licenseHint = `Tổng tải ${totalWeight || metrics.totalWeightKg + " kg"} — Phù hợp bằng C1 mới (3.5T - 7.5T) hoặc bằng C`;
+    } else {
+      licenseHint = `Tổng tải ${totalWeight || metrics.totalWeightKg + " kg"} (> 7.5 tấn) — Yêu cầu bằng lái hạng C trở lên`;
+    }
+  } else if (totalWeight) {
+    licenseHint = `Tổng tải trọng: ${totalWeight}`;
+  }
+
+  return { payload, engine, bodySpec, licenseHint };
+}
+
+const keyTakeaways = buildKeyTakeaways(vehicle, specs, specialSpecs);
+
+function extractShortBadge(v) {
+  if (!v) return [];
+  if (v.customBadges) {
+    const manualList = Array.isArray(v.customBadges)
+      ? v.customBadges.map(s => String(s).trim()).filter(Boolean)
+      : String(v.customBadges).split(/[,|]/).map(s => s.trim()).filter(Boolean);
+    if (manualList.length > 0) return manualList.slice(0, 3);
+  }
+  const badges = [];
+  const all = { ...(v?.chassisSpecs || {}), ...(v?.specialSpecs || {}) };
+  for (const [k, val] of Object.entries(all)) {
+    const kl = k.toLowerCase();
+    const vs = String(val);
+    if (kl.includes("thể tích") || kl.includes("dung tích")) {
+      const m = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|m3|m³)/i);
+      if (m) badges.push(`🛢️ Bồn ${m[1]} Khối`);
+    }
+    if (kl.includes("tải trọng cho phép") || kl.includes("khối lượng hàng") || kl.includes("tải trọng chở")) {
+      const kgM = vs.match(/(\d{1,2}\.\d{3}|\d{3,5})\s*kg/i);
+      if (kgM) {
+        const ton = (parseFloat(kgM[1].replace(".", "")) / 1000).toFixed(2).replace(/\.?0+$/, "");
+        badges.push(`⚖️ Tải ${ton} Tấn`);
+      } else {
+        const tM = vs.match(/(\d+(?:[.,]\d+)?)\s*tấn/i);
+        if (tM) badges.push(`⚖️ Tải ${tM[1]} Tấn`);
+      }
+    }
+  }
+  if (badges.length === 0 && v?.name) {
+    const mVol = v.name.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|m3|m³)/i);
+    if (mVol) badges.push(`🛢️ ${mVol[1]} Khối`);
+    const mTon = v.name.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan|t\b)/i);
+    if (mTon) badges.push(`⚖️ ${mTon[1]} Tấn`);
+  }
+  if (v?.brand) badges.push(`🏭 ${v.brand.toUpperCase()}`);
+  return badges.slice(0, 2);
+}
+
+// Lọc tối đa 4 xe cùng phân khúc (ưu tiên trùng subKey hoặc subCategory)
+const relatedVehicles = vehicles
+  .filter((item) => item.slug !== vehicle.slug && (
+    (vehicle.subKey && item.subKey === vehicle.subKey) ||
+    (vehicle.subCategory && item.subCategory === vehicle.subCategory) ||
+    (vehicle.category && item.category === vehicle.category)
+  ))
+  .slice(0, 4);
+// === END B2B & AI OVERVIEW HELPERS ===
 ---
 
 <BaseLayout title={`${vehicle.name} | Ô Tô Chuyên Dùng Phú Cường`} description={vehicle.summary || vehicle.name} image={images[0]}>
@@ -244,6 +358,42 @@ const faqSchema = faqs.length > 0 ? {
             <h3 class="font-bold text-gray-800 mb-2">Tổng quan sản phẩm:</h3>
             <p class="text-gray-600 leading-relaxed text-sm lg:text-base">{vehicle.summary}</p>
           </div>
+          <!-- === START KEY TAKEAWAYS BOX === -->
+          <div class="mb-6 bg-amber-50/90 border border-amber-200 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center gap-2 mb-2.5">
+              <span class="bg-amber-400 text-slate-950 text-[11px] font-black px-2 py-0.5 rounded uppercase">⚡ Điểm Chính Cho Chủ Đầu Tư</span>
+              <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wide">Tóm tắt cấu hình &amp; Pháp lý</h3>
+            </div>
+            <ul class="space-y-1.5 text-xs sm:text-sm text-slate-800">
+              {keyTakeaways.payload && (
+                <li class="flex items-start gap-2">
+                  <span class="text-emerald-600 font-bold">✔</span>
+                  <span><strong>Năng lực chuyên chở:</strong> {keyTakeaways.payload}</span>
+                </li>
+              )}
+              {keyTakeaways.bodySpec && (
+                <li class="flex items-start gap-2">
+                  <span class="text-emerald-600 font-bold">✔</span>
+                  <span><strong>Cấu hình chuyên dùng:</strong> {keyTakeaways.bodySpec}</span>
+                </li>
+              )}
+              {keyTakeaways.engine && (
+                <li class="flex items-start gap-2">
+                  <span class="text-emerald-600 font-bold">✔</span>
+                  <span><strong>Động cơ &amp; Vận hành:</strong> {keyTakeaways.engine}</span>
+                </li>
+              )}
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold">✔</span>
+                <span><strong>Phân hạng bằng lái:</strong> {keyTakeaways.licenseHint}</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold">✔</span>
+                <span><strong>Tài chính &amp; Trả góp:</strong> Hỗ trợ vay ngân hàng 70% – 85%, giao xe &amp; hồ sơ đăng kiểm trọn gói.</span>
+              </li>
+            </ul>
+          </div>
+          <!-- === END KEY TAKEAWAYS BOX === -->
         </div>
 
         <!-- Cụm nút Hành động Chốt Đơn -->
@@ -276,9 +426,74 @@ const faqSchema = faqs.length > 0 ? {
       </div>
     </div>
 
+    <!-- === START YOUTUBE FACADE === -->
+{ytVideoId && (
+  <section class="my-8 bg-slate-900 rounded-2xl p-5 sm:p-7 text-white shadow-xl border border-slate-800">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-red-600 text-white font-bold text-lg shadow">▶</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white leading-tight">Video Thực Tế Xe &amp; Vận Hành Thiết Bị</h2>
+          <p class="text-xs sm:text-sm text-slate-300">Quay trực tiếp tại xưởng &amp; bãi xe Ô Tô Phú Cường</p>
+        </div>
+      </div>
+      <a
+        href={`https://www.youtube.com/watch?v=${ytVideoId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 underline"
+      >
+        Xem trên YouTube ↗
+      </a>
+    </div>
+
+    <div
+      class="yt-facade relative w-full overflow-hidden rounded-xl bg-black aspect-video cursor-pointer group border border-slate-700"
+      data-yt-id={ytVideoId}
+      title="Bấm để phát video thực tế"
+    >
+      <img
+        src={`https://i.ytimg.com/vi/${ytVideoId}/hqdefault.jpg`}
+        alt={`Video thực tế ${vehicle?.name}`}
+        loading="lazy"
+        class="w-full h-full object-cover opacity-90 group-hover:scale-105 group-hover:opacity-100 transition-all duration-300"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+      <button
+        type="button"
+        aria-label="Phát video"
+        class="absolute inset-0 m-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-600 group-hover:bg-red-500 text-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-200"
+      >
+        <svg class="w-8 h-8 sm:w-10 sm:h-10 ml-1 fill-current" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </button>
+      <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs sm:text-sm text-slate-200 font-medium">
+        <span>🎬 Bấm vào nút Play để xem video chất lượng cao</span>
+        <span class="bg-red-600/90 px-2.5 py-0.5 rounded text-white font-semibold">HD</span>
+      </div>
+    </div>
+    {videoSchema && (
+      <script type="application/ld+json" set:html={JSON.stringify(videoSchema)} />
+    )}
+  </section>
+)}
+<script is:inline>
+  document.addEventListener("click", function (e) {
+    const facade = e.target.closest && e.target.closest(".yt-facade");
+    if (!facade || facade.dataset.loaded === "1") return;
+    const vid = facade.getAttribute("data-yt-id");
+    if (!vid) return;
+    facade.dataset.loaded = "1";
+    facade.innerHTML = `<iframe class="w-full h-full border-0" src="https://www.youtube.com/embed/${vid}?autoplay=1&rel=0" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+  });
+</script>
+<!-- === END YOUTUBE FACADE === -->
+
     <!-- Khối Thông số kỹ thuật chi tiết -->
     {Object.keys(specs).length > 0 && (
-      <div class="mt-12 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
+      
+<div class="mt-12 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
         <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 flex items-center gap-2">
           <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Thông số kỹ thuật chi tiết
         </h2>
@@ -351,6 +566,68 @@ const faqSchema = faqs.length > 0 ? {
       </div>
     )}
 
+        <!-- === START RELATED VEHICLES === -->
+    {relatedVehicles.length > 0 && (
+      <section class="mt-12 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 border-b pb-4">
+          <h2 class="text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <span class="w-2 h-6 bg-red-600 rounded-full"></span>
+            Các Dòng Xe Cùng Phân Khúc ({vehicle.subCategory || "Chuyên Dùng"}) Để So Sánh
+          </h2>
+          <a href={`/san-pham?cat=${vehicle.subKey || "xe-tai-chuyen-dung"}`} class="text-sm font-bold text-blue-600 hover:underline">
+            Xem tất cả cùng loại &rarr;
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {relatedVehicles.map((rel: any) => {
+            const relBadges = extractShortBadge(rel);
+            return (
+              <a
+                href={`/san-pham/${rel.slug}`}
+                class="group bg-gray-50 hover:bg-white rounded-xl border border-gray-200 hover:border-blue-500 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between"
+              >
+                <div>
+                  <div class="relative h-44 bg-white overflow-hidden border-b border-gray-100">
+                    <img
+                      src={rel.images?.[0] || "/Logo.png"}
+                      alt={rel.name}
+                      loading="lazy"
+                      class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                    />
+                    <span class="absolute top-2 left-2 bg-slate-900/85 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">
+                      {rel.brand || "Phú Cường"}
+                    </span>
+                  </div>
+                  <div class="p-3.5">
+                    <div class="flex flex-wrap gap-1.5 mb-2">
+                      {relBadges.map((b: string) => (
+                        <span class="bg-blue-50 text-blue-800 border border-blue-200 text-[11px] font-bold px-2 py-0.5 rounded">
+                          {b}
+                        </span>
+                      ))}
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-sm line-clamp-2 group-hover:text-blue-600 transition">
+                      {rel.name}
+                    </h3>
+                  </div>
+                </div>
+                <div class="px-3.5 pb-3.5 pt-2 border-t border-gray-100 flex items-center justify-between">
+                  <span class="text-xs font-extrabold text-red-600">
+                    {rel.price && Number(rel.price) > 0 ? `${Number(rel.price).toLocaleString("vi-VN")} đ` : "Giá: Liên hệ"}
+                  </span>
+                  <span class="text-[11px] font-bold text-blue-600 group-hover:translate-x-0.5 transition">
+                    So sánh &rarr;
+                  </span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+    <!-- === END RELATED VEHICLES === -->
+
     <!-- POPUP ĐĂNG KÝ NHẬN BÁO GIÁ NHANH NGAY TẠI TRANG XE -->
     <div id="quickQuoteModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
       <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
@@ -387,7 +664,86 @@ const faqSchema = faqs.length > 0 ? {
       </div>
     </div>
 
-  </main>
+  
+<!-- === START INLINE YOUTUBE AUTO-EMBED === -->
+<script is:inline>
+  function initInlineYouTubeEmbeds() {
+    // 1. Kích hoạt click phát video cho mọi khung .yt-facade
+    document.addEventListener("click", function (e) {
+      const facade = e.target.closest && e.target.closest(".yt-facade");
+      if (!facade || facade.dataset.loaded === "1") return;
+      const vid = facade.getAttribute("data-yt-id");
+      if (!vid) return;
+      facade.dataset.loaded = "1";
+      facade.innerHTML = `<iframe class="w-full h-full border-0" src="https://www.youtube.com/embed/${vid}?autoplay=1&rel=0" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+    });
+
+    function getYtId(url) {
+      if (!url || typeof url !== "string") return null;
+      const m = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|v\/|e(?:mbed)?\/|.*[?&]v=|shorts\/)|youtu\.be\/)([^"&?\/\s]{11})/i);
+      return m ? m[1] : null;
+    }
+
+    function buildFacadeElement(vid) {
+      const wrap = document.createElement("div");
+      wrap.className = "my-6 not-prose";
+      wrap.innerHTML = `
+        <div class="yt-facade relative w-full overflow-hidden rounded-2xl bg-black aspect-video cursor-pointer group border border-slate-700 shadow-lg" data-yt-id="${vid}" title="Bấm để xem video">
+          <img src="https://i.ytimg.com/vi/${vid}/hqdefault.jpg" alt="YouTube Video" loading="lazy" class="w-full h-full object-cover opacity-90 group-hover:scale-105 group-hover:opacity-100 transition-all duration-300" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+          <button type="button" aria-label="Phát video" class="absolute inset-0 m-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-600 group-hover:bg-red-500 text-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-200">
+            <svg class="w-8 h-8 sm:w-10 sm:h-10 ml-1 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+          </button>
+          <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs sm:text-sm text-white font-medium">
+            <span>🎬 Bấm vào nút Play để xem video trực tiếp</span>
+            <span class="bg-red-600 px-2.5 py-0.5 rounded text-white font-bold">YouTube HD</span>
+          </div>
+        </div>
+      `;
+      return wrap;
+    }
+
+    // 2. Quét trong vùng bài viết / mô tả (.prose) để biến link YouTube thành khung Video
+    document.querySelectorAll(".prose a[href*='youtube.com'], .prose a[href*='youtu.be']").forEach(a => {
+      const vid = getYtId(a.getAttribute("href"));
+      if (!vid || a.dataset.ytProcessed === "1") return;
+      a.dataset.ytProcessed = "1";
+
+      const parentP = a.closest("p");
+      // Nếu thẻ <p> chỉ chứa đường link YouTube (hoặc người dùng chèn link đứng riêng 1 dòng) -> Thay hẳn bằng khung phát Video
+      if (parentP && parentP.textContent.trim() === a.textContent.trim()) {
+        parentP.replaceWith(buildFacadeElement(vid));
+      } else {
+        // Nếu link nằm lẫn trong câu văn -> Chèn khung phát Video ngay bên dưới đoạn văn đó
+        if (parentP && !parentP.dataset.hasVideoBelow) {
+          parentP.dataset.hasVideoBelow = "1";
+          parentP.after(buildFacadeElement(vid));
+        }
+      }
+    });
+
+    // 3. Trường hợp người dùng dán thẳng text URL YouTube mà không bôi đen bấm nút Link
+    document.querySelectorAll(".prose p").forEach(p => {
+      if (p.children.length === 0) {
+        const txt = p.textContent.trim();
+        if (/^https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\//i.test(txt)) {
+          const vid = getYtId(txt);
+          if (vid) p.replaceWith(buildFacadeElement(vid));
+        }
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initInlineYouTubeEmbeds);
+  } else {
+    initInlineYouTubeEmbeds();
+  }
+  document.addEventListener("astro:page-load", initInlineYouTubeEmbeds);
+</script>
+<!-- === END INLINE YOUTUBE AUTO-EMBED === -->
+
+</main>
 
   <script is:inline define:vars={{ rawImages: images, basePrice: vehicle.price || 0, roadTax: dynamicRoadTax, insurance: dynamicInsuranceTNDS, otherFixed: fixedServiceAndPlate }}>
     let currentImgIdx = 0;

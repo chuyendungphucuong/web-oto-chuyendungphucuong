@@ -4,7 +4,8 @@ import path from 'path';
 export async function POST({ request }) {
   try {
     const data = await request.json();
-    const { slug, title, category, author, summary, image, content } = data;
+    const { slug, title, category, author, summary, image,
+      videoUrl, content } = data;
 
     if (!slug || !title) {
       return new Response(JSON.stringify({ success: false, message: 'Vui lòng nhập đầy đủ Tiêu đề và Slug bài viết.' }), {
@@ -31,6 +32,7 @@ export async function POST({ request }) {
         author: author || 'Chuyên gia Phú Cường',
         summary: summary || '',
         image: image || posts[index].image,
+        videoUrl: videoUrl || "",
         content: content || posts[index].content
       };
     } else {

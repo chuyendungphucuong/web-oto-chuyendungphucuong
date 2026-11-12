@@ -170,6 +170,10 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
           <input type="text" id="inputPromo" value={vehicle?.promo || 'Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm'} class="w-full p-3 border rounded-xl text-red-700 font-semibold" />
         </div>
         <div class="md:col-span-2">
+          <label class="block font-bold text-blue-800 mb-1">🏷️ Nhãn thông số nổi bật trên thẻ sản phẩm (Tối đa 2-3 nhãn, ngăn cách bằng dấu phẩy ","):</label>
+          <input type="text" id="inputCustomBadges" value={Array.isArray(vehicle?.customBadges) ? vehicle.customBadges.join(', ') : (vehicle?.customBadges || '')} placeholder="VD: ⚖️ Tải 2.45 Tấn, 🔧 Sàn trượt 5.8m (Để trống hệ thống sẽ tự trích xuất từ thông số)" class="w-full p-3 border-2 border-blue-300 bg-blue-50/40 rounded-xl font-bold text-blue-900 mb-4 focus:bg-white focus:border-blue-600 outline-none" />
+          <label class="block font-bold text-red-700 mb-1">🎬 Link Video YouTube / YouTube Shorts Thực Tế (Tùy chọn):</label>
+          <input type="url" id="inputVideoUrl" value={vehicle?.videoUrl || vehicle?.youtubeUrl || ''} placeholder="Dán link YouTube vào đây (VD: https://www.youtube.com/watch?v=... hoặc https://youtube.com/shorts/...)" class="w-full p-3 border-2 border-red-300 bg-red-50/40 rounded-xl font-medium text-slate-900 mb-4 focus:bg-white focus:border-red-600 outline-none" />
           <label class="block font-bold text-slate-700 mb-1">Tóm tắt ngắn chuẩn AI Overviews (Summary):</label>
           <textarea id="inputSummary" rows="2" class="w-full p-3 border rounded-xl">{vehicle?.summary || ''}</textarea>
         </div>
@@ -494,6 +498,17 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
         if (data.summary) {
           document.getElementById('inputSummary').value = data.summary;
         }
+        if (data.customBadges !== undefined || data.badges !== undefined) {
+          const bEl = document.getElementById('inputCustomBadges');
+          const rawBadges = data.customBadges || data.badges;
+          if (bEl) {
+            bEl.value = Array.isArray(rawBadges) ? rawBadges.join(', ') : String(rawBadges || '');
+          }
+        }
+        if (data.videoUrl !== undefined || data.youtubeUrl !== undefined) {
+          const vEl = document.getElementById('inputVideoUrl');
+          if (vEl) vEl.value = data.videoUrl || data.youtubeUrl || '';
+        }
 
         // Chọn đúng Danh mục chuyên dùng trong dropdown
         const selectSub = document.getElementById('inputSubCategory');
@@ -643,7 +658,10 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
       const brand = document.getElementById('inputBrand').value.trim();
       const price = document.getElementById('inputPrice').value;
       const promo = document.getElementById('inputPromo').value.trim();
+      const videoUrl = document.getElementById('inputVideoUrl') ? document.getElementById('inputVideoUrl').value.trim() : '';
       const summary = document.getElementById('inputSummary').value.trim();
+      const rawCustomBadges = document.getElementById('inputCustomBadges') ? document.getElementById('inputCustomBadges').value : '';
+      const customBadges = rawCustomBadges.split(/[,|]/).map(s => s.trim()).filter(Boolean);
       
       const selectSub = document.getElementById('inputSubCategory');
       const selectedOpt = selectSub.options[selectSub.selectedIndex];
@@ -684,7 +702,7 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
         }
       });
 
-      const payload = { slug, name, brand, price, promo, summary, description, images, chassisSpecs, specialSpecs, subCategory, subKey, category, isFeatured, faqs };
+      const payload = { slug, name, customBadges, brand, price, promo, videoUrl, summary, description, images, chassisSpecs, specialSpecs, subCategory, subKey, category, isFeatured, faqs };
 
       try {
         const res = await fetch('/api/update-vehicle', {
@@ -703,5 +721,7 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
         alert('❌ Lỗi kết nối máy chủ!');
       }
     });
+  
+
   </script>
 </AdminLayout>

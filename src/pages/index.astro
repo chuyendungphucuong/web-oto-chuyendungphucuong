@@ -19,7 +19,116 @@ const coreServices = [
 ];
 
 // Lấy 6 tin tức mới nhất để chạy ngang
-const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 6) : [];
+const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 24) : [];
+
+// === START HAS VIDEO HELPER ===
+function itemHasVideo(item) {
+  if (!item) return false;
+  if (item.videoUrl && String(item.videoUrl).trim() !== "") return true;
+  if (item.youtubeUrl && String(item.youtubeUrl).trim() !== "") return true;
+  const bodyText = String(item.description || item.content || "");
+  return /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)[a-zA-Z0-9_-]{11}/i.test(bodyText);
+}
+// === END HAS VIDEO HELPER ===
+
+// === START SPEC BADGE EXTRACTOR ===
+function getCardSpecBadges(p) {
+  if (!p) return [];
+  if (p.customBadges) {
+    const manualList = Array.isArray(p.customBadges)
+      ? p.customBadges.map(s => String(s).trim()).filter(Boolean)
+      : String(p.customBadges).split(/[,|]/).map(s => s.trim()).filter(Boolean);
+    if (manualList.length > 0) return manualList.slice(0, 3);
+  }
+  const badges = [];
+  const chassis = p.chassisSpecs || {};
+  const special = p.specialSpecs || {};
+  const all = [...Object.entries(chassis), ...Object.entries(special)];
+
+  // 1. Tìm Thể tích bồn (Khối / m3) hoặc Kích thước sàn
+  for (const [k, v] of all) {
+    const kl = String(k).toLowerCase();
+    const vs = String(v);
+    if (kl.includes("thể tích") || kl.includes("dung tích")) {
+      const m = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+      if (m) {
+        badges.push(`🛢️ Bồn ${m[1]} Khối`);
+        break;
+      }
+    }
+  }
+
+  // 2. Tìm Tải trọng cho phép chở (quy về Tấn gọn gàng)
+  for (const [k, v] of all) {
+    const kl = String(k).toLowerCase();
+    const vs = String(v);
+    if (kl.includes("tải trọng cho phép") || kl.includes("tải trọng chuyên chở") || kl.includes("khối lượng hàng") || kl.includes("tải trọng chở")) {
+      const kgMatch = vs.match(/(\d{1,2}\.\d{3}|\d{3,5})\s*kg/i);
+      if (kgMatch) {
+        const ton = (parseFloat(kgMatch[1].replace(".", "")) / 1000).toFixed(2).replace(/\.?0+$/, "");
+        badges.push(`⚖️ Tải ${ton} Tấn`);
+        break;
+      }
+      const tonMatch = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan)/i);
+      if (tonMatch) {
+        badges.push(`⚖️ Tải ${tonMatch[1]} Tấn`);
+        break;
+      }
+    }
+  }
+
+  // 3. Tìm Vật liệu bồn (Inox 304 / SS400) hoặc Cơ cấu chuyên dùng (Sàn trượt / Càng kéo / Cẩu)
+  for (const [k, v] of all) {
+    if (badges.length >= 2) break;
+    const vs = String(v);
+    if (/inoxs*304/i.test(vs)) {
+      badges.push("🛡️ Inox 304");
+      break;
+    } else if (/sàn trượt/i.test(vs) && /càng kéo/i.test(vs)) {
+      badges.push("🔧 Sàn trượt + Càng kéo");
+      break;
+    } else if (/kích thước.*sàn|lòng thùng/i.test(String(k))) {
+      const dim = vs.match(/(\d[.,]\d+|\d{4})\s*x\s*(\d[.,]\d+|\d{4})/i);
+      if (dim) {
+        const d1 = dim[1].length === 4 ? (parseInt(dim[1]) / 1000).toFixed(1) + "m" : dim[1] + "m";
+        badges.push(`📏 Sàn dài ${d1}`);
+        break;
+      }
+    }
+  }
+
+  // 4. Fallback đọc từ tên xe nếu xe chưa điền bảng chassisSpecs chi tiết
+  const nameStr = String(p.name || "");
+  if (badges.length === 0) {
+    const vMatch = nameStr.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+    if (vMatch) badges.push(`🛢️ Bồn ${vMatch[1]} Khối`);
+
+    const tMatch1 = nameStr.match(/(\d+)t(\d+)/i);
+    if (tMatch1) badges.push(`⚖️ Tải ${tMatch1[1]}.${tMatch1[2]} Tấn`);
+    else {
+      const tMatch2 = nameStr.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan|t\b)/i);
+      if (tMatch2) badges.push(`⚖️ Tải ${tMatch2[1]} Tấn`);
+    }
+
+    const sMatch = nameStr.match(/(\d+)\s*chỗ/i);
+    if (sMatch) badges.push(`💺 ${sMatch[1]} Chỗ ngồi`);
+  }
+
+  if (badges.length < 2) {
+    if (/2 chức năng/i.test(nameStr) && !badges.some(b => b.includes("Sàn trượt"))) {
+      badges.push("🔧 Sàn trượt + Càng kéo");
+    } else if (/3 chức năng/i.test(nameStr)) {
+      badges.push("🏗️ Cẩu + Sàn + Càng kéo");
+    } else if (/trục vít/i.test(nameStr)) {
+      badges.push("⚙️ Bơm trục vít");
+    } else if (/cám thổi|khí nén/i.test(nameStr)) {
+      badges.push("💨 Bơm khí nén");
+    }
+  }
+
+  return badges.slice(0, 2);
+}
+// === END SPEC BADGE EXTRACTOR ===
 ---
 
 <BaseLayout title="Ô Tô Chuyên Dùng Phú Cường | Xe Tải, Xe Bồn, Xe Cứu Hộ Hàng Đầu">
@@ -115,10 +224,24 @@ const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 6) : [];
               <div class="relative overflow-hidden bg-gray-100 h-48">
                 <span class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-md z-10">🔥 Nổi Bật & Ưu Đãi</span>
                 <img src={vehicle.images?.[0] || '/Logo.png'} alt={vehicle.name} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                  {itemHasVideo(vehicle) && (
+                    <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                  )}
               </div>
               <div class="p-4 space-y-2">
                 <span class="text-xs font-bold text-gray-500 uppercase">{vehicle.brand}</span>
-                <h3 class="font-bold text-base text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition">
+                <!-- SPEC BADGES -->
+                  {getCardSpecBadges(vehicle).length > 0 && (
+                    <div class="flex flex-wrap gap-1.5 mb-2">
+                      {getCardSpecBadges(vehicle).map((badge: string) => (
+                        <span class="inline-flex items-center bg-slate-100 text-slate-800 border border-slate-200/80 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                          {badge}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <!-- END SPEC BADGES -->
+                  <h3 class="font-bold text-base text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition">
                   <a href={`/san-pham/${vehicle.slug}`}>{vehicle.name}</a>
                 </h3>
                 <p class="text-xs text-gray-600 font-medium bg-gray-50 p-1.5 rounded line-clamp-1">
@@ -168,53 +291,57 @@ const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 6) : [];
       </div>
     </section>
 
-    <!-- KHỐI TIN TỨC ĐỘNG TỪ POSTS.JSON (6 TIN MỚI NHẤT VÒNG TRÒN VÔ TẬN) -->
+    <!-- KHỐI TIN TỨC ĐỘNG TỪ POSTS.JSON (THANH TAB CHUYÊN MỤC + HIỂN THỊ 6 BÀI / TAB CHUẨN SEO AI OVERVIEW) -->
     <section class="container mx-auto px-4 max-w-7xl">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 border-b pb-4 gap-4">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-6 border-b border-gray-200 pb-4 gap-4">
         <div>
-          <span class="text-blue-600 font-bold text-sm uppercase tracking-wider">Kiến Thức & Cập Nhật</span>
-          <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 mt-1">Tin Tức & Bàn Giao Xe Mới Nhất</h2>
+          <span class="text-blue-600 font-bold text-sm uppercase tracking-wider">Kiến Thức Chuyên Sâu &amp; Cập Nhật</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 mt-1">Tin Tức, Kỹ Thuật &amp; Kinh Nghiệm Đầu Tư Xe</h2>
         </div>
-        <div class="flex items-center gap-3 self-end md:self-auto">
-          <div class="flex items-center gap-2">
-            <button
-              type="button"
-              id="btnPrevPosts"
-              aria-label="Tin trước"
-              class="w-10 h-10 rounded-full border border-gray-300 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 text-gray-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold"
-            >
-              &#10094;
-            </button>
-            <button
-              type="button"
-              id="btnNextPosts"
-              aria-label="Tin tiếp theo"
-              class="w-10 h-10 rounded-full border border-gray-300 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 text-gray-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold"
-            >
-              &#10095;
-            </button>
-          </div>
-          <a href="/tin-tuc" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 ml-2">
-            Xem tất cả tin tức &rarr;
-          </a>
-        </div>
+        <a href="/tin-tuc" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 shrink-0">
+          Xem toàn bộ kho bài viết &rarr;
+        </a>
       </div>
 
-      <div
-        id="postCarousel"
-        class="flex gap-6 overflow-x-auto no-scrollbar pb-2"
-      >
-        {latestPosts.map((post: any) => (
-          <div class="shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition group">
+      <!-- Thanh Tab Lọc Nhanh Theo Chuyên Mục -->
+      <div id="homeNewsTabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-6">
+        <button
+          type="button"
+          data-news-tab="all"
+          class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-blue-600 text-white shadow-sm"
+        >
+          🔥 Tất cả mới nhất
+        </button>
+        {Array.from(new Set(latestPosts.map((p: any) => p.category).filter(Boolean))).map((catName: any) => (
+          <button
+            type="button"
+            data-news-tab={String(catName).trim()}
+            class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-gray-700 border border-gray-200"
+          >
+            {catName}
+          </button>
+        ))}
+      </div>
+
+      <!-- Lưới 6 bài viết (3 cột x 2 hàng trên Desktop) -->
+      <div id="homeNewsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {latestPosts.map((post: any, idx: number) => (
+          <article
+            data-post-cat={String(post.category || "").trim()}
+            class={`home-news-card bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group ${idx >= 6 ? "hidden" : ""}`}
+          >
             <div>
               {post.image && (
-                <div class="overflow-hidden h-48 border-b bg-gray-100">
-                  <img src={post.image} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                </div>
+                <a href={`/tin-tuc/${post.slug}`} class="block relative overflow-hidden h-48 border-b bg-gray-100">
+                  <img src={post.image} alt={post.title} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                  {itemHasVideo(post) && (
+                    <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                  )}
+                </a>
               )}
-              <div class="p-5 space-y-2">
+              <div class="p-5 space-y-2.5">
                 <div class="flex justify-between items-center text-xs">
-                  <span class="bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-md">{post.category}</span>
+                  <span class="bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-md">{post.category || "Tin tức"}</span>
                   <span class="text-gray-400">{post.date}</span>
                 </div>
                 <h3 class="font-bold text-base text-gray-900 leading-snug group-hover:text-blue-600 transition line-clamp-2">
@@ -225,14 +352,50 @@ const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 6) : [];
                 )}
               </div>
             </div>
-            <div class="p-5 pt-0">
-              <a href={`/tin-tuc/${post.slug}`} class="text-blue-600 hover:text-blue-700 font-bold text-sm inline-flex items-center gap-1">
-                Đọc bài viết &rarr;
+            <div class="px-5 pb-5 pt-2 border-t border-gray-50 flex items-center justify-between">
+              <a href={`/tin-tuc/${post.slug}`} class="text-blue-600 hover:text-blue-700 font-bold text-xs sm:text-sm inline-flex items-center gap-1 group-hover:translate-x-0.5 transition">
+                Đọc chi tiết &rarr;
               </a>
             </div>
-          </div>
+          </article>
         ))}
       </div>
+
+      <script is:inline>
+        (function() {
+          const tabBtns = document.querySelectorAll(".news-tab-btn");
+          const cards = document.querySelectorAll(".home-news-card");
+          if (!tabBtns.length || !cards.length) return;
+
+          tabBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+              const selectedTab = btn.getAttribute("data-news-tab") || "all";
+
+              // Cập nhật màu nút Tab đang chọn
+              tabBtns.forEach(b => {
+                if (b === btn) {
+                  b.className = "news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-blue-600 text-white shadow-sm";
+                } else {
+                  b.className = "news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-gray-700 border border-gray-200";
+                }
+              });
+
+              // Lọc và hiển thị tối đa 6 bài viết thuộc Tab đã chọn
+              let shownCount = 0;
+              cards.forEach(card => {
+                const cardCat = card.getAttribute("data-post-cat") || "";
+                const isMatch = (selectedTab === "all") || (cardCat === selectedTab);
+                if (isMatch && shownCount < 6) {
+                  card.classList.remove("hidden");
+                  shownCount++;
+                } else {
+                  card.classList.add("hidden");
+                }
+              });
+            });
+          });
+        })();
+      </script>
     </section>
 
   </main>

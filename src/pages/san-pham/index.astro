@@ -54,6 +54,115 @@ const categories = [
   { id: "xe-cu", name: "Tất cả Xe Cũ" },
   { id: "xe-4-7-cho-cu", name: "Xe 4 - 7 Chỗ Cũ" }
 ];
+
+// === START HAS VIDEO HELPER ===
+function itemHasVideo(item) {
+  if (!item) return false;
+  if (item.videoUrl && String(item.videoUrl).trim() !== "") return true;
+  if (item.youtubeUrl && String(item.youtubeUrl).trim() !== "") return true;
+  const bodyText = String(item.description || item.content || "");
+  return /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)[a-zA-Z0-9_-]{11}/i.test(bodyText);
+}
+// === END HAS VIDEO HELPER ===
+
+// === START SPEC BADGE EXTRACTOR ===
+function getCardSpecBadges(p) {
+  if (!p) return [];
+  if (p.customBadges) {
+    const manualList = Array.isArray(p.customBadges)
+      ? p.customBadges.map(s => String(s).trim()).filter(Boolean)
+      : String(p.customBadges).split(/[,|]/).map(s => s.trim()).filter(Boolean);
+    if (manualList.length > 0) return manualList.slice(0, 3);
+  }
+  const badges = [];
+  const chassis = p.chassisSpecs || {};
+  const special = p.specialSpecs || {};
+  const all = [...Object.entries(chassis), ...Object.entries(special)];
+
+  // 1. Tìm Thể tích bồn (Khối / m3) hoặc Kích thước sàn
+  for (const [k, v] of all) {
+    const kl = String(k).toLowerCase();
+    const vs = String(v);
+    if (kl.includes("thể tích") || kl.includes("dung tích")) {
+      const m = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+      if (m) {
+        badges.push(`🛢️ Bồn ${m[1]} Khối`);
+        break;
+      }
+    }
+  }
+
+  // 2. Tìm Tải trọng cho phép chở (quy về Tấn gọn gàng)
+  for (const [k, v] of all) {
+    const kl = String(k).toLowerCase();
+    const vs = String(v);
+    if (kl.includes("tải trọng cho phép") || kl.includes("tải trọng chuyên chở") || kl.includes("khối lượng hàng") || kl.includes("tải trọng chở")) {
+      const kgMatch = vs.match(/(\d{1,2}\.\d{3}|\d{3,5})\s*kg/i);
+      if (kgMatch) {
+        const ton = (parseFloat(kgMatch[1].replace(".", "")) / 1000).toFixed(2).replace(/\.?0+$/, "");
+        badges.push(`⚖️ Tải ${ton} Tấn`);
+        break;
+      }
+      const tonMatch = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan)/i);
+      if (tonMatch) {
+        badges.push(`⚖️ Tải ${tonMatch[1]} Tấn`);
+        break;
+      }
+    }
+  }
+
+  // 3. Tìm Vật liệu bồn (Inox 304 / SS400) hoặc Cơ cấu chuyên dùng (Sàn trượt / Càng kéo / Cẩu)
+  for (const [k, v] of all) {
+    if (badges.length >= 2) break;
+    const vs = String(v);
+    if (/inoxs*304/i.test(vs)) {
+      badges.push("🛡️ Inox 304");
+      break;
+    } else if (/sàn trượt/i.test(vs) && /càng kéo/i.test(vs)) {
+      badges.push("🔧 Sàn trượt + Càng kéo");
+      break;
+    } else if (/kích thước.*sàn|lòng thùng/i.test(String(k))) {
+      const dim = vs.match(/(\d[.,]\d+|\d{4})\s*x\s*(\d[.,]\d+|\d{4})/i);
+      if (dim) {
+        const d1 = dim[1].length === 4 ? (parseInt(dim[1]) / 1000).toFixed(1) + "m" : dim[1] + "m";
+        badges.push(`📏 Sàn dài ${d1}`);
+        break;
+      }
+    }
+  }
+
+  // 4. Fallback đọc từ tên xe nếu xe chưa điền bảng chassisSpecs chi tiết
+  const nameStr = String(p.name || "");
+  if (badges.length === 0) {
+    const vMatch = nameStr.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+    if (vMatch) badges.push(`🛢️ Bồn ${vMatch[1]} Khối`);
+
+    const tMatch1 = nameStr.match(/(\d+)t(\d+)/i);
+    if (tMatch1) badges.push(`⚖️ Tải ${tMatch1[1]}.${tMatch1[2]} Tấn`);
+    else {
+      const tMatch2 = nameStr.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan|t\b)/i);
+      if (tMatch2) badges.push(`⚖️ Tải ${tMatch2[1]} Tấn`);
+    }
+
+    const sMatch = nameStr.match(/(\d+)\s*chỗ/i);
+    if (sMatch) badges.push(`💺 ${sMatch[1]} Chỗ ngồi`);
+  }
+
+  if (badges.length < 2) {
+    if (/2 chức năng/i.test(nameStr) && !badges.some(b => b.includes("Sàn trượt"))) {
+      badges.push("🔧 Sàn trượt + Càng kéo");
+    } else if (/3 chức năng/i.test(nameStr)) {
+      badges.push("🏗️ Cẩu + Sàn + Càng kéo");
+    } else if (/trục vít/i.test(nameStr)) {
+      badges.push("⚙️ Bơm trục vít");
+    } else if (/cám thổi|khí nén/i.test(nameStr)) {
+      badges.push("💨 Bơm khí nén");
+    }
+  }
+
+  return badges.slice(0, 2);
+}
+// === END SPEC BADGE EXTRACTOR ===
 ---
 
 <BaseLayout title="Tổng hợp danh mục xe chuyên dùng, Ô tô khách & Xe cũ | Ô Tô Phú Cường">
@@ -179,10 +288,24 @@ const categories = [
                   <div class="relative overflow-hidden bg-gray-100 h-48">
                     <span class={`absolute top-3 left-3 text-white text-xs font-bold px-2.5 py-1 rounded-md z-10 ${isUsedCar ? "bg-amber-600" : "bg-blue-600"}`}>{catSub}</span>
                     <img src={product.images?.[0] || product.image || "/Logo.png"} alt={product.name} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                  {itemHasVideo(product) && (
+                    <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                  )}
                   </div>
                   <div class="p-4 space-y-2">
                     <span class="text-xs font-bold text-gray-500 uppercase">{product.brand || "Phú Cường"}</span>
-                    <h3 class="font-bold text-base text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition">
+                    <!-- SPEC BADGES -->
+                  {getCardSpecBadges(product).length > 0 && (
+                    <div class="flex flex-wrap gap-1.5 mb-2">
+                      {getCardSpecBadges(product).map((badge: string) => (
+                        <span class="inline-flex items-center bg-slate-100 text-slate-800 border border-slate-200/80 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                          {badge}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <!-- END SPEC BADGES -->
+                  <h3 class="font-bold text-base text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition">
                       <a href={`/san-pham/${product.slug}`}>{product.name}</a>
                     </h3>
                     <p class="text-xs text-gray-600 font-medium bg-gray-50 p-1.5 rounded line-clamp-1">{specText}</p>
@@ -439,5 +562,142 @@ const categories = [
 
     highlightActiveTab();
     filterProducts();
-  </script>
+  
+
+  
+  
+
+
+
+  // === START AUTO SORT ===
+  function initProductSortBar() {
+    const firstCard = document.querySelector(".product-card") || document.querySelector("[data-brand]");
+    if (!firstCard || !firstCard.parentElement) {
+      console.warn("Không tìm thấy thẻ sản phẩm để gắn thanh sắp xếp.");
+      return;
+    }
+
+    const grid = firstCard.parentElement;
+
+    // Tạo giao diện Thanh Sắp Xếp nếu chưa có trên trang
+    if (!document.getElementById("sort-select")) {
+      const sortBar = document.createElement("div");
+      sortBar.id = "custom-sort-bar";
+      sortBar.className = "flex flex-wrap items-center justify-between gap-3 mb-6 bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm";
+      sortBar.innerHTML = `
+        <div class="text-sm text-slate-600 font-medium">
+          Hiển thị <span id="visible-count" class="font-bold text-red-600">tất cả</span> dòng xe chuyên dùng &amp; ô tô
+        </div>
+        <div class="flex items-center gap-2">
+          <label for="sort-select" class="text-sm font-semibold text-slate-700 whitespace-nowrap">Sắp xếp theo:</label>
+          <select id="sort-select" class="text-sm border border-slate-300 rounded-lg px-3 py-2 bg-slate-50 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 cursor-pointer">
+            <option value="default">Mới cập nhật (Mặc định)</option>
+            <option value="cap-desc">Tải trọng / Thể tích: Lớn → Nhỏ</option>
+            <option value="cap-asc">Tải trọng / Thể tích: Nhỏ → Lớn</option>
+            <option value="price-asc">Giá tham khảo: Thấp → Cao</option>
+            <option value="price-desc">Giá tham khảo: Cao → Thấp</option>
+          </select>
+        </div>
+      `;
+      grid.parentNode.insertBefore(sortBar, grid);
+    }
+
+    const cards = Array.from(grid.children).filter(el => el.classList.contains("product-card") || el.hasAttribute("data-brand") || el.querySelector("a[href*='/san-pham/']"));
+    cards.forEach((c, idx) => {
+      if (!c.hasAttribute("data-orig-index")) {
+        c.setAttribute("data-orig-index", String(idx));
+      }
+    });
+
+    function extractCapacityScore(card) {
+      const text = (card.getAttribute("data-name") || card.textContent || "").toLowerCase();
+      // 1. Tìm số Khối / m3 (VD: 36 khối, 28m3)
+      const volMatch = text.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+      if (volMatch) return parseFloat(volMatch[1].replace(",", "."));
+      // 2. Tìm dạng 2t45, 3t5
+      const tonMatch1 = text.match(/(\d+)t(\d+)/i);
+      if (tonMatch1) return parseFloat(tonMatch1[1] + "." + tonMatch1[2]);
+      // 3. Tìm số Tấn / T (VD: 3.35 tấn, 2.9t, 15 tấn)
+      const tonMatch2 = text.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan|t\b)/i);
+      if (tonMatch2) return parseFloat(tonMatch2[1].replace(",", "."));
+      // 4. Tìm số Chỗ ngồi (VD: 47 chỗ, 29 chỗ)
+      const seatMatch = text.match(/(\d+)\s*(?:chỗ|cho)/i);
+      if (seatMatch) return parseFloat(seatMatch[1]);
+      return 0;
+    }
+
+    function extractPriceScore(card) {
+      const rawPrice = card.getAttribute("data-price");
+      if (rawPrice && !isNaN(parseFloat(rawPrice)) && parseFloat(rawPrice) > 0) {
+        return parseFloat(rawPrice);
+      }
+      const cleanText = (card.textContent || "").replace(/[.,]/g, "");
+      const m = cleanText.match(/(\d{8,10})\s*(?:đ|vnđ|vnd)/i);
+      if (m) return parseFloat(m[1]);
+      const trMatch = (card.textContent || "").match(/(\d+(?:[.,]\d+)?)\s*triệu/i);
+      if (trMatch) return parseFloat(trMatch[1].replace(",", ".")) * 1000000;
+      const tyMatch = (card.textContent || "").match(/(\d+(?:[.,]\d+)?)\s*tỷ/i);
+      if (tyMatch) return parseFloat(tyMatch[1].replace(",", ".")) * 1000000000;
+      return 0;
+    }
+
+    function applySortAndCount() {
+      const sortSelect = document.getElementById("sort-select");
+      const visibleCountEl = document.getElementById("visible-count");
+      const sortVal = sortSelect ? sortSelect.value : "default";
+
+      const sortedCards = [...cards].sort((a, b) => {
+        if (sortVal === "default") {
+          return parseInt(a.getAttribute("data-orig-index") || "0") - parseInt(b.getAttribute("data-orig-index") || "0");
+        }
+        if (sortVal === "cap-desc" || sortVal === "cap-asc") {
+          const capA = extractCapacityScore(a);
+          const capB = extractCapacityScore(b);
+          if (capA === 0 && capB === 0) return 0;
+          if (capA === 0) return 1;
+          if (capB === 0) return -1;
+          return sortVal === "cap-desc" ? capB - capA : capA - capB;
+        }
+        if (sortVal === "price-asc" || sortVal === "price-desc") {
+          const priceA = extractPriceScore(a);
+          const priceB = extractPriceScore(b);
+          if (priceA === 0 && priceB === 0) return 0;
+          if (priceA === 0) return 1;
+          if (priceB === 0) return -1;
+          return sortVal === "price-asc" ? priceA - priceB : priceB - priceA;
+        }
+        return 0;
+      });
+
+      sortedCards.forEach(card => grid.appendChild(card));
+
+      if (visibleCountEl) {
+        const visibleCards = cards.filter(c => c.style.display !== "none" && !c.classList.contains("hidden"));
+        visibleCountEl.textContent = String(visibleCards.length);
+      }
+    }
+
+    const sortSelectEl = document.getElementById("sort-select");
+    if (sortSelectEl) {
+      sortSelectEl.addEventListener("change", applySortAndCount);
+    }
+
+    document.addEventListener("input", () => setTimeout(applySortAndCount, 50));
+    document.addEventListener("change", (e) => {
+      if (e.target && e.target.id !== "sort-select") setTimeout(applySortAndCount, 50);
+    });
+    document.addEventListener("click", () => setTimeout(applySortAndCount, 60));
+
+    applySortAndCount();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initProductSortBar);
+  } else {
+    initProductSortBar();
+  }
+  document.addEventListener("astro:page-load", initProductSortBar);
+  // === END AUTO SORT ===
+
+</script>
 </BaseLayout>

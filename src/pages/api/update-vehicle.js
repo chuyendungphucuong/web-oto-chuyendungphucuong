@@ -10,6 +10,8 @@ export async function POST({ request }) {
       brand,
       price,
       promo,
+      customBadges,
+      videoUrl,
       summary,
       description,
       images,
@@ -52,6 +54,8 @@ export async function POST({ request }) {
         if (brand !== undefined) vehicles[index].brand = brand;
         if (price !== undefined && price !== '') vehicles[index].price = parseFloat(price);
         if (promo !== undefined) vehicles[index].promo = promo;
+        if (customBadges !== undefined) vehicles[index].customBadges = customBadges;
+        if (videoUrl !== undefined) vehicles[index].videoUrl = videoUrl;
         if (summary !== undefined) vehicles[index].summary = summary;
         if (description !== undefined) vehicles[index].description = description;
         if (subCategory !== undefined) vehicles[index].subCategory = subCategory;
@@ -95,6 +99,7 @@ export async function POST({ request }) {
         brand: brand || 'Phú Cường',
         price: price !== undefined && price !== '' ? parseFloat(price) : 0,
         promo: promo || 'Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm',
+      videoUrl: videoUrl || "",
         summary: summary || '',
         description: description || '',
         subCategory: subCategory || 'Xe Chuyên Dùng',
