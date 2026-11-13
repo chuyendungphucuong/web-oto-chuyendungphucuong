@@ -56,7 +56,23 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
 ---
 
 <AdminLayout title={isEditMode ? "Chỉnh Sửa Thông Tin Chi Tiết Sản Phẩm" : "Thêm Mới Mẫu Xe Chuyên Dùng"} activeTab="products">
-  <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+  <style is:global>
+    #visualEditor { min-height: 460px; max-height: 720px; overflow-y: auto; outline: none; line-height: 1.75; color: #1e293b; font-size: 15px; }
+    #visualEditor h2 { font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 1.25rem 0 0.6rem; }
+    #visualEditor h3 { font-size: 1.2rem; font-weight: 700; color: #1e3a8a; margin: 1rem 0 0.5rem; }
+    #visualEditor h4 { font-size: 1.05rem; font-weight: 700; color: #334155; margin: 0.8rem 0 0.4rem; }
+    #visualEditor p { margin-bottom: 0.75rem; }
+    #visualEditor ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.85rem; }
+    #visualEditor ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 0.85rem; }
+    #visualEditor li { margin-bottom: 0.35rem; }
+    #visualEditor a { color: #2563eb; text-decoration: underline; font-weight: 600; }
+    #visualEditor img { max-width: 100%; height: auto; border-radius: 0.75rem; margin: 1rem auto; border: 1px solid #cbd5e1; }
+    #visualEditor table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 14px; background: #fff; }
+    #visualEditor th { background-color: #1e3a8a; color: #ffffff; font-weight: 700; padding: 10px 12px; border: 1px solid #94a3b8; text-align: left; }
+    #visualEditor td { padding: 10px 12px; border: 1px solid #cbd5e1; vertical-align: top; }
+    #visualEditor tr:nth-child(even) td { background-color: #f8fafc; }
+    #visualEditor td:focus, #visualEditor th:focus { outline: 2px solid #f59e0b; background-color: #fffbeb !important; color: #0f172a; }
+  </style>
 
   <div class="max-w-5xl mx-auto space-y-6 pb-12">
     <div class="flex items-center justify-between">
@@ -217,11 +233,57 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
       </div>
     </div>
 
-    <!-- KHỐI 3: MÔ TẢ CHI TIẾT TRỰC QUAN -->
+    <!-- KHỐI 3: MÔ TẢ CHI TIẾT TRỰC QUAN (HỖ TRỢ 100% BẢNG BIỂU NHƯ TRANG TIN TỨC) -->
     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-      <h2 class="text-base font-bold text-white bg-blue-700 p-3 rounded-xl">3. Mô Tả Chi Tiết Sản Phẩm</h2>
-      <div>
-        <div id="editor-container" style="height: 380px; background: white; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem;"></div>
+      <h2 class="text-base font-bold text-white bg-blue-700 p-3 rounded-xl">3. Mô Tả Chi Tiết Sản Phẩm &amp; Bảng Phân Bổ Tải Trọng</h2>
+
+      <!-- THANH CÔNG CỤ SOẠN THẢO & QUẢN LÝ BẢNG TÍNH -->
+      <div class="border border-slate-300 rounded-2xl overflow-hidden shadow-sm">
+        <div class="bg-slate-100 p-2.5 border-b border-slate-300 flex flex-wrap items-center gap-1.5">
+          <button type="button" data-cmd="formatBlock" data-val="H2" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg font-extrabold text-xs hover:bg-blue-50 cursor-pointer">H2</button>
+          <button type="button" data-cmd="formatBlock" data-val="H3" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg font-bold text-xs hover:bg-blue-50 cursor-pointer">H3</button>
+          <button type="button" data-cmd="formatBlock" data-val="P" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs hover:bg-blue-50 cursor-pointer">Đoạn văn</button>
+          <span class="h-5 w-px bg-slate-300 mx-1"></span>
+          <button type="button" data-cmd="bold" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg font-black text-xs hover:bg-blue-50 cursor-pointer">B</button>
+          <button type="button" data-cmd="italic" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg italic text-xs hover:bg-blue-50 cursor-pointer">I</button>
+          <button type="button" data-cmd="underline" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg underline text-xs hover:bg-blue-50 cursor-pointer">U</button>
+          <span class="h-5 w-px bg-slate-300 mx-1"></span>
+          <button type="button" data-cmd="insertUnorderedList" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs hover:bg-blue-50 cursor-pointer">• Danh sách</button>
+          <button type="button" data-cmd="insertOrderedList" class="tb-btn px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs hover:bg-blue-50 cursor-pointer">1. Danh sách</button>
+          <button type="button" id="btnAddLink" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs hover:bg-blue-50 cursor-pointer font-semibold text-blue-700">🔗 Chèn Link</button>
+          <button type="button" id="btnAddInlineImg" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs hover:bg-blue-50 cursor-pointer font-semibold text-emerald-700">🖼️ Chèn Ảnh</button>
+          <input type="file" id="fileInlineImg" accept="image/*" class="hidden" />
+        </div>
+
+        <!-- THANH CÔNG CỤ CHUYÊN BIỆT CHO BẢNG TÍNH (TABLE TOOLS) -->
+        <div class="bg-blue-50/90 p-2.5 border-b border-blue-200 flex flex-wrap items-center gap-2 text-xs">
+          <span class="font-extrabold text-blue-900 uppercase tracking-wider flex items-center gap-1">📊 Công cụ Bảng thông số:</span>
+          <div class="flex items-center gap-1 bg-white px-2 py-1 rounded-lg border border-blue-200">
+            <span>Dòng:</span>
+            <input type="number" id="tblRows" value="4" min="1" max="30" class="w-11 p-1 border rounded text-center font-bold" />
+            <span>Cột:</span>
+            <input type="number" id="tblCols" value="4" min="1" max="10" class="w-11 p-1 border rounded text-center font-bold" />
+            <button type="button" id="btnInsertTable" class="bg-blue-700 hover:bg-blue-800 text-white font-bold px-2.5 py-1 rounded-md cursor-pointer transition">+ Tạo Bảng Mới</button>
+          </div>
+          <button type="button" id="btnAddRow" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition">+ Thêm dòng dưới</button>
+          <button type="button" id="btnDelRow" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition">- Xóa dòng đang chọn</button>
+          <button type="button" id="btnAddCol" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition">+ Thêm cột phải</button>
+          <button type="button" id="btnDelCol" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition">- Xóa cột đang chọn</button>
+          <button type="button" id="btnDelTable" class="bg-slate-700 hover:bg-slate-900 text-white font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition">🗑️ Xóa bảng</button>
+        </div>
+
+        <!-- VÙNG SOẠN THẢO TRỰC QUAN CONTENTEDITABLE (GIỮ 100% BẢNG BIỂU) -->
+        <div id="visualEditor" contenteditable="true" class="p-5 bg-white"></div>
+      </div>
+
+      <!-- KHỐI QUẢN LÝ MÃ HTML ĐỒNG BỘ 2 CHIỀU TỨC THÌ -->
+      <div class="bg-slate-900 text-white p-5 rounded-xl border border-slate-700 space-y-3 mt-4">
+        <div class="flex items-center justify-between">
+          <label class="block font-extrabold text-amber-400 text-xs uppercase tracking-wider">
+            🛠️ Mã Nguồn HTML Mô Tả Sản Phẩm (Tự động đồng bộ 2 chiều với khung soạn thảo):
+          </label>
+        </div>
+        <textarea id="inputRawHtml" rows="6" placeholder="Mã HTML chi tiết..." class="w-full p-3 rounded-lg bg-slate-950 border border-slate-700 text-emerald-400 font-mono text-xs outline-none focus:border-amber-400"></textarea>
       </div>
     </div>
 
@@ -276,7 +338,7 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
     </div>
   </div>
 
-  <script is:inline src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+  
   <script is:inline>
     const inputName = document.getElementById('inputName');
     const inputSlug = document.getElementById('inputSlug');
@@ -364,59 +426,14 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
       appendImageRow('');
     });
 
-    const quill = new Quill('#editor-container', {
-      theme: 'snow',
-      modules: {
-        toolbar: {
-          container: [
-            [{ header: [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ color: [] }, { background: [] }],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image'],
-            ['clean']
-          ],
-          handlers: {
-            image: function() {
-              const input = document.createElement('input');
-              input.setAttribute('type', 'file');
-              input.setAttribute('accept', 'image/*');
-              input.click();
+    const visualEditor = document.getElementById('visualEditor');
+    const inputRawHtml = document.getElementById('inputRawHtml');
+    let activeTableCell = null;
 
-              input.onchange = async () => {
-                const file = input.files[0];
-                const currentTitle = inputName.value.trim() || 'xe-phu-cuong';
-                const currentSlug = inputSlug.value.trim() || makeSlug(currentTitle);
-
-                if (file) {
-                  const formData = new FormData();
-                  formData.append('image', file);
-                  formData.append('title', currentTitle);
-                  formData.append('slug', currentSlug);
-                  formData.append('type', 'products');
-
-                  try {
-                    const res = await fetch('/api/upload-image', {
-                      method: 'POST',
-                      body: formData
-                    });
-                    const result = await res.json();
-                    if (result.success) {
-                      const range = quill.getSelection(true);
-                      quill.insertEmbed(range.index, 'image', result.url);
-                    } else {
-                      alert('❌ Tải ảnh lên thất bại: ' + result.message);
-                    }
-                  } catch (err) {
-                    alert('❌ Lỗi kết nối khi tải ảnh lên!');
-                  }
-                }
-              };
-            }
-          }
-        }
-      }
-    });
+    function setEditorHtml(html) {
+      if (visualEditor) visualEditor.innerHTML = html || '';
+      if (inputRawHtml) inputRawHtml.value = html || '';
+    }
 
     function decodeHtml(html) {
       const txt = document.createElement('textarea');
@@ -424,10 +441,145 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
       return txt.value;
     }
 
-    const rawDesc = document.getElementById('initialDescription').innerHTML;
+    const rawDesc = document.getElementById('initialDescription')?.innerHTML || '';
     if (rawDesc) {
-      quill.root.innerHTML = decodeHtml(rawDesc);
+      setEditorHtml(decodeHtml(rawDesc));
     }
+
+    visualEditor?.addEventListener('input', () => {
+      if (inputRawHtml) inputRawHtml.value = visualEditor.innerHTML;
+    });
+
+    inputRawHtml?.addEventListener('input', () => {
+      if (visualEditor) visualEditor.innerHTML = inputRawHtml.value;
+    });
+
+    visualEditor?.addEventListener('click', (e) => {
+      const cell = e.target.closest('td, th');
+      if (cell) activeTableCell = cell;
+    });
+
+    document.querySelectorAll('.tb-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const cmd = btn.getAttribute('data-cmd');
+        const val = btn.getAttribute('data-val') || null;
+        visualEditor.focus();
+        document.execCommand(cmd, false, val);
+        inputRawHtml.value = visualEditor.innerHTML;
+      });
+    });
+
+    document.getElementById('btnAddLink')?.addEventListener('click', () => {
+      const url = prompt('Nhập đường dẫn liên kết (URL):', 'https://chuyendungphucuong.vn/san-pham/');
+      if (url) {
+        visualEditor.focus();
+        document.execCommand('createLink', false, url);
+        inputRawHtml.value = visualEditor.innerHTML;
+      }
+    });
+
+    const fileInlineImg = document.getElementById('fileInlineImg');
+    document.getElementById('btnAddInlineImg')?.addEventListener('click', () => fileInlineImg.click());
+    fileInlineImg?.addEventListener('change', async () => {
+      const file = fileInlineImg.files[0];
+      if (!file) return;
+      const currentTitle = inputName.value.trim() || 'xe-phu-cuong';
+      const currentSlug = inputSlug.value.trim() || makeSlug(currentTitle);
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('title', currentTitle);
+      formData.append('slug', currentSlug);
+      formData.append('type', 'products');
+      try {
+        const res = await fetch('/api/upload-image', { method: 'POST', body: formData });
+        const result = await res.json();
+        if (result.success) {
+          visualEditor.focus();
+          document.execCommand('insertImage', false, result.url);
+          inputRawHtml.value = visualEditor.innerHTML;
+        } else alert('❌ Tải ảnh lên thất bại: ' + result.message);
+      } catch (err) {
+        alert('❌ Lỗi kết nối khi tải ảnh lên!');
+      }
+    });
+
+    // CÔNG CỤ XỬ LÝ BẢNG TÍNH (TẠO BẢNG, THÊM/XÓA DÒNG CỘT)
+    document.getElementById('btnInsertTable')?.addEventListener('click', () => {
+      const rows = parseInt(document.getElementById('tblRows').value, 10) || 4;
+      const cols = parseInt(document.getElementById('tblCols').value, 10) || 4;
+      let html = '<div style="overflow-x:auto;margin:20px 0;"><table><thead><tr>';
+      for (let c = 1; c <= cols; c++) {
+        html += '<th>Tiêu đề cột ' + c + '</th>';
+      }
+      html += '</tr></thead><tbody>';
+      for (let r = 1; r <= rows; r++) {
+        html += '<tr>';
+        for (let c = 1; c <= cols; c++) {
+          html += '<td>Nội dung ô ' + r + '.' + c + '</td>';
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table></div><p><br></p>';
+      visualEditor.focus();
+      document.execCommand('insertHTML', false, html);
+      inputRawHtml.value = visualEditor.innerHTML;
+    });
+
+    document.getElementById('btnAddRow')?.addEventListener('click', () => {
+      if (!activeTableCell) return alert('⚠️ Hãy nhấp chuột vào 1 ô bất kỳ trong bảng trước!');
+      const tr = activeTableCell.closest('tr');
+      if (!tr) return;
+      const newRow = tr.cloneNode(true);
+      newRow.querySelectorAll('td, th').forEach((cell) => { cell.innerHTML = 'Nhập nội dung...'; });
+      tr.parentNode.insertBefore(newRow, tr.nextSibling);
+      inputRawHtml.value = visualEditor.innerHTML;
+    });
+
+    document.getElementById('btnDelRow')?.addEventListener('click', () => {
+      if (!activeTableCell) return alert('⚠️ Hãy nhấp chuột vào 1 ô thuộc dòng cần xóa!');
+      const tr = activeTableCell.closest('tr');
+      if (tr) {
+        tr.remove();
+        activeTableCell = null;
+        inputRawHtml.value = visualEditor.innerHTML;
+      }
+    });
+
+    document.getElementById('btnAddCol')?.addEventListener('click', () => {
+      if (!activeTableCell) return alert('⚠️ Hãy nhấp chuột vào 1 ô trong bảng trước!');
+      const table = activeTableCell.closest('table');
+      const colIndex = Array.from(activeTableCell.parentNode.children).indexOf(activeTableCell);
+      table.querySelectorAll('tr').forEach((row) => {
+        const refCell = row.children[colIndex];
+        if (refCell) {
+          const newCell = document.createElement(refCell.tagName);
+          newCell.innerHTML = refCell.tagName === 'TH' ? 'Cột mới' : 'Nội dung...';
+          refCell.parentNode.insertBefore(newCell, refCell.nextSibling);
+        }
+      });
+      inputRawHtml.value = visualEditor.innerHTML;
+    });
+
+    document.getElementById('btnDelCol')?.addEventListener('click', () => {
+      if (!activeTableCell) return alert('⚠️ Hãy nhấp chuột vào 1 ô thuộc cột cần xóa!');
+      const table = activeTableCell.closest('table');
+      const colIndex = Array.from(activeTableCell.parentNode.children).indexOf(activeTableCell);
+      table.querySelectorAll('tr').forEach((row) => {
+        if (row.children[colIndex]) row.children[colIndex].remove();
+      });
+      activeTableCell = null;
+      inputRawHtml.value = visualEditor.innerHTML;
+    });
+
+    document.getElementById('btnDelTable')?.addEventListener('click', () => {
+      if (!activeTableCell) return alert('⚠️ Hãy nhấp chuột vào bảng cần xóa!');
+      const table = activeTableCell.closest('table');
+      if (table && confirm('Bạn chắc chắn muốn xóa bảng này?')) {
+        table.remove();
+        activeTableCell = null;
+        inputRawHtml.value = visualEditor.innerHTML;
+      }
+    });
 
     function renderSpecRows(containerId, rowClass, specsObj) {
       const container = document.getElementById(containerId);
@@ -527,8 +679,8 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
           document.getElementById('chkFeatured').checked = Boolean(data.isFeatured);
         }
 
-        if (data.description) {
-          quill.root.innerHTML = data.description;
+        if (data.description || data.content) {
+          setEditorHtml(data.description || data.content);
         }
 
         if (data.chassisSpecs && Object.keys(data.chassisSpecs).length > 0) {
@@ -586,7 +738,7 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
       const chassisLi = Object.entries(chassis).map(([k, v]) => `<li><strong>${k}:</strong> ${v}</li>`).join('');
       const specialLi = Object.entries(special).map(([k, v]) => `<li><strong>${k}:</strong> ${v}</li>`).join('');
 
-      quill.root.innerHTML = `
+      setEditorHtml(`
         <h2>${name}: Đánh Giá Chi Tiết, Thông Số Đăng Kiểm & Báo Giá Lăn Bánh</h2>
         <p><strong>${name}</strong> là một trong những dòng <strong>${subCat.toLowerCase()}</strong> chủ lực được phân phối và bảo hành chính hãng tại <strong>Ô Tô Phú Cường - Nhà Cung Cấp Và Sản Xuất Ô Tô Chuyên Dùng</strong>. Sở hữu nền tảng khung gầm <strong>${brand}</strong> vững chắc kết hợp hệ thống chuyên dùng đồng bộ, mẫu xe này mang lại hiệu quả khai thác kinh tế vượt trội và khả năng thu hồi vốn nhanh cho doanh nghiệp.</p>
         <h3>1. Ưu Điểm Vượt Trội Về Khung Gầm, Động Cơ & Tải Trọng</h3>
@@ -597,7 +749,7 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
         ${specialLi ? `<ul>${specialLi}</ul>` : ''}
         <h3>3. Chính Sách Giá Bán & Hỗ Trợ Trả Góp Lên Đến 90%</h3>
         <p>Khi đầu tư <strong>${name}</strong> tại hệ thống Showroom <strong>Ô Tô Phú Cường</strong> (TP. Hồ Chí Minh, Tiền Giang, An Giang), quý khách hàng được hưởng gói ưu đãi đặc biệt: <strong>Tặng 100% Bảo hiểm Thân Vỏ</strong>, hỗ trợ vay ngân hàng từ <strong>50% đến 90% giá trị xe</strong> với lãi suất ưu đãi, cùng dịch vụ đăng ký – đăng kiểm trọn gói giao xe tận nơi toàn quốc. Liên hệ ngay Hotline/Zalo <strong>0922 77 77 03 (Mr. Hoàng Vũ)</strong> để nhận bảng tính lăn bánh chi tiết.</p>
-      `;
+      `);
 
       renderFaqRows([
         {
@@ -670,7 +822,7 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
       const category = selectedOpt ? selectedOpt.getAttribute('data-parent') || 'xe-tai-chuyen-dung' : 'xe-tai-chuyen-dung';
 
       const isFeatured = document.getElementById('chkFeatured').checked;
-      const description = quill.root.innerHTML;
+      const description = visualEditor.innerHTML;
 
       if (!slug || !name) {
         alert('❌ Vui lòng nhập đầy đủ Tên sản phẩm và Slug!');

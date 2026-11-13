@@ -546,9 +546,18 @@ function extractShortBadge(v) {
         <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Đánh giá chi tiết & Cấu hình sản phẩm
       </h2>
       <div 
-        class="prose max-w-none text-gray-800 leading-relaxed space-y-4 text-base 
+        class="prose product-rich-content max-w-none text-gray-800 leading-relaxed space-y-4 text-base 
+               [&_h2]:text-xl [&_h2]:lg:text-2xl [&_h2]:font-extrabold [&_h2]:text-slate-900 [&_h2]:mt-6 [&_h2]:mb-3
+               [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-blue-900 [&_h3]:mt-5 [&_h3]:mb-2
+               [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-1.5
+               [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-1.5
+               [&_a]:text-blue-600 [&_a]:font-semibold hover:[&_a]:underline
                [&_img]:max-w-xl [&_img]:w-full [&_img]:h-auto [&_img]:max-h-[450px] [&_img]:object-cover [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:border [&_img]:border-gray-200 [&_img]:shadow-sm 
-               [&_p]:mb-3" 
+               [&_p]:mb-3
+               [&_table]:w-full [&_table]:border-collapse [&_table]:my-5 [&_table]:text-sm [&_table]:bg-white [&_table]:shadow-sm [&_table]:rounded-xl [&_table]:overflow-hidden
+               [&_th]:bg-blue-900 [&_th]:text-white [&_th]:font-bold [&_th]:p-3 [&_th]:border [&_th]:border-slate-300 [&_th]:text-left
+               [&_td]:p-3 [&_td]:border [&_td]:border-slate-200 [&_td]:align-top
+               [&_tr:nth-child(even)_td]:bg-slate-50" 
         set:html={cleanDescription} 
       />
     </div>
