@@ -79,92 +79,53 @@ const postYtId = extractPostYouTubeId(post?.videoUrl || post?.youtubeUrl || "");
             </span>
             <a href={`https://www.youtube.com/watch?v=${postYtId}`} target="_blank" rel="noopener noreferrer" class="text-xs text-amber-400 hover:underline">Mở YouTube ↗</a>
           </div>
-          <div class="yt-facade relative w-full overflow-hidden rounded-xl bg-black aspect-video cursor-pointer group border border-slate-700" data-yt-id={postYtId}>
-            <img src={`https://i.ytimg.com/vi/${postYtId}/hqdefault.jpg`} alt="Video bài viết" loading="lazy" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition duration-300" />
-            <button type="button" class="absolute inset-0 m-auto w-16 h-16 rounded-full bg-red-600 text-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition">
-              <svg class="w-8 h-8 ml-1 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-            </button>
-          </div>
-        </div>
-      )}
-<div 
-          class="prose max-w-none text-gray-800 leading-relaxed space-y-4 text-base [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:border [&_img]:border-gray-200 [&_p]:mb-3 [&_table]:w-full [&_table]:border-collapse [&_table]:my-6 [&_table]:text-sm [&_th]:bg-blue-900 [&_th]:text-white [&_th]:font-bold [&_th]:p-3 [&_th]:border [&_th]:border-slate-300 [&_th]:text-left [&_td]:p-3 [&_td]:border [&_td]:border-slate-300 [&_tr:nth-child(even)_td]:bg-slate-50 [&_h2]:text-2xl [&_h2]:font-extrabold [&_h2]:text-slate-900 [&_h2]:mt-6 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-blue-900 [&_h3]:mt-5 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-1.5" 
-          set:html={cleanContent} 
-        />
+          <div
+      class="yt-facade relative w-full overflow-hidden rounded-xl bg-black aspect-video cursor-pointer group border border-slate-700 shadow-xl"
+      data-yt-id={ytVideoId}
+      title="Bấm để phát video thực tế"
+    >
+      <img
+        src={`https://i.ytimg.com/vi/${ytVideoId}/hqdefault.jpg`}
+        alt="Video thực tế Ô Tô Phú Cường"
+        loading="lazy"
+        class="w-full h-full object-cover opacity-90 group-hover:scale-105 group-hover:opacity-100 transition-all duration-300"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/60"></div>
 
-        <div class="bg-gradient-to-r from-blue-800 to-blue-900 text-white p-6 rounded-2xl shadow-md mt-8 space-y-4 text-center">
-          <h3 class="text-xl font-bold">Bạn đang cần tư vấn mua xe chuyên dùng trả góp?</h3>
-          <p class="text-sm text-white/90 max-w-xl mx-auto">Liên hệ ngay với Ô Tô Chuyên Dùng Phú Cường để nhận bảng dự toán chi tiết và hỗ trợ thủ tục ngân hàng nhanh chóng.</p>
-          <a href="tel:0922777703" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg text-lg">
-            📞 Hotline tư vấn: 0922 77 77 03
-          </a>
+      <!-- LỚP PHỦ THƯƠNG HIỆU & HOTLINE PHÍA TRÊN -->
+      <div class="absolute top-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 z-10 pointer-events-none">
+        <div class="flex items-center gap-2 bg-slate-950/85 backdrop-blur-sm border border-white/15 px-3 py-1.5 rounded-lg shadow-md">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+          <span class="text-[11px] sm:text-xs font-extrabold text-white tracking-wider uppercase">Ô TÔ CHUYÊN DÙNG PHÚ CƯỜNG</span>
         </div>
-      </article>
+        <div class="bg-red-600/95 text-white text-[11px] sm:text-xs font-black px-3 py-1.5 rounded-lg shadow-md border border-red-400/40 flex items-center gap-1.5">
+          <span>📞 Hotline/Zalo: 0922 77 77 03</span>
+        </div>
+      </div>
 
-      <aside class="lg:col-span-4 space-y-6">
-        <div class="bg-blue-800 text-white p-6 rounded-2xl shadow-sm space-y-3">
-          <h3 class="font-bold text-lg border-b border-white/20 pb-2">Hỗ trợ nhanh 24/7</h3>
-          <p class="text-sm text-white/90">Giải đáp mọi thắc mắc về kỹ thuật xe chuyên dùng và thủ tục đăng ký, đăng kiểm.</p>
-          <a href="tel:0922777703" class="block bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-center transition">
-            📞 0922 77 77 03
-          </a>
-        </div>
+      <!-- NÚT PLAY TRUNG TÂM -->
+      <button
+        type="button"
+        aria-label="Phát video"
+        class="absolute inset-0 m-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-600 group-hover:bg-red-500 text-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-200 z-10 ring-4 ring-white/25"
+      >
+        <svg class="w-8 h-8 sm:w-10 sm:h-10 ml-1 fill-current" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </button>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
-          <h3 class="font-bold text-gray-900 border-b pb-2 text-base flex items-center gap-2">
-            <span class="w-2 h-5 bg-blue-600 rounded-full"></span> Bài viết liên quan
-          </h3>
-          <div class="space-y-4">
-            {related.map((rel: any) => (
-              <div class="group border-b border-gray-100 pb-3 last:border-0 last:pb-0">
-                <div class="flex items-center justify-between text-xs mb-1">
-                  <span class="text-blue-600 font-semibold">{rel.category}</span>
-                  <span class="text-gray-400">{rel.date}</span>
-                </div>
-                <h4 class="font-semibold text-sm text-gray-800 group-hover:text-blue-600 transition leading-snug">
-                  <a href={`/tin-tuc/${rel.slug}`}>{rel.title}</a>
-                </h4>
-              </div>
-            ))}
-          </div>
+      <!-- LỚP PHỦ TÊN XE / BÀI VIẾT & THÔNG SỐ PHÍA DƯỚI -->
+      <div class="absolute bottom-3 left-3.5 right-3.5 flex flex-col sm:flex-row sm:items-end justify-between gap-2 z-10 pointer-events-none">
+        <div class="space-y-0.5 max-w-xl">
+          <p class="text-white font-extrabold text-xs sm:text-sm line-clamp-1 drop-shadow">{post?.title || "Video Thực Tế Ô Tô Phú Cường"}</p>
+          <p class="text-amber-300 font-bold text-[11px] sm:text-xs line-clamp-1">"Quay thực tế tại xưởng & bãi xe Phú Cường • Giao xe toàn quốc"</p>
         </div>
-      </aside>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span class="text-[11px] text-slate-200 font-medium hidden sm:inline">🎬 Bấm để xem</span>
+          <span class="bg-red-600 px-2.5 py-0.5 rounded text-white text-[11px] font-extrabold shadow">YouTube HD</span>
+        </div>
+      </div>
     </div>
-  
-<!-- === START INLINE YOUTUBE AUTO-EMBED === -->
-<script is:inline>
-  function initInlineYouTubeEmbeds() {
-    // 1. Kích hoạt click phát video cho mọi khung .yt-facade
-    document.addEventListener("click", function (e) {
-      const facade = e.target.closest && e.target.closest(".yt-facade");
-      if (!facade || facade.dataset.loaded === "1") return;
-      const vid = facade.getAttribute("data-yt-id");
-      if (!vid) return;
-      facade.dataset.loaded = "1";
-      facade.innerHTML = `<iframe class="w-full h-full border-0" src="https://www.youtube.com/embed/${vid}?autoplay=1&rel=0" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-    });
-
-    function getYtId(url) {
-      if (!url || typeof url !== "string") return null;
-      const m = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|v\/|e(?:mbed)?\/|.*[?&]v=|shorts\/)|youtu\.be\/)([^"&?\/\s]{11})/i);
-      return m ? m[1] : null;
-    }
-
-    function buildFacadeElement(vid) {
-      const wrap = document.createElement("div");
-      wrap.className = "my-6 not-prose";
-      wrap.innerHTML = `
-        <div class="yt-facade relative w-full overflow-hidden rounded-2xl bg-black aspect-video cursor-pointer group border border-slate-700 shadow-lg" data-yt-id="${vid}" title="Bấm để xem video">
-          <img src="https://i.ytimg.com/vi/${vid}/hqdefault.jpg" alt="YouTube Video" loading="lazy" class="w-full h-full object-cover opacity-90 group-hover:scale-105 group-hover:opacity-100 transition-all duration-300" />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-          <button type="button" aria-label="Phát video" class="absolute inset-0 m-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-600 group-hover:bg-red-500 text-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-200">
-            <svg class="w-8 h-8 sm:w-10 sm:h-10 ml-1 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-          </button>
-          <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs sm:text-sm text-white font-medium">
-            <span>🎬 Bấm vào nút Play để xem video trực tiếp</span>
-            <span class="bg-red-600 px-2.5 py-0.5 rounded text-white font-bold">YouTube HD</span>
-          </div>
-        </div>
       `;
       return wrap;
     }
