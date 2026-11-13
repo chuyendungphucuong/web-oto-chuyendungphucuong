@@ -383,7 +383,7 @@ function getCardSpecBadges(p) {
                 class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md transition group product-card"
                 data-name={product.name?.toLowerCase() || ""}
                 data-search={fullSearchableText}
-                data-payload={getExactPayloadTons(product)} data-volume={getExactVolumeM3(product)} data-brand={String(product.brand || "").trim().toUpperCase()}
+                data-brand={String(product.brand || "").trim().toUpperCase()}
                 data-category={catSub.toLowerCase()}
                 data-subkey={subKey}
                 data-type={categoryType.toLowerCase()}
@@ -535,13 +535,54 @@ function getCardSpecBadges(p) {
     function checkCategoryMatch(filterKey, cardType, cardSubKey, cardCatName, cardTitle) {
       if (filterKey === "all") return true;
 
-      // 1. Nếu người dùng bấm vào Menu Cha (ví dụ: "xe-cu") có chứa các nhánh con trong navigation.json
+      // Nhận diện chính xác Xe Bồn Cám để không bao giờ bị lẫn sang Xe Bồn Nước
+      const isFeedTank =
+        cardSubKey === "bon-thuc-pham" ||
+        cardSubKey === "xe-bon-cam" ||
+        cardSubKey === "xe-bon-cho-cam" ||
+        cardCatName.includes("bồn cám") ||
+        cardCatName.includes("thức ăn chăn nuôi") ||
+        cardTitle.includes("bồn cám") ||
+        cardTitle.includes("chở cám");
+
+      // 1. Nhóm Xe Bồn Cám & Thức Ăn Chăn Nuôi
+      if (filterKey === "bon-thuc-pham" || filterKey === "xe-bon-cam" || filterKey === "xe-bon-cho-cam") {
+        return isFeedTank;
+      }
+
+      // 2. Nhóm Xe Bồn Nước & Hút Chất Thải (Tuyệt đối loại trừ Xe Bồn Cám)
+      if (filterKey === "bon-nuoc" || filterKey === "xe-bon-nuoc" || filterKey === "xe-moi-truong-nang") {
+        if (isFeedTank) return false;
+        return (
+          cardSubKey === "bon-nuoc" ||
+          cardSubKey === "xe-bon-nuoc" ||
+          cardSubKey === "bon-chuyen-dung" ||
+          cardSubKey === "bon-hut-chat-thai" ||
+          cardSubKey === "xe-moi-truong-nang" ||
+          cardCatName.includes("bồn nước") ||
+          cardCatName.includes("tưới cây") ||
+          cardCatName.includes("phun nước") ||
+          cardCatName.includes("hút chất thải") ||
+          cardTitle.includes("bồn nước") ||
+          cardTitle.includes("phun nước") ||
+          cardTitle.includes("tưới cây") ||
+          cardTitle.includes("hút chất thải")
+        );
+      }
+
+      // 3. Nhóm riêng Xe Bồn Hút Chất Thải (từ Menu con)
+      if (filterKey === "bon-hut-chat-thai") {
+        if (isFeedTank) return false;
+        return cardSubKey === "bon-hut-chat-thai" || cardCatName.includes("hút chất thải") || cardTitle.includes("hút chất thải");
+      }
+
+      // 4. Nếu người dùng bấm vào Menu Cha (ví dụ: "xe-cu") có chứa các nhánh con trong navigation.json
       const childKeys = parentToChildrenMap[filterKey] || [];
-      if (childKeys.length > 0) {
+      if (childKeys.length > 0 && filterKey !== "xe-tai-chuyen-dung") {
         if (childKeys.includes(cardSubKey)) return true;
       }
 
-      // 2. Xử lý nhóm Xe Cũ tổng hợp (hiển thị toàn bộ các nhánh con xe cũ: xe-4-7-cho-cu, xe-tai-cu, xe-chuyen-dung-cu, xe-khach-cu...)
+      // 5. Xử lý nhóm Xe Cũ tổng hợp
       if (filterKey === "xe-cu") {
         return (
           cardType === "xe-cu" ||
@@ -553,35 +594,45 @@ function getCardSpecBadges(p) {
         );
       }
 
-      // 3. Nếu bấm vào từng nhánh con cụ thể của Xe Cũ (vd: xe-4-7-cho-cu, xe-tai-cu...)
+      // 6. Nếu bấm vào từng nhánh con cụ thể của Xe Cũ (vd: xe-4-7-cho-cu, xe-tai-cu...)
       if (filterKey.endsWith("-cu")) {
         return cardSubKey === filterKey;
       }
 
-      // 4. Nhóm Xe Tải Chuyên Dùng Mới (không trộn lẫn xe cũ)
+      // 7. Nhóm Xe Tải Chuyên Dùng Mới (không trộn lẫn xe cũ)
       if (filterKey === "xe-tai-chuyen-dung") {
         return cardType === "xe-tai-chuyen-dung";
       }
 
-      // 5. Nhóm Ô Tô Khách Mới (không trộn lẫn xe cũ)
+      // 8. Nhóm Ô Tô Khách Mới (không trộn lẫn xe cũ)
       if (filterKey === "xe-khach") {
         return cardType === "xe-khach";
       }
 
-      if (filterKey === "xe-cau" || filterKey === "cau-truc" || filterKey === "cau-gap") return cardSubKey.includes("cau") || cardCatName.includes("cẩu");
-      if (filterKey === "bon-thuc-pham" || filterKey === "xe-bon-cam") return cardSubKey === "bon-thuc-pham" || cardCatName.includes("bồn cám");
-      if (filterKey === "bon-nuoc" || filterKey === "xe-bon-nuoc" || filterKey === "xe-moi-truong-nang") return cardSubKey === "bon-nuoc" || cardSubKey === "xe-moi-truong-nang" || cardSubKey === "bon-hut-chat-thai" || cardCatName.includes("bồn") || cardCatName.includes("phun nước");
-      if (filterKey === "bon-hut-chat-thai") return cardSubKey === "bon-hut-chat-thai" || cardTitle.includes("hút chất thải");
-      if (filterKey === "cuu-ho" || filterKey === "xe-cuu-ho") return cardSubKey === "cuu-ho" || cardSubKey === "nang-dau" || cardCatName.includes("cứu hộ") || cardCatName.includes("nâng đầu");
-      if (filterKey === "nang-dau" || filterKey === "xe-nang-dau") return cardSubKey === "nang-dau" || cardCatName.includes("nâng đầu");
-      if (filterKey === "ep-rac" || filterKey === "xe-ep-rac") return cardSubKey === "ep-rac" || cardCatName.includes("ép rác");
-      if (filterKey === "xe-nang-khac") return cardSubKey === "xe-nang-khac";
+      if (filterKey === "xe-cau" || filterKey === "cau-truc" || filterKey === "cau-gap") {
+        return cardSubKey === "xe-cau" || cardSubKey.includes("cau") || cardCatName.includes("gắn cẩu") || cardCatName.includes("cẩu tự hành");
+      }
+      if (filterKey === "cuu-ho" || filterKey === "xe-cuu-ho") {
+        return cardSubKey === "cuu-ho" || cardSubKey === "nang-dau" || cardCatName.includes("cứu hộ") || cardCatName.includes("nâng đầu");
+      }
+      if (filterKey === "nang-dau" || filterKey === "xe-nang-dau") {
+        return cardSubKey === "nang-dau" || cardCatName.includes("nâng đầu");
+      }
+      if (filterKey === "ep-rac" || filterKey === "xe-ep-rac") {
+        return cardSubKey === "ep-rac" || cardCatName.includes("ép rác") || cardTitle.includes("ép rác");
+      }
+      if (filterKey === "quet-duong-hut-bui") {
+        return cardSubKey === "quet-duong-hut-bui" || cardCatName.includes("quét đường") || cardTitle.includes("quét đường");
+      }
+      if (filterKey === "xe-nang-khac") {
+        return cardSubKey === "xe-nang-khac" || cardCatName.includes("gia cầm") || cardTitle.includes("đầu kéo gắn cẩu");
+      }
       if (filterKey === "16-cho") return cardSubKey === "16-cho" || cardCatName.includes("16 chỗ");
       if (filterKey === "29-cho") return cardSubKey === "29-cho" || cardSubKey === "34-cho" || cardCatName.includes("29-34 chỗ");
       if (filterKey === "34-cho") return cardSubKey === "34-cho" || cardTitle.includes("34 chỗ");
       if (filterKey === "47-cho") return cardSubKey === "47-cho" || cardCatName.includes("47 chỗ");
 
-      return cardSubKey === filterKey || cardSubKey.includes(filterKey) || cardCatName.includes(filterKey);
+      return cardSubKey === filterKey;
     }
 
     function filterProducts() {
