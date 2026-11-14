@@ -374,9 +374,11 @@ function getCardSpecBadges(p) {
               JSON.stringify(product.specialSpecs || {})
             ].join(" ");
 
-            const displayPrice = Number(product.price || 0) > 0
-              ? Number(product.price).toLocaleString("vi-VN") + " đ"
-              : (product.priceText || "Liên hệ nhận giá tốt");
+            const numericPrice = Number(product.price || 0);
+            const displayPrice = numericPrice > 0
+              ? Number(numericPrice).toLocaleString("vi-VN") + " đ"
+              : (product.priceText || "Liên hệ nhận báo giá tốt nhất");
+            const downPaymentTrieu = numericPrice > 0 ? Math.round((numericPrice * 0.2) / 1000000) : 0;
 
             return (
               <div 
@@ -414,7 +416,21 @@ function getCardSpecBadges(p) {
                       <a href={`/san-pham/${product.slug}`}>{product.name}</a>
                     </h3>
                     <p class="text-xs text-gray-600 font-medium bg-gray-50 p-1.5 rounded line-clamp-1">{specText}</p>
-                    <p class="text-red-600 font-black text-lg">{displayPrice}</p>
+                    <div class="pt-1">
+                      <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                        {numericPrice > 0 ? "Giá tham khảo từ:" : "Giá bán ưu đãi:"}
+                      </p>
+                      <p class="text-red-600 font-black text-lg leading-tight">{displayPrice}</p>
+                      {downPaymentTrieu > 0 ? (
+                        <p class="mt-1 inline-block bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                          💳 Trả trước chỉ từ ~{downPaymentTrieu.toLocaleString("vi-VN")} Triệu
+                        </p>
+                      ) : (
+                        <p class="mt-1 inline-block bg-blue-50 text-blue-800 border border-blue-200 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                          💳 Hỗ trợ trả góp 75% - 85%
+                        </p>
+                      )}
+                    </div>
                     {product.promo && (
                       <p class="text-xs text-red-700 bg-red-50 p-2 rounded border border-red-100 font-medium line-clamp-1">🎁 {product.promo}</p>
                     )}

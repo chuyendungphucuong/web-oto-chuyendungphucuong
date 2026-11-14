@@ -268,7 +268,7 @@ function extractShortBadge(v) {
           
           <div class="space-y-3 text-sm">
             <div class="flex justify-between border-b pb-2">
-              <span class="text-gray-600">Giá niêm yết:</span>
+              <span class="text-gray-600">Giá xe tham khảo:</span>
               <span id="lblPrice" class="font-bold text-gray-900" data-price={vehicle.price}>{Number(vehicle.price || 0).toLocaleString('vi-VN')} đ</span>
             </div>
             <div class="flex justify-between border-b pb-2">
@@ -348,13 +348,61 @@ function extractShortBadge(v) {
           <span class="inline-block bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">{vehicle.subCategory || vehicle.categoryName || 'Xe Chuyên Dùng'}</span>
           <h1 class="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-4 leading-snug">{vehicle.name}</h1>
           
-          <div class="bg-gray-50 p-5 rounded-xl mb-6 border border-gray-200">
-            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Giá niêm yết chính thức:</p>
-            <p class="text-3xl lg:text-4xl font-black text-red-600 mb-3">{Number(vehicle.price || 0).toLocaleString('vi-VN')} đ</p>
+          <div class="bg-gradient-to-br from-slate-50 to-blue-50/50 p-5 rounded-2xl mb-6 border border-blue-200/80 shadow-sm space-y-3">
+            {Number(vehicle.price || 0) > 0 ? (
+              <>
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <span class="text-xs font-bold text-slate-600 uppercase tracking-wide">Giá tham khảo tiêu chuẩn:</span>
+                  <span class="text-[11px] font-bold text-blue-700 bg-blue-100 px-2.5 py-0.5 rounded-full">Chưa trừ chiết khấu tháng này</span>
+                </div>
+                <p class="text-3xl lg:text-4xl font-black text-red-600 leading-none">
+                  {Number(vehicle.price).toLocaleString('vi-VN')} đ
+                </p>
+                <div class="bg-white border border-emerald-200 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
+                  <div>
+                    <p class="text-xs font-extrabold text-emerald-800">
+                      💳 Trả trước dự kiến (20%): ~{Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu đồng
+                    </p>
+                    <p class="text-[11px] text-slate-500">Hỗ trợ vay ngân hàng 75% – 85% giá trị xe, thời hạn đến 7 năm</p>
+                  </div>
+                  <button
+                    type="button"
+                    onclick="document.getElementById('btnOpenQuickQuote')?.click()"
+                    class="shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold px-3 py-2 rounded-lg transition cursor-pointer shadow-2xs"
+                  >
+                    Nhận bảng tính Zalo &rarr;
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-xs font-bold text-slate-600 uppercase tracking-wide">Báo giá theo cấu hình đóng thùng / thiết bị:</span>
+                  <span class="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">Ưu đãi trực tiếp từ xưởng</span>
+                </div>
+                <p class="text-2xl lg:text-3xl font-black text-red-600">
+                  {vehicle.priceText || "Liên hệ: 0922 77 77 03"}
+                </p>
+                <div class="bg-white border border-blue-200 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <p class="text-xs font-bold text-blue-900">
+                    💳 Hỗ trợ vay trả góp 75% – 85% (Chỉ cần trả trước từ 15% – 20% nhận xe ngay)
+                  </p>
+                  <button
+                    type="button"
+                    onclick="document.getElementById('btnOpenQuickQuote')?.click()"
+                    class="shrink-0 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-3 py-2 rounded-lg transition cursor-pointer"
+                  >
+                    Nhận báo giá Zalo &rarr;
+                  </button>
+                </div>
+              </>
+            )}
             {vehicle.promo && (
-              <div class="bg-red-500 text-white p-3 text-sm rounded-lg shadow-sm">
+              <div class="bg-red-600 text-white p-3 text-sm rounded-xl shadow-sm">
                 <span class="font-bold">🎁 Ưu đãi đặc biệt:</span> {vehicle.promo}
               </div>
+            )}
+          </div>
             )}
           </div>
 
@@ -648,7 +696,7 @@ function extractShortBadge(v) {
                 </div>
                 <div class="px-3.5 pb-3.5 pt-2 border-t border-gray-100 flex items-center justify-between">
                   <span class="text-xs font-extrabold text-red-600">
-                    {rel.price && Number(rel.price) > 0 ? `${Number(rel.price).toLocaleString("vi-VN")} đ` : "Giá: Liên hệ"}
+                    {rel.price && Number(rel.price) > 0 ? `Tham khảo: ${Number(rel.price).toLocaleString("vi-VN")} đ` : "Giá ưu đãi: Liên hệ"}
                   </span>
                   <span class="text-[11px] font-bold text-blue-600 group-hover:translate-x-0.5 transition">
                     So sánh &rarr;
