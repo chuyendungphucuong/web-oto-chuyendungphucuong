@@ -52,7 +52,7 @@ const productSchema = {
     "@type": "Offer",
     "url": `https://phucuongauto.vn/san-pham/${vehicle.slug}`,
     "priceCurrency": "VND",
-    "price": vehicle.price || 0,
+    "price": vehicle.price ? Math.round(Number(vehicle.price) * 0.2) : 0,
     "itemCondition": "https://schema.org/NewCondition",
     "availability": "https://schema.org/InStock",
     "seller": {
@@ -204,14 +204,14 @@ function extractShortBadge(v) {
     <nav class="text-sm text-gray-500 mb-6">
       <a href="/" class="hover:text-blue-600">Trang chủ</a> &gt; 
       <a href="/san-pham" class="hover:text-blue-600">Sản phẩm</a> &gt; 
-      <span class="text-gray-900 font-semibold line-clamp-1">{vehicle.name}</span>
+      <span class="text-gray-900 font-semibold break-words leading-snug">{vehicle.name}</span>
     </nav>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100">
       <div class="lg:col-span-6 space-y-6">
         <div class="space-y-3">
-          <div class="relative overflow-hidden rounded-xl border border-gray-200 bg-gray-50 group">
-            <img id="mainProductImg" src={images[0]} alt={vehicle.name} class="w-full h-[350px] object-contain p-2 transition duration-300" />
+          <div class="relative overflow-hidden rounded-xl border border-gray-200 bg-gray-50 group flex items-center justify-center">
+            <img id="mainProductImg" src={images[0]} alt={vehicle.name} class="w-full min-h-[240px] max-h-[420px] h-auto aspect-4/3 object-contain p-2 transition duration-300" />
             
             {images.length > 1 && (
               <>
@@ -255,92 +255,119 @@ function extractShortBadge(v) {
           <p>{showrooms.join(' | ')}</p>
         </div>
 
-        <!-- CÔNG CỤ TÍNH GIÁ LĂN BÁNH -->
-        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-inner">
-          <div class="flex justify-between items-center mb-3">
-            <h3 class="text-lg font-bold text-gray-900">
-              Dự toán giá lăn bánh & Trả góp (dự kiến)
-            </h3>
-            <a href={`/tinh-lan-banh?car=${vehicle.slug}`} class="text-xs font-extrabold bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition shadow-sm">
-              🖨️ Xuất Báo Giá PDF &rarr;
-            </a>
+        <!-- CÔNG CỤ TÍNH GIÁ LĂN BÁNH & THU LEAD BÁO GIÁ CHI TIẾT -->
+        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-inner space-y-4">
+          <div class="flex flex-wrap justify-between items-center gap-2 border-b border-gray-200 pb-3">
+            <div>
+              <h3 class="text-base sm:text-lg font-extrabold text-gray-900">
+                📊 Dự Toán Chi Phí Lăn Bánh &amp; Trả Góp
+              </h3>
+              <p class="text-xs text-gray-500">Chọn tỷ lệ vay &amp; nhập thông tin để nhận bảng tính gốc + lãi chi tiết</p>
+            </div>
+            <button
+              type="button"
+              onclick="document.getElementById('inlineLeadName')?.focus()"
+              class="text-xs font-extrabold bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition shadow-sm cursor-pointer"
+            >
+              🖨️ Yêu Cầu Xuất Báo Giá PDF &rarr;
+            </button>
           </div>
           
-          <div class="space-y-3 text-sm">
-            <div class="flex justify-between border-b pb-2">
-              <span class="text-gray-600">Giá xe tham khảo:</span>
-              <span id="lblPrice" class="font-bold text-gray-900" data-price={vehicle.price}>{Number(vehicle.price || 0).toLocaleString('vi-VN')} đ</span>
+          <div class="space-y-2.5 text-sm">
+            <div class="flex justify-between items-center border-b border-gray-200/80 pb-2">
+              <span class="text-gray-600">Vốn đối ứng ban đầu (Trả trước ~20%):</span>
+              <span class="font-extrabold text-red-600 text-base">
+                {Number(vehicle.price || 0) > 0
+                  ? `~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu đ`
+                  : 'Chỉ từ 20% giá trị xe'}
+              </span>
             </div>
-            <div class="flex justify-between border-b pb-2">
-              <span class="text-gray-600">Lệ phí trước bạ (2%):</span>
-              <span id="lblRegistration" class="font-semibold text-gray-800">0 đ</span>
+            <div class="flex justify-between items-center border-b border-gray-200/80 pb-2">
+              <span class="text-gray-600">Giá xuất xưởng &amp; Chiết khấu tháng này:</span>
+              <span class="text-xs font-bold bg-amber-100 text-amber-900 px-2.5 py-1 rounded-md border border-amber-300">
+                🔒 Nhận qua Zalo / Email
+              </span>
             </div>
-            <div class="flex justify-between border-b pb-2">
+            <div class="flex justify-between items-center border-b border-gray-200/80 pb-2">
               <span class="text-gray-600">Phí sử dụng đường bộ (1 năm):</span>
               <span class="font-semibold text-gray-800">{Number(dynamicRoadTax).toLocaleString('vi-VN')} đ</span>
             </div>
-            <div class="flex justify-between border-b pb-2">
+            <div class="flex justify-between items-center border-b border-gray-200/80 pb-2">
               <span class="text-gray-600">
-                {metrics.isBus ? `Bảo hiểm TNDS (${metrics.seats} chỗ):` : `BH TNDS Chuyên dùng (${(metrics.payloadKg/1000).toFixed(1)}T + ${metrics.seats} ghế):`}
+                {metrics.isBus ? `Bảo hiểm TNDS (${metrics.seats} chỗ):` : `BH TNDS Chuyên dùng (${(metrics.payloadKg/1000).toFixed(1)}T + ${metrics.seats} ghế):` }
               </span>
               <span class="font-semibold text-blue-700">{Number(dynamicInsuranceTNDS).toLocaleString('vi-VN')} đ</span>
             </div>
-            <div class="flex justify-between border-b pb-2">
-              <span class="text-gray-600">Đăng kiểm, Biển số & Dịch vụ trọn gói:</span>
+            <div class="flex justify-between items-center border-b border-gray-200/80 pb-2">
+              <span class="text-gray-600">Đăng kiểm, Biển số &amp; Dịch vụ trọn gói:</span>
               <span class="font-semibold text-gray-800">{Number(fixedServiceAndPlate).toLocaleString('vi-VN')} đ</span>
             </div>
-            <div class="flex justify-between bg-blue-50 p-2.5 rounded-lg font-bold text-blue-800 text-base">
-              <span>Tổng giá lăn bánh dự kiến:</span>
-              <span id="lblTotalRollout">0 đ</span>
-            </div>
 
-            <div class="pt-3 border-t mt-4 space-y-3">
-              <h4 class="font-bold text-gray-900">Tính toán vay mua xe trả góp:</h4>
+            <!-- Tuỳ chọn cấu hình vay của khách -->
+            <div class="pt-2 space-y-3">
+              <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider text-blue-900">1. Chọn phương án vay dự kiến của quý khách:</h4>
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label class="block text-xs text-gray-600 mb-1">Tỷ lệ vay vốn:</label>
-                  <select id="selectLoanRatio" class="w-full p-2 border rounded-lg text-sm bg-white font-semibold">
-                    <option value="0.5">Vay 50% giá trị xe</option>
-                    <option value="0.6">Vay 60% giá trị xe</option>
-                    <option value="0.65">Vay 65% giá trị xe</option>
-                    <option value="0.7">Vay 70% giá trị xe</option>
-                    <option value="0.75" selected>Vay 75% giá trị xe</option>
-                    <option value="0.8">Vay 80% giá trị xe</option>
-                    <option value="0.85">Vay 85% giá trị xe</option>
-                    <option value="0.9">Vay 90% giá trị xe</option>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Mức vay ngân hàng:</label>
+                  <select id="selectLoanRatio" class="w-full p-2.5 border border-gray-300 rounded-xl text-xs sm:text-sm bg-white font-bold text-gray-900 outline-none focus:border-blue-600">
+                    <option value="Vay 80% (Trả trước 20%)" selected>Vay 80% (Trả trước 20%)</option>
+                    <option value="Vay 85% (Trả trước 15%)">Vay 85% (Trả trước 15%)</option>
+                    <option value="Vay 75% (Trả trước 25%)">Vay 75% (Trả trước 25%)</option>
+                    <option value="Vay 70% (Trả trước 30%)">Vay 70% (Trả trước 30%)</option>
+                    <option value="Vay 60% (Trả trước 40%)">Vay 60% (Trả trước 40%)</option>
+                    <option value="Vay 50% (Trả trước 50%)">Vay 50% (Trả trước 50%)</option>
+                    <option value="Mua trả thẳng 100% tiền mặt">Trả thẳng 100% (Nhận chiết khấu)</option>
                   </select>
                 </div>
                 <div>
-                  <label class="block text-xs text-gray-600 mb-1">Thời hạn vay:</label>
-                  <select id="selectLoanTerm" class="w-full p-2 border rounded-lg text-sm bg-white font-semibold">
-                    <option value="12">1 Năm (12 tháng)</option>
-                    <option value="24">2 Năm (24 tháng)</option>
-                    <option value="36">3 Năm (36 tháng)</option>
-                    <option value="48">4 Năm (48 tháng)</option>
-                    <option value="60" selected>5 Năm (60 tháng)</option>
-                    <option value="72">6 Năm (72 tháng)</option>
-                    <option value="84">7 Năm (84 tháng)</option>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Thời hạn trả góp:</label>
+                  <select id="selectLoanTerm" class="w-full p-2.5 border border-gray-300 rounded-xl text-xs sm:text-sm bg-white font-bold text-gray-900 outline-none focus:border-blue-600">
+                    <option value="3 Năm (36 tháng)">3 Năm (36 tháng)</option>
+                    <option value="4 Năm (48 tháng)">4 Năm (48 tháng)</option>
+                    <option value="5 Năm (60 tháng)" selected>5 Năm (60 tháng)</option>
+                    <option value="6 Năm (72 tháng)">6 Năm (72 tháng)</option>
+                    <option value="7 Năm (84 tháng)">7 Năm (84 tháng)</option>
                   </select>
                 </div>
               </div>
-              <div class="bg-white p-3 rounded-xl border border-gray-200 text-xs space-y-1.5">
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Vốn đối ứng ban đầu (Trả trước):</span>
-                  <span id="lblDownPayment" class="font-bold text-blue-600">0 đ</span>
+            </div>
+
+            <!-- Form Mở khóa Bảng báo giá chi tiết & Lịch trả góp -->
+            <form id="inlineRolloutLeadForm" class="bg-white p-4 rounded-xl border-2 border-blue-600/80 shadow-md space-y-3 mt-3">
+              <input type="hidden" name="access_key" value="3f9f6577-6ee2-4393-9651-7dbe59109431" />
+              <input type="hidden" name="subject" value={`Yêu cầu báo giá & lịch trả góp xe: ${vehicle.name}`} />
+              <input type="hidden" name="message" id="inlineHiddenMessage" value={`Cần gửi Bảng Báo Giá Chi Tiết & Lịch Trả Góp mẫu xe ${vehicle.name} (Vay 80% - 5 Năm)`} />
+
+              <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
+                <span class="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">Bước 2</span>
+                <span class="text-xs font-extrabold text-slate-900">Nhập thông tin nhận Bảng Giá Chính Xác &amp; Lịch Trả Góp:</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-700 mb-1">Họ và tên quý khách / Đơn vị *</label>
+                  <input type="text" id="inlineLeadName" name="name" required placeholder="Nhập họ tên..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm outline-none focus:border-blue-600" />
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Số tiền vay ngân hàng:</span>
-                  <span id="lblLoanAmount" class="font-bold text-gray-800">0 đ</span>
-                </div>
-                <div class="flex justify-between pt-1 border-t">
-                  <span class="text-gray-600 font-semibold">Ước tính trả góp tháng đầu (Gốc + Lãi):</span>
-                  <span id="lblMonthlyPayment" class="font-bold text-red-600 text-sm">0 đ</span>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-700 mb-1">Số điện thoại / Zalo nhận báo giá *</label>
+                  <input type="tel" name="phone" required placeholder="Nhập SĐT Zalo..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm outline-none focus:border-blue-600" />
                 </div>
               </div>
-            </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Địa chỉ Email nhận file Báo Giá PDF *</label>
+                <input type="email" name="email" required placeholder="Nhập email (VD: tenban@gmail.com)..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm outline-none focus:border-blue-600" />
+              </div>
+
+              <button type="button" id="btnSubmitInlineRollout" class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-2.5 px-4 rounded-xl text-xs sm:text-sm transition shadow-md cursor-pointer flex items-center justify-center gap-1.5">
+                📩 Nhận Bảng Báo Giá Chi Tiết &amp; Lịch Trả Góp Ngay
+              </button>
+              <p class="text-[11px] text-center text-slate-500">
+                🔒 Cam kết bảo mật thông tin • Chuyên viên Phú Cường gửi bảng tính sau 3 phút.
+              </p>
+            </form>
           </div>
-        </div>
-      </div>
+        </div></div>
 
       <!-- Cột Thông tin & Báo giá -->
       <div class="lg:col-span-6 flex flex-col justify-between">
@@ -348,61 +375,49 @@ function extractShortBadge(v) {
           <span class="inline-block bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">{vehicle.subCategory || vehicle.categoryName || 'Xe Chuyên Dùng'}</span>
           <h1 class="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-4 leading-snug">{vehicle.name}</h1>
           
-          <div class="bg-gradient-to-br from-slate-50 to-blue-50/50 p-5 rounded-2xl mb-6 border border-blue-200/80 shadow-sm space-y-3">
+          <div class="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white p-5 rounded-2xl mb-6 border border-blue-800 shadow-lg space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/15 pb-2.5">
+              <span class="text-xs font-extrabold text-amber-400 uppercase tracking-wider">💳 Vốn đối ứng ban đầu (20% giá trị xe):</span>
+              <span class="text-[11px] font-bold text-emerald-300 bg-emerald-950/90 border border-emerald-500/40 px-2.5 py-0.5 rounded-full">Hỗ trợ vay 80% – Lãi suất ưu đãi</span>
+            </div>
+
             {Number(vehicle.price || 0) > 0 ? (
-              <>
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                  <span class="text-xs font-bold text-slate-600 uppercase tracking-wide">Giá tham khảo tiêu chuẩn:</span>
-                  <span class="text-[11px] font-bold text-blue-700 bg-blue-100 px-2.5 py-0.5 rounded-full">Chưa trừ chiết khấu tháng này</span>
-                </div>
-                <p class="text-3xl lg:text-4xl font-black text-red-600 leading-none">
-                  {Number(vehicle.price).toLocaleString('vi-VN')} đ
+              <div>
+                <p class="text-2xl lg:text-3xl font-black text-amber-400 leading-tight">
+                  Trả trước chỉ từ: ~{Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu đồng
                 </p>
-                <div class="bg-white border border-emerald-200 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
-                  <div>
-                    <p class="text-xs font-extrabold text-emerald-800">
-                      💳 Trả trước dự kiến (20%): ~{Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu đồng
-                    </p>
-                    <p class="text-[11px] text-slate-500">Hỗ trợ vay ngân hàng 75% – 85% giá trị xe, thời hạn đến 7 năm</p>
-                  </div>
-                  <button
-                    type="button"
-                    onclick="document.getElementById('btnOpenQuickQuote')?.click()"
-                    class="shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold px-3 py-2 rounded-lg transition cursor-pointer shadow-2xs"
-                  >
-                    Nhận bảng tính Zalo &rarr;
-                  </button>
-                </div>
-              </>
+                <p class="text-xs text-blue-200 mt-1">
+                  (Giá xuất xưởng chính xác &amp; chương trình chiết khấu được gửi riêng qua Zalo / Email theo cấu hình thực tế)
+                </p>
+              </div>
             ) : (
-              <>
-                <div class="flex items-center justify-between gap-2">
-                  <span class="text-xs font-bold text-slate-600 uppercase tracking-wide">Báo giá theo cấu hình đóng thùng / thiết bị:</span>
-                  <span class="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">Ưu đãi trực tiếp từ xưởng</span>
-                </div>
-                <p class="text-2xl lg:text-3xl font-black text-red-600">
-                  {vehicle.priceText || "Liên hệ: 0922 77 77 03"}
+              <div>
+                <p class="text-2xl lg:text-3xl font-black text-amber-400 leading-tight">
+                  Trả trước chỉ từ 20% giá trị xe
                 </p>
-                <div class="bg-white border border-blue-200 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <p class="text-xs font-bold text-blue-900">
-                    💳 Hỗ trợ vay trả góp 75% – 85% (Chỉ cần trả trước từ 15% – 20% nhận xe ngay)
-                  </p>
-                  <button
-                    type="button"
-                    onclick="document.getElementById('btnOpenQuickQuote')?.click()"
-                    class="shrink-0 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-3 py-2 rounded-lg transition cursor-pointer"
-                  >
-                    Nhận báo giá Zalo &rarr;
-                  </button>
-                </div>
-              </>
-            )}
-            {vehicle.promo && (
-              <div class="bg-red-600 text-white p-3 text-sm rounded-xl shadow-sm">
-                <span class="font-bold">🎁 Ưu đãi đặc biệt:</span> {vehicle.promo}
+                <p class="text-xs text-blue-200 mt-1">
+                  (Hỗ trợ vay ngân hàng 75% – 85%, thủ tục nhanh gọn, giao xe tận nơi toàn quốc)
+                </p>
               </div>
             )}
-          </div>
+
+            <div class="bg-white/10 backdrop-blur-xs border border-white/15 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div class="text-xs text-slate-200">
+                <span class="font-bold text-white">🔒 Bảng báo giá chi tiết &amp; Lịch trả góp:</span> Cung cấp SĐT Zalo &amp; Email để nhận file PDF chính xác.
+              </div>
+              <button
+                type="button"
+                onclick="document.getElementById('btnOpenQuickQuote')?.click()"
+                class="shrink-0 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-black px-3.5 py-2.5 rounded-lg transition cursor-pointer shadow-md"
+              >
+                🔓 Nhận Báo Giá Chi Tiết &rarr;
+              </button>
+            </div>
+
+            {vehicle.promo && (
+              <div class="bg-red-600/95 text-white p-3 text-xs sm:text-sm rounded-xl border border-red-400/30">
+                <span class="font-bold">🎁 Ưu đãi đặc biệt:</span> {vehicle.promo}
+              </div>
             )}
           </div>
 
@@ -537,8 +552,8 @@ function extractShortBadge(v) {
       <!-- LỚP PHỦ TÊN XE / BÀI VIẾT & THÔNG SỐ PHÍA DƯỚI -->
       <div class="absolute bottom-3 left-3.5 right-3.5 flex flex-col sm:flex-row sm:items-end justify-between gap-2 z-10 pointer-events-none">
         <div class="space-y-0.5 max-w-xl">
-          <p class="text-white font-extrabold text-xs sm:text-sm line-clamp-1 drop-shadow">{vehicle?.name || "Xe Chuyên Dùng Phú Cường"}</p>
-          <p class="text-amber-300 font-bold text-[11px] sm:text-xs line-clamp-1">{extractShortBadge(vehicle).join(" • ") || "Quay thực tế tại xưởng & bãi xe Phú Cường"}</p>
+          <p class="text-white font-extrabold text-xs sm:text-sm break-words leading-snug drop-shadow">{vehicle?.name || "Xe Chuyên Dùng Phú Cường"}</p>
+          <p class="text-amber-300 font-bold text-[11px] sm:text-xs break-words leading-snug">{extractShortBadge(vehicle).join(" • ") || "Quay thực tế tại xưởng & bãi xe Phú Cường"}</p>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
           <span class="text-[11px] text-slate-200 font-medium hidden sm:inline">🎬 Bấm để xem</span>
@@ -689,14 +704,14 @@ function extractShortBadge(v) {
                         </span>
                       ))}
                     </div>
-                    <h3 class="font-bold text-gray-900 text-sm line-clamp-2 group-hover:text-blue-600 transition">
+                    <h3 class="font-bold text-gray-900 text-sm break-words leading-snug group-hover:text-blue-600 transition">
                       {rel.name}
                     </h3>
                   </div>
                 </div>
                 <div class="px-3.5 pb-3.5 pt-2 border-t border-gray-100 flex items-center justify-between">
                   <span class="text-xs font-extrabold text-red-600">
-                    {rel.price && Number(rel.price) > 0 ? `Tham khảo: ${Number(rel.price).toLocaleString("vi-VN")} đ` : "Giá ưu đãi: Liên hệ"}
+                    {rel.price && Number(rel.price) > 0 ? `Trả trước ~${Math.round((Number(rel.price) * 0.2) / 1000000).toLocaleString("vi-VN")} Triệu` : "Trả trước từ 20%"}
                   </span>
                   <span class="text-[11px] font-bold text-blue-600 group-hover:translate-x-0.5 transition">
                     So sánh &rarr;
@@ -716,7 +731,7 @@ function extractShortBadge(v) {
         <div class="bg-blue-900 text-white px-5 py-4 flex justify-between items-center">
           <div>
             <h3 class="text-base font-extrabold">Nhận Báo Giá Lăn Bánh & Trả Góp</h3>
-            <p class="text-xs text-blue-200 line-clamp-1 mt-0.5">{vehicle.name}</p>
+            <p class="text-xs text-blue-200 break-words leading-snug mt-0.5">{vehicle.name}</p>
           </div>
           <button type="button" id="btnCloseQuickQuote" class="w-8 h-8 rounded-full bg-white/10 hover:bg-red-600 text-white font-bold flex items-center justify-center cursor-pointer">✕</button>
         </div>
@@ -729,7 +744,11 @@ function extractShortBadge(v) {
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">Số điện thoại / Zalo nhận bảng tính *</label>
-            <input type="tel" name="phone" required placeholder="Nhập số điện thoại..." class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-blue-600" />
+            <input type="tel" name="phone" required placeholder="Nhập số điện thoại Zalo..." class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-blue-600" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Địa chỉ Email nhận file Báo Giá PDF *</label>
+            <input type="email" name="email" required placeholder="Nhập địa chỉ Email của quý khách..." class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-blue-600" />
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">Nhu cầu tư vấn</label>
@@ -791,7 +810,7 @@ function extractShortBadge(v) {
 
           <div class="absolute bottom-3 left-3.5 right-3.5 flex flex-col sm:flex-row sm:items-end justify-between gap-2 z-10 pointer-events-none">
             <div class="space-y-0.5 max-w-xl">
-              <p class="text-white font-extrabold text-xs sm:text-sm line-clamp-1 drop-shadow">${pageHeading}</p>
+              <p class="text-white font-extrabold text-xs sm:text-sm break-words leading-snug drop-shadow">${pageHeading}</p>
               <p class="text-amber-300 font-bold text-[11px] sm:text-xs">Quay thực tế tại xưởng &amp; bãi xe Phú Cường • Hỗ trợ trả góp 85%</p>
             </div>
             <div class="flex items-center gap-1.5 shrink-0">
@@ -920,7 +939,7 @@ function extractShortBadge(v) {
     document.getElementById('selectLoanTerm')?.addEventListener('change', calculateRollout);
     calculateRollout();
 
-    // Điều khiển Popup Báo Giá Nhanh
+    // Điều khiển Popup Báo Giá Nhanh & Form Dự Toán Lăn Bánh
     const quickModal = document.getElementById('quickQuoteModal');
     document.getElementById('btnOpenQuickQuote')?.addEventListener('click', () => {
       quickModal?.classList.remove('hidden');
@@ -932,6 +951,50 @@ function extractShortBadge(v) {
       if (e.target === quickModal) quickModal.classList.add('hidden');
     });
 
+    // Tự động cập nhật nội dung trường message ẩn khi khách đổi Tỷ lệ vay / Thời hạn vay
+    const selectRatioEl = document.getElementById('selectLoanRatio');
+    const selectTermEl = document.getElementById('selectLoanTerm');
+    const inlineMsgInput = document.getElementById('inlineHiddenMessage');
+    const pageCarTitle = document.querySelector('h1')?.innerText?.trim() || 'Xe chuyên dùng';
+
+    function updateInlineMessageField() {
+      if (!inlineMsgInput) return;
+      const ratioTxt = selectRatioEl ? (selectRatioEl.options[selectRatioEl.selectedIndex]?.text || selectRatioEl.value) : 'Vay 80%';
+      const termTxt = selectTermEl ? (selectTermEl.options[selectTermEl.selectedIndex]?.text || selectTermEl.value) : '5 Năm';
+      inlineMsgInput.value = `Yêu cầu gửi Bảng Báo Giá Chi Tiết & Lịch Trả Góp mẫu xe: ${pageCarTitle} | Phương án chọn: ${ratioTxt} - Thời hạn: ${termTxt}`;
+    }
+    selectRatioEl?.addEventListener('change', updateInlineMessageField);
+    selectTermEl?.addEventListener('change', updateInlineMessageField);
+    updateInlineMessageField();
+
+    // 1. Xử lý gửi Form Dự Toán Lăn Bánh (#inlineRolloutLeadForm) - Y hệt 100% cơ chế của quickQuoteForm
+    const inlineForm = document.getElementById('inlineRolloutLeadForm');
+    const btnInlineSubmit = document.getElementById('btnSubmitInlineRollout');
+
+    async function sendInlineProductLead() {
+      if (!inlineForm) return;
+      if (!inlineForm.reportValidity()) return;
+      updateInlineMessageField();
+      if (btnInlineSubmit) {
+        btnInlineSubmit.disabled = true;
+        btnInlineSubmit.innerText = '⏳ Đang gửi...';
+      }
+      try {
+        const fd = new FormData(inlineForm);
+        await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
+        window.location.href = '/cam-on';
+      } catch (err) {
+        window.location.href = '/cam-on';
+      }
+    }
+
+    btnInlineSubmit?.addEventListener('click', sendInlineProductLead);
+    inlineForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      sendInlineProductLead();
+    });
+
+    // 2. Xử lý gửi Form Popup Báo Giá Nhanh (#quickQuoteForm)
     const quickForm = document.getElementById('quickQuoteForm');
     const btnQuickSubmit = document.getElementById('btnSubmitQuickQuote');
     quickForm?.addEventListener('submit', async (e) => {
@@ -942,8 +1005,17 @@ function extractShortBadge(v) {
       }
       try {
         const fd = new FormData(quickForm);
-        await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
-        window.location.href = '/cam-on';
+        const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = '/cam-on';
+        } else {
+          alert('❌ Không thể gửi biểu mẫu: ' + (data.message || 'Vui lòng thử lại'));
+          if (btnQuickSubmit) {
+            btnQuickSubmit.disabled = false;
+            btnQuickSubmit.innerText = '🚀 Gửi Yêu Cầu Ngay';
+          }
+        }
       } catch (err) {
         window.location.href = '/cam-on';
       }

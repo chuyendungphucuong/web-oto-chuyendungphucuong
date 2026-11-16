@@ -282,18 +282,18 @@ function getCardSpecBadges(p) {
         <h1 id="categoryTitle" class="text-2xl lg:text-4xl font-extrabold mb-2">Danh Mục Xe Chuyên Dùng, Ô Tô Khách & Xe Cũ</h1>
         <p class="text-white/90 text-sm lg:text-base">Đóng mới chất lượng cao, xe cũ chính chủ pháp lý chuẩn, hỗ trợ giao xe toàn quốc tại TP.HCM, Tiền Giang và An Giang.</p>
       </div>
-      <div class="bg-white/10 px-4 py-2.5 rounded-xl border border-white/20 text-sm font-bold whitespace-nowrap">
+      <div class="bg-white/10 px-4 py-2.5 rounded-xl border border-white/20 text-sm font-bold whitespace-normal text-left">
         Hiển thị: <span id="lblCount" class="text-yellow-300 text-lg">{productList.length}</span> mẫu xe
       </div>
     </div>
 
     <!-- Thanh lọc danh mục ngang -->
-    <div class="flex overflow-x-auto gap-2 pb-4 mb-6 no-scrollbar">
+    <div class="flex flex-wrap gap-2 pb-4 mb-6">
       {categories.map((cat, idx) => (
         <button 
           type="button"
           data-category={cat.id}
-          class={`cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer ${idx === 0 ? "bg-blue-600 text-white shadow-md shadow-blue-600/20" : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-100"}`}
+          class={`cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-normal text-left transition cursor-pointer ${idx === 0 ? "bg-blue-600 text-white shadow-md shadow-blue-600/20" : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-100"}`}
         >
           {cat.name}
         </button>
@@ -375,10 +375,10 @@ function getCardSpecBadges(p) {
             ].join(" ");
 
             const numericPrice = Number(product.price || 0);
-            const displayPrice = numericPrice > 0
-              ? Number(numericPrice).toLocaleString("vi-VN") + " đ"
-              : (product.priceText || "Liên hệ nhận báo giá tốt nhất");
             const downPaymentTrieu = numericPrice > 0 ? Math.round((numericPrice * 0.2) / 1000000) : 0;
+            const displayPrice = downPaymentTrieu > 0
+              ? `Trả trước chỉ từ ~${downPaymentTrieu.toLocaleString("vi-VN")} Triệu`
+              : "Trả trước chỉ từ 20% giá xe";
 
             return (
               <div 
@@ -412,27 +412,21 @@ function getCardSpecBadges(p) {
                     </div>
                   )}
                   <!-- END SPEC BADGES -->
-                  <h3 class="font-bold text-base text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition">
+                  <h3 class="font-bold text-base text-gray-900 break-words leading-snug group-hover:text-blue-600 transition">
                       <a href={`/san-pham/${product.slug}`}>{product.name}</a>
                     </h3>
-                    <p class="text-xs text-gray-600 font-medium bg-gray-50 p-1.5 rounded line-clamp-1">{specText}</p>
-                    <div class="pt-1">
-                      <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
-                        {numericPrice > 0 ? "Giá tham khảo từ:" : "Giá bán ưu đãi:"}
+                    <p class="text-xs text-gray-600 font-medium bg-gray-50 p-2 rounded break-words leading-relaxed">{specText}</p>
+                    <div class="pt-1 bg-red-50/70 border border-red-100 rounded-xl p-2.5">
+                      <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
+                        💳 Vốn đối ứng nhận xe (20%):
                       </p>
-                      <p class="text-red-600 font-black text-lg leading-tight">{displayPrice}</p>
-                      {downPaymentTrieu > 0 ? (
-                        <p class="mt-1 inline-block bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold px-2 py-0.5 rounded-md">
-                          💳 Trả trước chỉ từ ~{downPaymentTrieu.toLocaleString("vi-VN")} Triệu
-                        </p>
-                      ) : (
-                        <p class="mt-1 inline-block bg-blue-50 text-blue-800 border border-blue-200 text-[11px] font-bold px-2 py-0.5 rounded-md">
-                          💳 Hỗ trợ trả góp 75% - 85%
-                        </p>
-                      )}
+                      <p class="text-red-600 font-black text-base sm:text-lg leading-snug">{displayPrice}</p>
+                      <p class="text-[11px] font-semibold text-blue-700 mt-0.5">
+                        🔒 Báo giá chi tiết: Nhắn Zalo / Gọi ngay
+                      </p>
                     </div>
                     {product.promo && (
-                      <p class="text-xs text-red-700 bg-red-50 p-2 rounded border border-red-100 font-medium line-clamp-1">🎁 {product.promo}</p>
+                      <p class="text-xs text-red-700 bg-red-50 p-2 rounded border border-red-100 font-medium break-words leading-snug">🎁 {product.promo}</p>
                     )}
                   </div>
                 </div>
@@ -701,9 +695,9 @@ function getCardSpecBadges(p) {
       document.querySelectorAll(".cat-tab").forEach(t => {
         const tabCat = (t.getAttribute("data-category") || "").toLowerCase();
         if (tabCat === currentFilter) {
-          t.className = "cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer bg-blue-600 text-white shadow-md shadow-blue-600/20";
+          t.className = "cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-normal text-left transition cursor-pointer bg-blue-600 text-white shadow-md shadow-blue-600/20";
         } else {
-          t.className = "cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition cursor-pointer bg-white text-gray-700 border border-gray-200 hover:bg-gray-100";
+          t.className = "cat-tab px-4 py-2.5 rounded-xl font-bold text-sm whitespace-normal text-left transition cursor-pointer bg-white text-gray-700 border border-gray-200 hover:bg-gray-100";
         }
       });
     }
@@ -761,7 +755,7 @@ function getCardSpecBadges(p) {
           Hiển thị <span id="visible-count" class="font-bold text-red-600">tất cả</span> dòng xe chuyên dùng &amp; ô tô
         </div>
         <div class="flex items-center gap-2">
-          <label for="sort-select" class="text-sm font-semibold text-slate-700 whitespace-nowrap">Sắp xếp theo:</label>
+          <label for="sort-select" class="text-sm font-semibold text-slate-700 whitespace-normal text-left">Sắp xếp theo:</label>
           <select id="sort-select" class="text-sm border border-slate-300 rounded-lg px-3 py-2 bg-slate-50 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 cursor-pointer">
             <option value="default">Mới cập nhật (Mặc định)</option>
             <option value="cap-desc">Tải trọng cho phép chở: Lớn → Nhỏ</option>

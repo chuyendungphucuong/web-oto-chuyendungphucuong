@@ -235,7 +235,7 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
             class="flex gap-6 overflow-x-auto no-scrollbar pb-2"
           >
             {feedTrucks.map((vehicle: any) => (
-              <div class="shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group">
+              <div class="shrink-0 w-[86%] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] min-w-[260px] bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group">
                 <div>
                   <div class="relative overflow-hidden bg-gray-100 h-48">
                     <span class="absolute top-3 left-3 bg-red-600/95 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-sm z-10 flex items-center gap-1">⭐ Sản Phẩm Thế Mạnh</span>
@@ -257,15 +257,25 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
                         ))}
                       </div>
                     )}
-                    <h3 class="font-bold text-base text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition">
+                    <h3 class="font-bold text-base text-gray-900 break-words leading-snug group-hover:text-blue-600 transition">
                       <a href={`/san-pham/${vehicle.slug}`}>{vehicle.name}</a>
                     </h3>
-                    <p class="text-xs text-gray-600 font-medium bg-gray-50 p-1.5 rounded line-clamp-1">
+                    <p class="text-xs text-gray-600 font-medium bg-gray-50 p-2 rounded break-words leading-relaxed">
                       {vehicle.specialSpecs ? Object.values(vehicle.specialSpecs)[0] : 'Đóng mới chuẩn cục Đăng kiểm'}
                     </p>
-                    <p class="text-red-600 font-black text-lg">
-                      {vehicle.price && Number(vehicle.price) > 0 ? `${Number(vehicle.price).toLocaleString('vi-VN')} đ` : 'Giá: Liên hệ'}
-                    </p>
+                    <div class="pt-1 bg-red-50/75 border border-red-100 rounded-xl p-2.5">
+                      <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
+                        💳 Vốn đối ứng nhận xe (20%):
+                      </p>
+                      <p class="text-red-600 font-black text-base sm:text-lg leading-snug break-words">
+                        {vehicle.price && Number(vehicle.price) > 0
+                          ? `Trả trước chỉ từ ~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu`
+                          : 'Trả trước chỉ từ 20% giá xe'}
+                      </p>
+                      <p class="text-[11px] font-semibold text-blue-700 mt-0.5">
+                        🔒 Báo giá chi tiết: Nhắn Zalo / Email
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div class="p-4 pt-0">
@@ -317,7 +327,7 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
             class="flex gap-6 overflow-x-auto no-scrollbar pb-2"
           >
             {otherVehicles.map((vehicle: any) => (
-              <div class="shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group">
+              <div class="shrink-0 w-[86%] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] min-w-[260px] bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group">
                 <div>
                   <div class="relative overflow-hidden bg-gray-100 h-48">
                     <span class="absolute top-3 left-3 bg-gradient-to-r from-red-600 to-orange-500 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-sm z-10 flex items-center gap-1">🔥 Sản Phẩm Nổi Bật</span>
@@ -339,15 +349,25 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
                         ))}
                       </div>
                     )}
-                    <h3 class="font-bold text-base text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition">
+                    <h3 class="font-bold text-base text-gray-900 break-words leading-snug group-hover:text-blue-600 transition">
                       <a href={`/san-pham/${vehicle.slug}`}>{vehicle.name}</a>
                     </h3>
-                    <p class="text-xs text-gray-600 font-medium bg-gray-50 p-1.5 rounded line-clamp-1">
+                    <p class="text-xs text-gray-600 font-medium bg-gray-50 p-2 rounded break-words leading-relaxed">
                       {vehicle.specialSpecs ? Object.values(vehicle.specialSpecs)[0] : 'Chính hãng chất lượng cao'}
                     </p>
-                    <p class="text-red-600 font-black text-lg">
-                      {vehicle.price && Number(vehicle.price) > 0 ? `${Number(vehicle.price).toLocaleString('vi-VN')} đ` : 'Giá: Liên hệ'}
-                    </p>
+                    <div class="pt-1 bg-red-50/75 border border-red-100 rounded-xl p-2.5">
+                      <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
+                        💳 Vốn đối ứng nhận xe (20%):
+                      </p>
+                      <p class="text-red-600 font-black text-base sm:text-lg leading-snug break-words">
+                        {vehicle.price && Number(vehicle.price) > 0
+                          ? `Trả trước chỉ từ ~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu`
+                          : 'Trả trước chỉ từ 20% giá xe'}
+                      </p>
+                      <p class="text-[11px] font-semibold text-blue-700 mt-0.5">
+                        🔒 Báo giá chi tiết: Nhắn Zalo / Email
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div class="p-4 pt-0">
@@ -404,7 +424,7 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
       </div>
 
       <!-- Thanh Tab Lọc Nhanh Theo Chuyên Mục -->
-      <div id="homeNewsTabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-6">
+      <div id="homeNewsTabs" class="flex flex-wrap items-center gap-2 pb-3 mb-6">
         <button
           type="button"
           data-news-tab="all"
@@ -444,11 +464,11 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
                   <span class="bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-md">{post.category || "Tin tức"}</span>
                   <span class="text-gray-400">{post.date}</span>
                 </div>
-                <h3 class="font-bold text-base text-gray-900 leading-snug group-hover:text-blue-600 transition line-clamp-2">
+                <h3 class="font-bold text-base text-gray-900 leading-snug group-hover:text-blue-600 transition break-words">
                   <a href={`/tin-tuc/${post.slug}`}>{post.title}</a>
                 </h3>
                 {post.excerpt && (
-                  <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">{post.excerpt}</p>
+                  <p class="text-xs text-gray-600 leading-relaxed break-words">{post.excerpt}</p>
                 )}
               </div>
             </div>
