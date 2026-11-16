@@ -4,7 +4,7 @@
     "name": "Xe Bồn Cám Thổi Chenglong 4 Chân (Dung Tích 30 Khối, Động Cơ Yuchai 330HP)",
     "category": "xe-tai-chuyen-dung",
     "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Xe Bồn Cám & Thực Phẩm",
+    "subCategory": "Xe bồn cám thức ăn chăn nuôi",
     "subKey": "bon-thuc-pham",
     "brand": "Chenglong",
     "price": 2280000000,
@@ -14,7 +14,11 @@
     ],
     "summary": "Giải pháp vận chuyển và bơm rót thức ăn chăn nuôi công nghệ cao: Xe bồn cám thổi Chenglong 4 chân dung tích 30 khối.",
     "description": "I. Tổng quan về Xe Bồn Cám Thổi Chenglong 4 Chân (30 Khối)",
-    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
     "roadTaxPerYear": 12480000,
     "insuranceTNDS": 4330000,
     "chassisSpecs": {
@@ -39,7 +43,7 @@
     "name": "Xe Khách Hyundai Solati 16 Chỗ Cao Cấp (Động Cơ Diesel 2.5L)",
     "category": "xe-khach",
     "categoryName": "Ô Tô Khách",
-    "subCategory": "Xe Khách 16 Chỗ",
+    "subCategory": "Xe khách 16 chỗ (Solati, Sunray)",
     "subKey": "16-cho",
     "brand": "Hyundai",
     "price": 1080000000,
@@ -49,7 +53,11 @@
     ],
     "summary": "Đẳng cấp xe khách 16 chỗ hạng sang: Hyundai Solati sở hữu không gian rộng rãi nhất phân khúc.",
     "description": "I. Tổng quan về Xe Khách Hyundai Solati 16 Chỗ",
-    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
     "roadTaxPerYear": 4680000,
     "insuranceTNDS": 3200000,
     "chassisSpecs": {
@@ -71,7 +79,7 @@
     "name": "Xe Cứu Hộ Giao Thông 3 Chức Năng Hino (Sàn Trượt, Cần Cẩu, Cần Kéo Xe)",
     "category": "xe-tai-chuyen-dung",
     "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Xe Cứu Hộ Giao Thông",
+    "subCategory": "Xe cứu hộ giao thông",
     "subKey": "cuu-ho",
     "brand": "Hino",
     "price": 1850000000,
@@ -81,7 +89,11 @@
     ],
     "summary": "Dòng xe cứu hộ giao thông đa năng tích hợp 3 trong 1: Sàn trượt chở xe, cần cẩu thủy lực và cần kéo xe phía sau.",
     "description": "I. Tổng quan về Xe Cứu Hộ Giao Thông Hino 3 Chức Năng",
-    "showrooms": ["TP. Hồ Chí Minh", "Tiền Giang", "An Giang"],
+    "showrooms": [
+      "TP. Hồ Chí Minh",
+      "Tiền Giang",
+      "An Giang"
+    ],
     "roadTaxPerYear": 10200000,
     "insuranceTNDS": 3500000,
     "chassisSpecs": {

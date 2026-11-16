@@ -12,7 +12,7 @@ const safeArray = (arr) => (Array.isArray(arr) ? arr : [
     slug: "faw-jh6-4-chan-bon-cam-truc-vit",
     name: "Xe Bồn Cám Trục Vít FAW JH6 4 Chân",
     brand: "FAW",
-    subCategory: "Xe Bồn Cám & Thực Phẩm",
+    subCategory: "Xe bồn cám thức ăn chăn nuôi",
     category: "xe-tai-chuyen-dung",
     subKey: "bon-thuc-pham",
     price: 2450000000,

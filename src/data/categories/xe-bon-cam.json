@@ -281,14 +281,15 @@
       "Vật liệu chế tạo bồn": "Thép SS400 chịu lực cao hoặc tùy chọn nâng cấp Inox SUS304",
       "Hệ thống xả hàng": "Trục vít cánh xoắn cơ học liên tục (Xả nhanh, vét sạch cám)",
       "Khối lượng bản thân (Sát-xi)": "10.360 kg",
-      "Trọng lượng toàn bộ (Tổng tải cho phép)": "34.000 kg (34 tấn)",
+      "Trọng lượng toàn bộ (Tổng tải cho phép)": "34.000 kg",
       "Kích thước tổng thể (D x R x C)": "11.875 x 2.500 x 3.700 mm",
       "Khoảng cách trục": "1.950 + 3.550 + 1.350 + 1.350 mm (Trục 3 là trục nâng hạ chịu tải)",
       "Động cơ": "YCK08360-50 (4 kỳ, 6 xi-lanh thẳng hàng, tăng áp)",
       "Thể tích làm việc (Dung tích xi-lanh)": "7.698 cm³",
       "Công suất cực đại": "265 kW / 2.200 vòng/phút (~360 Mã lực)",
       "Cỡ lốp": "12R22.5 đồng bộ toàn xe",
-      "Tiêu chuẩn chất lượng": "Đạt chuẩn đăng kiểm theo Thông tư 54/2024/TT-BGTVT"
+      "Tiêu chuẩn chất lượng": "Đạt chuẩn đăng kiểm theo Thông tư 54/2024/TT-BGTVT",
+      "Tải trọng cho phép chở": "21.500 kg"
     },
     "specialSpecs": {
       "Động cơ Yuchai 360PS mạnh mẽ": "Công suất 360 mã lực giúp xe vận hành khỏe khoắn, kéo tải trọng bồn 36 khối vượt mọi cung đường đèo dốc phức tạp",
@@ -344,7 +345,10 @@
       "Hệ thống vận hành xả": "Bơm thổi khí nén chuyên dụng công suất lớn",
       "Số trục xe": "03 trục chịu tải cao",
       "Hệ thống phanh": "Trang bị phanh ABS an toàn",
-      "Ứng dụng chính": "Vận chuyển cám bột, cám viên cho hệ thống trang trại và nhà máy"
+      "Ứng dụng chính": "Vận chuyển cám bột, cám viên cho hệ thống trang trại và nhà máy",
+      "Khối lượng bản thân": "10.500 kg",
+      "Tải trọng cho phép chở": "28.500 kg",
+      "Khối lượng toàn bộ (Tổng tải)": "39.000 kg"
     },
     "specialSpecs": {
       "Dung tích siêu lớn 48 khối": "Tối ưu hóa khối lượng hàng hóa chuyên chở trong mỗi chuyến, giảm đáng kể chi phí vận hành và nhiên liệu",
@@ -538,7 +542,10 @@
       "Mô-men xoắn cực đại": "138 Nm tại 4.400 vòng/phút",
       "Hộp số & Dẫn động": "Tự động 4 cấp (4AT) bền bỉ - Dẫn động cầu trước (FWD)",
       "Mức tiêu hao nhiên liệu": "Chỉ từ 5.8 – 6.6 lít xăng / 100km đường hỗn hợp",
-      "Cỡ lốp & Mâm xe": "195/60 R16"
+      "Cỡ lốp & Mâm xe": "195/60 R16",
+      "Số chỗ ngồi": "07 chỗ",
+      "Khối lượng bản thân": "1.175 kg",
+      "Khối lượng toàn bộ (Tổng tải)": "1.730 kg"
     },
     "specialSpecs": {
       "Ưu thế kinh tế vượt trội": "Chỉ với 300 triệu đồng sở hữu ngay xe 7 chỗ số tự động đời cao 2022, thu hồi vốn cực nhanh",
@@ -601,7 +608,10 @@
       "Hộp số & Cần số": "Tự động 8 cấp (8AT) - Cần số điện tử dạng núm xoay",
       "Hệ dẫn động": "Dẫn động cầu trước (FWD)",
       "Dung tích bình nhiên liệu": "72 lít (Tiêu hao chỉ khoảng 6.5 – 7.5 lít dầu/100km)",
-      "Cỡ lốp & La-zăng": "235/55 R19 (Mâm hợp kim 19 inch thể thao)"
+      "Cỡ lốp & La-zăng": "235/55 R19 (Mâm hợp kim 19 inch thể thao)",
+      "Số chỗ ngồi": "07 chỗ",
+      "Khối lượng bản thân": "2.150 kg",
+      "Khối lượng toàn bộ (Tổng tải)": "2.840 kg"
     },
     "specialSpecs": {
       "Nâng cấp đắt giá nhất": "Đã độ cặp ghế VIP Limousine thương gia ở hàng ghế giữa (Bản rộng, nâng đỡ toàn thân, chỉnh điện êm ái)",
@@ -1853,7 +1863,9 @@
       "Kích thước bao": "6.440 x 2.350 x 3.050",
       "Động cơ": "ISF3.8s5168, Diesel, 4 kỳ, 4 xi-lanh thẳng hàng, tăng áp",
       "Công suất lớn nhất": "125/2600 kW/rpm",
-      "Lốp xe": "Trục 1: 02 Lốp 8.25R16; Trục 2: 04 Lốp 8.25R16"
+      "Lốp xe": "Trục 1: 02 Lốp 8.25R16; Trục 2: 04 Lốp 8.25R16",
+      "Tải trọng cho phép chở": "5.200 kg",
+      "Khối lượng toàn bộ (Tổng tải)": "11.400 kg"
     },
     "specialSpecs": {
       "Dung tích bồn": "07 Khối",
@@ -1886,17 +1898,18 @@
     "promo": "🎁 Tặng 100% Bảo hiểm Thân Vỏ",
     "summary": "Xe bồn cám trục vít Isuzu FVM 3 chân mã kiểu loại FVM60TE5 tiêu chuẩn Euro 5, tổng tải trọng 25.000 kg, động cơ 6NX1E5RC mạnh mẽ dung tích 7.790 cm3, kích thước tối ưu, hệ thống xả cám trục vít thủy lực khép kín chuyên chở thức ăn chăn nuôi hiệu quả cao.",
     "description": "<p><strong>Xe Bồn Cám Trục Vít Isuzu FVM 3 Chân (FVM60TE5A): Đỉnh Cao Hiệu Suất &amp; Tiết Kiệm Vận Tải</strong></p><p><img src=\"/images/products/xe-bon-cam-truc-vit-isuzu-fvm-3-chan-fvm60te5a/xe-bon-cam-truc-vit-isuzu-fvm-3-chan-fvm60te5a-2.webp\"></p><p>Trong phân khúc xe tải nặng chuyên chở thức ăn chăn nuôi (cám xá) tại thị trường Việt Nam, dòng chassis 3 chân của Isuzu luôn chiếm trọn niềm tin của các doanh nghiệp vận tải lớn nhờ độ bền bỉ vượt trội và khả năng tiết kiệm nhiên liệu tối ưu.&nbsp;</p><p><strong>Xe bồn cám trục vít Isuzu FVM FVM60TE5</strong>&nbsp;là giải pháp vận chuyển quy mô lớn, giúp tối ưu hóa khối lượng hàng hóa trong mỗi chuyến đi, đáp ứng tiêu chuẩn khí thải mức 5 (Euro 5) mới nhất theo quy chuẩn hiện hành.</p><h4><br></h4><h4>Ưu Điểm Vượt Trội Về Thiết Kế &amp; Vận Hành</h4><ul><li><strong>Động cơ tiêu chuẩn Euro 5 tiên tiến:</strong>&nbsp;Sử dụng động cơ&nbsp;<strong>6NX1E5RC</strong>&nbsp;mạnh mẽ với công suất lớn đạt&nbsp;<strong>206 kW</strong>, dung tích 7.790 cm3, vận hành êm ái, bền bỉ và thân thiện với môi trường.</li><li><strong>Cơ cấu xả trục vít thủy lực thông minh:</strong>&nbsp;Quá trình bơm xả cám diễn ra hoàn toàn khép kín thông qua hệ thống trục vít kết hợp mô-tơ thủy lực, giúp đẩy cám lên các loại silo cao tại trang trại nhanh chóng, không bị bụi bẩn hay ẩm mốc.</li><li><strong>Nền xe Isuzu FVM danh tiếng:</strong>&nbsp;Khung gầm chắc chắn, hệ thống treo và phanh khí nén toàn phần an toàn tuyệt đối khi vận hành đường dài tải nặng.</li></ul><p><br></p>",
-    "subCategory": "Xe Bồn Cám & Thực Phẩm",
+    "subCategory": "Xe bồn cám thức ăn chăn nuôi",
     "images": [
       "/images/products/xe-bon-cam-truc-vit-isuzu-fvm-3-chan-fvm60te5a/xe-bon-cam-truc-vit-isuzu-fvm-3-chan-fvm60te5a-1.webp"
     ],
     "chassisSpecs": {
-      "Tải trọng": "15.00 kg",
+      "Tải trọng": "15.000 kg",
       "Hãng sản xuất / Model": "ISUZU / FVM (Mã kiểu loại: FVM60TE5A)",
       "Động cơ": "6NX1E5RC, Diesel, 4 kỳ, 6 xi-lanh thẳng hàng, turbo tăng áp",
       "Công suất lớn nhất": "206 kW",
       "Cỡ lốp": "1.00R20 đồng bộ",
-      "Kích thước xe": "9.710 x 2.485 x 3.010 mm"
+      "Kích thước xe": "9.710 x 2.485 x 3.010 mm",
+      "Khối lượng toàn bộ (Tổng tải)": "24.000 kg"
     },
     "specialSpecs": {
       "Dung tích bồn": "26 Khối (26m3) chuyên chở cám xá",
@@ -1915,7 +1928,8 @@
         "answer": "A: Có, Ô Tô Phú Cường hỗ trợ vay vốn ngân hàng lên đến 80% - 90% giá trị xe, thủ tục nhanh chóng, lãi suất ưu đãi và thời gian cho vay linh hoạt."
       }
     ],
-    "isFeatured": true
+    "isFeatured": true,
+    "subKey": "bon-thuc-pham"
   },
   {
     "slug": "xe-bon-cam-truc-vit-jac-n900",
@@ -1925,7 +1939,7 @@
     "promo": "🎁 Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 1 năm.",
     "summary": "Xe bồn cám trục vít Jac N900 Euro 5 thiết kế tối ưu hóa tải trọng cho phép chở thức ăn chăn nuôi, động cơ bền bỉ tiết kiệm nhiên liệu, hệ thống xả trục vít thủy lực khép kín giúp vận chuyển cám nhanh chóng và an toàn vệ sinh.",
     "description": "<p><strong>Xe Bồn Cám Trục Vít Jac N900: Giải Pháp Vận Chuyển Thức Ăn Chăn Nuôi Tối Ưu Cho Doanh Nghiệp</strong></p><p><br></p><p><img src=\"/images/products/xe-bon-cam-truc-vit-jac-n900/xe-bon-cam-truc-vit-jac-n900-9.webp\"></p><p>Trong lĩnh vực vận chuyển thức ăn chăn nuôi (cám xá) dạng rời, dòng xe tải trung cao cấp kết hợp bồn chuyên dùng luôn được các doanh nghiệp ưu tiên lựa chọn nhờ tính cơ động và chi phí đầu tư hợp lý.&nbsp;<strong>Xe bồn cám trục vít Jac N900</strong>là sự kết hợp hoàn hảo giữa nền xe cơ sở Jac N900 tiêu chuẩn khí thải Euro 5 mạnh mẽ và hệ thống bồn chứa gắn trục vít cơ khí chuyên dụng, mang lại hiệu quả vận hành kinh tế cao.</p><p><br></p><h4>1. Tổng Quan Về Thiết Kế &amp; Khả Năng Tải Trọng</h4><p>Jac N900 nổi bật với thiết kế cabin vuông hiện đại, không gian nội thất rộng rãi thoải mái cho các chuyến đi dài. Điểm nhấn quan trọng của xe là phần kết cấu chassis chịu lực cực tốt, giúp tối ưu hóa phần tải trọng cho phép chở hàng hóa (thức ăn chăn nuôi) đạt mức cao nhất trong phân khúc xe tải trung, giúp chủ xe tối ưu hóa khối lượng chuyên chở trong mỗi chuyến đi.</p><p><img src=\"/images/products/xe-bon-cam-truc-vit-jac-n900/xe-bon-cam-truc-vit-jac-n900-10.webp\"></p><p><br></p><h4>2. Ưu Điểm Vượt Trội Của Hệ Thống Bồn Cám Trục Vít Jac N900</h4><ul><li><strong>Vận hành khép kín, bảo quản cám tối ưu:</strong>&nbsp;Quá trình nạp và xả cám diễn ra hoàn toàn qua hệ thống trục vít thủy lực kín khít, ngăn chặn tuyệt đối tình trạng ẩm mốc, nhiễm khuẩn hay thất thoát cám.</li><li><strong>Động cơ Euro 5 mạnh mẽ, tiết kiệm:</strong>&nbsp;Trang bị khối động cơ tiêu chuẩn khí thải mới, vận hành êm ái trên mọi cung đường từ quốc lộ đến đường nông thôn vào trang trại.</li><li><strong>Linh hoạt tại các trang trại:</strong>&nbsp;Hệ thống ống xả trục vít có khả năng vươn cao và điều chỉnh góc độ linh hoạt, giúp bơm trực tiếp cám vào các loại silo cao tại các trang trại một cách nhanh chóng.</li></ul><p><br></p>",
-    "subCategory": "Xe Bồn Cám & Thực Phẩm",
+    "subCategory": "Xe bồn cám thức ăn chăn nuôi",
     "images": [
       "/images/products/xe-bon-cam-truc-vit-jac-n900/xe-bon-cam-truc-vit-jac-n900-1.webp",
       "/images/products/xe-bon-cam-truc-vit-jac-n900/xe-bon-cam-truc-vit-jac-n900-2.webp",
@@ -1963,7 +1977,8 @@
         "answer": "A: Xe được thiết kế cải tạo đồng bộ giữa chassis Jac N900 và thể tích bồn chứa để đảm bảo tổng tải trọng tuân thủ đúng quy định đăng kiểm hiện hành, giúp xe lưu thông hợp pháp trên đường."
       }
     ],
-    "isFeatured": true
+    "isFeatured": true,
+    "subKey": "bon-thuc-pham"
   },
   {
     "slug": "xe-bon-cam-truc-vit-sat-faw-jh6-4-chan",
@@ -1973,7 +1988,7 @@
     "promo": "🎁 Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm.",
     "summary": "Xe bồn cám trục vít FAW JH6 4 chân dung tích 28 khối, động cơ 370HP mạnh mẽ, hệ thống xả cám thủy lực khép kín, giải pháp vận chuyển thức ăn chăn nuôi toàn diện cho các tập đoàn và trang trại lớn.",
     "description": "<p><strong>Xe Bồn Cám Trục Vít FAW JH6 4 Chân: Giải Pháp Vận Chuyển Thức Ăn Chăn Nuôi Toàn Diện</strong></p><p>Trong ngành công nghiệp chăn nuôi công nghiệp hiện đại, việc vận chuyển thức ăn chăn nuôi (cám xá) từ nhà máy đến các trang trại lớn đòi hỏi phương tiện phải có độ bền bỉ cao, khối lượng chuyên chở lớn và đặc biệt là hệ thống xả hàng kín khít, an toàn vệ sinh.&nbsp;<strong>Xe bồn cám trục vít FAW JH6 4 chân</strong>&nbsp;chính là lời giải toàn diện, mang lại hiệu quả kinh tế vượt trội cho các doanh nghiệp vận tải và tập đoàn chăn nuôi.</p><p><br></p><p><img src=\"/images/products/xe-bon-cam-truc-vit-sat-faw-jh6-4-chan/xe-bon-cam-truc-vit-sat-faw-jh6-4-chan-11.webp\"></p><h4><strong>1. Tổng Quan Về Thiết Kế &amp; Vận Hành</strong></h4><p>Được phát triển trên nền xe chassis tải nặng FAW JH6 nhập khẩu nguyên chiếc, mẫu xe chuyên dùng này nổi bật với thiết kế hiện đại, khả năng chịu tải siêu hạng và động cơ mạnh mẽ. Hệ thống bồn chứa kết hợp trục vít cơ khí giúp quá trình nạp và xả cám diễn ra hoàn toàn khép kín, chống ẩm mốc, hạn chế tối đa thất thoát và đảm bảo tiêu chuẩn vệ sinh an toàn thực phẩm tuyệt đối.</p><p><br></p><h4><img src=\"/images/products/xe-bon-cam-truc-vit-sat-faw-jh6-4-chan/xe-bon-cam-truc-vit-sat-faw-jh6-4-chan-12.webp\"></h4><h4><strong>2. Ưu Điểm Vượt Trội Của Xe Bồn Cám FAW JH6</strong></h4><ul><li><strong>Hiệu suất vận hành kinh tế:</strong>&nbsp;Động cơ 370HP mạnh mẽ nhưng cực kỳ tiết kiệm nhiên liệu, giúp tối ưu chi phí vận chuyển đường dài.</li><li><strong>Bảo quản cám nguyên vẹn:</strong>&nbsp;Quá trình vận chuyển và bơm xả khép kín hoàn toàn giúp cám không bị ẩm ướt, không nhiễm khuẩn, không lẫn tạp chất hay bụi bẩn từ môi trường bên ngoài.</li><li><strong>Tải trọng cao, mau thu hồi vốn:</strong>&nbsp;Khung gầm chassis khỏe khoắn cho phép xe chuyên chở khối lượng hàng hóa lớn, giảm thiểu số chuyến đi và tiết kiệm nhân công.</li><li><strong>Tiện nghi vượt trội cho tài xế:</strong>&nbsp;Cabin JH6 tiêu chuẩn châu Âu với không gian sinh hoạt thoải mái, 2 giường nằm rộng rãi, giảm thiểu mệt mỏi cho các chuyến giao hàng liên tỉnh kéo dài.</li></ul><p><br></p>",
-    "subCategory": "Xe Bồn Cám & Thực Phẩm",
+    "subCategory": "Xe bồn cám thức ăn chăn nuôi",
     "images": [
       "/images/products/xe-bon-cam-truc-vit-sat-faw-jh6-4-chan/xe-bon-cam-truc-vit-sat-faw-jh6-4-chan-1.webp",
       "/images/products/xe-bon-cam-truc-vit-sat-faw-jh6-4-chan/xe-bon-cam-truc-vit-sat-faw-jh6-4-chan-2.webp",
@@ -1993,7 +2008,8 @@
       "Động cơ": "CA6DL3-37E5 (Công nghệ FAW/Weichai), 4 kỳ, 6 xi-lanh thẳng hàng, turbo tăng áp",
       "Công suất cực đại": "370 Mã lực (HP)",
       "Hộp số": "Fast Gear (12 số tiến, 2 số lùi, 2 tầng số)",
-      "Tiêu chuẩn khí thải": "Euro 5"
+      "Tiêu chuẩn khí thải": "Euro 5",
+      "Khối lượng toàn bộ (Tổng tải)": "30.000 kg"
     },
     "specialSpecs": {
       "Dung tích bồn": "28 Khối (28 m3) chia thành 4 khoang độc lập",
@@ -2012,7 +2028,8 @@
         "answer": "A: Bồn có dung tích thiết kế chuẩn khoảng 28 khối, được chia thành nhiều khoang độc lập giúp chủ xe dễ dàng phân phối các loại cám khác nhau trong cùng một chuyến vận chuyển."
       }
     ],
-    "isFeatured": true
+    "isFeatured": true,
+    "subKey": "bon-thuc-pham"
   },
   {
     "slug": "xe-bon-cam-thoi-chenglong-4-chan",
