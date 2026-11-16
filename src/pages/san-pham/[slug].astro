@@ -37,27 +37,42 @@ const dynamicRoadTax = FINANCIAL_CONFIG.getRoadTax(metrics.totalWeightKg, metric
 const dynamicInsuranceTNDS = FINANCIAL_CONFIG.getInsuranceTNDS(metrics.payloadKg, metrics.seats, metrics.isBus);
 const fixedServiceAndPlate = FINANCIAL_CONFIG.serviceAndInspectionFee + FINANCIAL_CONFIG.plateFeeProvince;
 
-// 1. Tạo cấu trúc Product Schema (JSON-LD) cho Google & AI Overviews
+// 1. Tạo cấu trúc Product Schema (JSON-LD) ngầm cho Google & AI Overviews
+const fullPublishedPrice = Number(vehicle.price || 0);
+const downPayment20 = fullPublishedPrice > 0 ? Math.round(fullPublishedPrice * 0.2) : 0;
+
 const productSchema = {
   "@context": "https://schema.org/",
   "@type": "Product",
   "name": vehicle.name,
-  "image": images,
+  "sku": vehicle.slug,
+  "image": images.map((img: string) => img.startsWith('http') ? img : `https://chuyendungphucuong.vn${img}`),
   "description": vehicle.summary || vehicle.name,
   "brand": {
     "@type": "Brand",
     "name": vehicle.brand || "Ô Tô Phú Cường"
   },
   "offers": {
-    "@type": "Offer",
-    "url": `https://phucuongauto.vn/san-pham/${vehicle.slug}`,
+    "@type": "AggregateOffer",
+    "url": `https://chuyendungphucuong.vn/san-pham/${vehicle.slug}`,
     "priceCurrency": "VND",
-    "price": vehicle.price ? Math.round(Number(vehicle.price) * 0.2) : 0,
+    "lowPrice": downPayment20,
+    "highPrice": fullPublishedPrice,
+    "price": fullPublishedPrice,
+    "offerCount": 1,
+    "priceValidUntil": "2027-12-31",
     "itemCondition": "https://schema.org/NewCondition",
     "availability": "https://schema.org/InStock",
     "seller": {
-      "@type": "Organization",
-      "name": "Ô Tô Phú Cường - Nhà Cung Cấp Và Sản Xuất Ô Tô Chuyên Dùng"
+      "@type": "AutoDealer",
+      "name": "Ô Tô Chuyên Dùng Phú Cường",
+      "telephone": "0922777703",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "2466 Lê Khả Phiêu (Quốc Lộ 1A), Bình Chánh",
+        "addressLocality": "TP. Hồ Chí Minh",
+        "addressCountry": "VN"
+      }
     }
   }
 };
