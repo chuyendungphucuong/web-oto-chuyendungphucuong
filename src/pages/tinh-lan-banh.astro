@@ -299,7 +299,7 @@ const firstCar = enrichedVehicles[0] || {
                   {firstCar.name}
                 </h3>
                 <p id="cardVehiclePrice" class="text-xs sm:text-sm font-black text-red-600">
-                  {Number(firstCar.price) > 0 ? `💳 Trả trước (20%): ~${Math.round((Number(firstCar.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu` : '💳 Trả trước chỉ từ 20% giá xe'}
+                  {Number(firstCar.price) > 0 ? `💳 Trả trước chỉ từ: ~${Math.round((Number(firstCar.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu` : '💳 Trả trước chỉ từ 20% giá xe'}
                 </p>
               </div>
               <div class="shrink-0">
@@ -1544,7 +1544,7 @@ const firstCar = enrichedVehicles[0] || {
         } else {
           const dpTrieu = basePrice > 0 ? Math.round((basePrice * 0.2) / 1000000) : 0;
           cardVehiclePrice.innerText = dpTrieu > 0
-            ? '💳 Trả trước (20%): ~' + dpTrieu.toLocaleString('vi-VN') + ' Triệu'
+            ? '💳 Trả trước chỉ từ: ~' + dpTrieu.toLocaleString('vi-VN') + ' Triệu'
             : '💳 Trả trước chỉ từ 20% giá xe';
         }
       }

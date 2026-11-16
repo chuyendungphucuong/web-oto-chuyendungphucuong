@@ -32,9 +32,66 @@ function extractPostYouTubeId(url: string) {
   return m ? m[1] : null;
 }
 const postYtId = extractPostYouTubeId(post?.videoUrl || post?.youtubeUrl || "");
+
+const postImageUrl = post.image
+  ? (post.image.startsWith("http") ? post.image : `https://chuyendungphucuong.vn${post.image}`)
+  : "https://chuyendungphucuong.vn/Logo.png";
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": post.title,
+  "description": post.excerpt || post.summary || post.title,
+  "image": [postImageUrl],
+  "datePublished": "2026-10-01T08:00:00+07:00",
+  "dateModified": "2026-11-16T08:00:00+07:00",
+  "author": {
+    "@type": "Person",
+    "name": post.author || "Đặng Ngọc Hoàng Vũ"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ô Tô Chuyên Dùng Phú Cường",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://chuyendungphucuong.vn/Logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `https://chuyendungphucuong.vn/tin-tuc/${post.slug}`
+  }
+};
+
+const newsBreadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Trang chủ",
+      "item": "https://chuyendungphucuong.vn/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Kiến thức & Tin tức",
+      "item": "https://chuyendungphucuong.vn/tin-tuc"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": post.title,
+      "item": `https://chuyendungphucuong.vn/tin-tuc/${post.slug}`
+    }
+  ]
+};
 ---
 
 <BaseLayout title={`${post.title} | Kiến thức Ô Tô Chuyên Dùng Phú Cường`} description={post.excerpt || post.summary || post.title} image={post.image}>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(newsBreadcrumbSchema)} />
   <main class="container mx-auto px-4 py-8 max-w-7xl">
     <nav class="text-sm text-gray-500 mb-6">
       <a href="/" class="hover:text-blue-600">Trang chủ</a> &gt; 

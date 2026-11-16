@@ -37,17 +37,21 @@ const dynamicRoadTax = FINANCIAL_CONFIG.getRoadTax(metrics.totalWeightKg, metric
 const dynamicInsuranceTNDS = FINANCIAL_CONFIG.getInsuranceTNDS(metrics.payloadKg, metrics.seats, metrics.isBus);
 const fixedServiceAndPlate = FINANCIAL_CONFIG.serviceAndInspectionFee + FINANCIAL_CONFIG.plateFeeProvince;
 
-// 1. Tạo cấu trúc Product Schema (JSON-LD) ngầm cho Google & AI Overviews
-const fullPublishedPrice = Number(vehicle.price || 0);
-const downPayment20 = fullPublishedPrice > 0 ? Math.round(fullPublishedPrice * 0.2) : 0;
+// 1. Tạo cấu trúc Product Schema + AggregateOffer (Chuẩn Google Rich Snippets & Bảo mật giá gốc)
+const basePublicPrice = Number(vehicle.price || 0);
+const lowDownPayment = basePublicPrice > 0 ? Math.round((basePublicPrice * 0.18) / 1000000) * 1000000 : 150000000;
+const highDownPayment = basePublicPrice > 0 ? Math.round((basePublicPrice * 0.25) / 1000000) * 1000000 : 350000000;
+const fullImages = images.map((img: string) => img.startsWith('http') ? img : `https://chuyendungphucuong.vn${img}`);
 
 const productSchema = {
   "@context": "https://schema.org/",
   "@type": "Product",
   "name": vehicle.name,
   "sku": vehicle.slug,
-  "image": images.map((img: string) => img.startsWith('http') ? img : `https://chuyendungphucuong.vn${img}`),
+  "mpn": vehicle.slug.toUpperCase(),
+  "image": fullImages,
   "description": vehicle.summary || vehicle.name,
+  "category": vehicle.subCategory || "Xe Tải Chuyên Dùng",
   "brand": {
     "@type": "Brand",
     "name": vehicle.brand || "Ô Tô Phú Cường"
@@ -56,20 +60,18 @@ const productSchema = {
     "@type": "AggregateOffer",
     "url": `https://chuyendungphucuong.vn/san-pham/${vehicle.slug}`,
     "priceCurrency": "VND",
-    "lowPrice": downPayment20,
-    "highPrice": fullPublishedPrice,
-    "price": fullPublishedPrice,
-    "offerCount": 1,
-    "priceValidUntil": "2027-12-31",
+    "lowPrice": lowDownPayment,
+    "highPrice": highDownPayment,
+    "offerCount": 3,
     "itemCondition": "https://schema.org/NewCondition",
     "availability": "https://schema.org/InStock",
     "seller": {
       "@type": "AutoDealer",
       "name": "Ô Tô Chuyên Dùng Phú Cường",
-      "telephone": "0922777703",
+      "telephone": "+84922777703",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "2466 Lê Khả Phiêu (Quốc Lộ 1A), Bình Chánh",
+        "streetAddress": "2466 Lê Khả Phiêu, Xã Bình Chánh",
         "addressLocality": "TP. Hồ Chí Minh",
         "addressCountry": "VN"
       }
@@ -77,7 +79,33 @@ const productSchema = {
   }
 };
 
-// 2. Tạo cấu trúc FAQ Schema (JSON-LD) nếu xe có danh sách câu hỏi
+// 2. Tạo cấu trúc BreadcrumbList Schema giúp hiển thị đường dẫn phân cấp trên Google Search
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Trang chủ",
+      "item": "https://chuyendungphucuong.vn/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": vehicle.subCategory || "Xe Chuyên Dùng",
+      "item": `https://chuyendungphucuong.vn/san-pham?cat=${vehicle.subKey || 'xe-tai-chuyen-dung'}`
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": vehicle.name,
+      "item": `https://chuyendungphucuong.vn/san-pham/${vehicle.slug}`
+    }
+  ]
+};
+
+// 3. Tạo cấu trúc FAQ Schema (JSON-LD) nếu xe có danh sách câu hỏi
 const faqSchema = faqs.length > 0 ? {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -213,6 +241,7 @@ function extractShortBadge(v) {
 <BaseLayout title={`${vehicle.name} | Ô Tô Chuyên Dùng Phú Cường`} description={vehicle.summary || vehicle.name} image={images[0]}>
   <!-- NHÚNG MÃ JSON-LD SCHEMA ẨN CHO SEO & AI OVERVIEWS -->
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
 
   <main class="container mx-auto px-4 py-8 max-w-7xl">
@@ -290,7 +319,7 @@ function extractShortBadge(v) {
           
           <div class="space-y-2.5 text-sm">
             <div class="flex justify-between items-center border-b border-gray-200/80 pb-2">
-              <span class="text-gray-600">Vốn đối ứng ban đầu (Trả trước ~20%):</span>
+              <span class="text-gray-600">Vốn đối ứng nhận xe:</span>
               <span class="font-extrabold text-red-600 text-base">
                 {Number(vehicle.price || 0) > 0
                   ? `~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu đ`
@@ -392,7 +421,7 @@ function extractShortBadge(v) {
           
           <div class="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white p-5 rounded-2xl mb-6 border border-blue-800 shadow-lg space-y-3.5">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/15 pb-2.5">
-              <span class="text-xs font-extrabold text-amber-400 uppercase tracking-wider">💳 Vốn đối ứng ban đầu (20% giá trị xe):</span>
+              <span class="text-xs font-extrabold text-amber-400 uppercase tracking-wider">💳 Vốn đối ứng nhận xe:</span>
               <span class="text-[11px] font-bold text-emerald-300 bg-emerald-950/90 border border-emerald-500/40 px-2.5 py-0.5 rounded-full">Hỗ trợ vay 80% – Lãi suất ưu đãi</span>
             </div>
 
