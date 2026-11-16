@@ -600,14 +600,55 @@ const firstCar = enrichedVehicles[0] || {
               <h2 class="text-lg font-bold text-gray-900">
                 📊 Chi Tiết Dự Toán Chi Phí &amp; Vốn Đối Ứng
               </h2>
-              <button
-                type="button"
-                id="btnToggleSaleMode"
-                title="Dành cho Chuyên viên Phú Cường"
-                class="text-[11px] font-bold text-slate-400 hover:text-blue-700 bg-white border border-slate-200 px-2.5 py-1 rounded-lg transition cursor-pointer shrink-0"
-              >
-                🔒 Nội bộ
-              </button>
+              <div class="relative flex items-center gap-1.5 shrink-0">
+                <div id="inlinePinBox" class="hidden absolute right-0 top-9 z-50 w-72 bg-white border-2 border-blue-700 rounded-2xl p-4 shadow-2xl space-y-2.5">
+                  <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                    <span class="text-[11px] font-black text-blue-950 uppercase">🛡️ Mở Khóa Chế Độ Nội Bộ</span>
+                    <button type="button" id="btnCloseInlinePin" class="text-slate-400 hover:text-red-600 font-bold text-xs cursor-pointer">✕</button>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-600 mb-0.5">1. Mã PIN Sale:</label>
+                    <input
+                      type="password"
+                      id="inputInlineSalePin"
+                      inputmode="numeric"
+                      maxlength="8"
+                      autocomplete="off"
+                      placeholder="Nhập mã PIN..."
+                      class="w-full text-xs font-extrabold text-slate-900 border border-slate-300 rounded-lg px-2.5 py-1.5 outline-none focus:border-blue-600 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-600 mb-0.5">2. Mật khẩu bảo mật:</label>
+                    <input
+                      type="password"
+                      id="inputInlineSalePass"
+                      autocomplete="current-password"
+                      placeholder="Nhập mật khẩu..."
+                      class="w-full text-xs font-extrabold text-slate-900 border border-slate-300 rounded-lg px-2.5 py-1.5 outline-none focus:border-blue-600 bg-white"
+                    />
+                  </div>
+                  <label class="flex items-center gap-2 pt-0.5 cursor-pointer select-none">
+                    <input type="checkbox" id="chkRememberDevice" checked class="w-4 h-4 accent-blue-700 rounded cursor-pointer" />
+                    <span class="text-[11px] font-bold text-slate-700">Ghi nhớ trên thiết bị của tôi</span>
+                  </label>
+                  <button
+                    type="button"
+                    id="btnConfirmInlinePin"
+                    class="w-full bg-blue-700 hover:bg-blue-800 text-white text-xs font-black py-2 rounded-xl cursor-pointer transition shadow-sm"
+                  >
+                    🔓 Mở Khóa Ngay
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  id="btnToggleSaleMode"
+                  title="Dành cho Chuyên viên Phú Cường"
+                  class="text-[11px] font-bold text-slate-500 hover:text-blue-700 bg-white border border-slate-200 px-2.5 py-1 rounded-lg transition cursor-pointer shrink-0"
+                >
+                  🔒 Nội bộ
+                </button>
+              </div>
             </div>
 
             <div class="space-y-2.5 text-sm">
@@ -1108,19 +1149,12 @@ const firstCar = enrichedVehicles[0] || {
       };
     }
 
-    // Bảo mật 2 lớp Chế độ Chuyên Viên Nội Bộ + Ghi nhớ thiết bị cá nhân (90 ngày)
-    const SALE_AUTH_HASH = '509e460dbfaea93bd9456939e807e93b6f7ac32ca4bd980aa231fd82e0e60e01';
-    const SALE_DEVICE_KEY = 'pc_trusted_device_token_v2';
-    const SALE_SESSION_KEY = 'pc_sale_auth_session_v2';
-    const REMEMBER_TTL_MS = 90 * 24 * 60 * 60 * 1000; // Ghi nhớ thiết bị 90 ngày (tự gia hạn mỗi lần vào)
+    // Bảo mật 2 lớp Chế độ Chuyên Viên Nội Bộ + Ghi nhớ thiết bị cá nhân
+    const EXPECTED_TOKEN = 'NzcwM3xIdmQyMDExODlA'; // Base64("7703|Hvd201189@")
+    const SALE_DEVICE_KEY = 'pc_sale_trusted_device_v3';
+    const SALE_SESSION_KEY = 'pc_sale_session_v3';
     let isSaleMode = false;
     let isDeviceTrusted = false;
-
-    function getDeviceBindSignature() {
-      const ua = navigator.userAgent || '';
-      const pf = navigator.platform || '';
-      return btoa(unescape(encodeURIComponent(ua.slice(0, 48) + '|' + pf))).slice(0, 32);
-    }
 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('sale')) {
@@ -1132,17 +1166,10 @@ const firstCar = enrichedVehicles[0] || {
 
     try {
       localStorage.removeItem('phucuong_sale_mode');
-      const devSig = getDeviceBindSignature();
-      const trustedRaw = JSON.parse(localStorage.getItem(SALE_DEVICE_KEY) || 'null');
-      const sessionRaw = JSON.parse(sessionStorage.getItem(SALE_SESSION_KEY) || 'null');
-
-      if (trustedRaw && trustedRaw.hash === SALE_AUTH_HASH && trustedRaw.sig === devSig && (Date.now() - trustedRaw.ts) < REMEMBER_TTL_MS) {
+      if (localStorage.getItem(SALE_DEVICE_KEY) === EXPECTED_TOKEN) {
         isSaleMode = true;
         isDeviceTrusted = true;
-        // Tự động gia hạn thêm 90 ngày mỗi lần anh mở trang trên thiết bị của anh
-        trustedRaw.ts = Date.now();
-        localStorage.setItem(SALE_DEVICE_KEY, JSON.stringify(trustedRaw));
-      } else if (sessionRaw && sessionRaw.hash === SALE_AUTH_HASH) {
+      } else if (sessionStorage.getItem(SALE_SESSION_KEY) === EXPECTED_TOKEN) {
         isSaleMode = true;
       }
     } catch (e) {}
@@ -1153,6 +1180,7 @@ const firstCar = enrichedVehicles[0] || {
     const rolloutLeadForm = document.getElementById('rolloutPageLeadForm') as HTMLFormElement | null;
     const btnToggleSaleMode = document.getElementById('btnToggleSaleMode');
     const btnLockSaleMode = document.getElementById('btnLockSaleMode');
+    const btnTempPreviewPublic = document.getElementById('btnTempPreviewPublic');
     const btnResetDefaultFees = document.getElementById('btnResetDefaultFees');
 
     const inputDiscount = document.getElementById('inputDiscountAmount') as HTMLInputElement | null;
@@ -1161,7 +1189,6 @@ const firstCar = enrichedVehicles[0] || {
     const extraFeeRowsContainer = document.getElementById('extraFeeRowsContainer');
     const btnAddExtraFeeRow = document.getElementById('btnAddExtraFeeRow');
 
-    // Các phần tử của 8 Hạng mục mặc định
     const chkFeeReg = document.getElementById('chkFeeReg') as HTMLInputElement | null;
     const inputCustomRegRate = document.getElementById('inputCustomRegRate') as HTMLInputElement | null;
     const valFeeReg = document.getElementById('valFeeReg') as HTMLInputElement | null;
@@ -1189,7 +1216,6 @@ const firstCar = enrichedVehicles[0] || {
     const chkFeeHtx = document.getElementById('chkFeeHtx') as HTMLInputElement | null;
     const valFeeHtx = document.getElementById('valFeeHtx') as HTMLInputElement | null;
 
-    // Theo dõi xem chuyên viên có tự gõ sửa tay số tiền của mục nào không
     const manualOverride = {
       reg: false,
       plate: false,
@@ -1226,7 +1252,6 @@ const firstCar = enrichedVehicles[0] || {
       return Math.max(0, basePrice - discount);
     }
 
-    // Tự động tính lại các ô số tiền mặc định từ Biểu phí (trừ khi chuyên viên đã tự gõ sửa tay trực tiếp vào ô tiền)
     function syncAutoFeeInputs() {
       const netPrice = getNetVehiclePrice();
       const isBus = selectType?.value === 'bus';
@@ -1267,7 +1292,6 @@ const firstCar = enrichedVehicles[0] || {
       }
     }
 
-    // Sự kiện khi thay đổi % Trước bạ hoặc % Bảo hiểm thân vỏ -> Tính lại tiền tương ứng
     inputCustomRegRate?.addEventListener('input', () => {
       manualOverride.reg = false;
       syncAutoFeeInputs();
@@ -1279,7 +1303,6 @@ const firstCar = enrichedVehicles[0] || {
       recalculateAll();
     });
 
-    // Sự kiện khi chuyên viên tự gõ số tiền trực tiếp vào từng ô
     valFeeReg?.addEventListener('input', () => { manualOverride.reg = true; recalculateAll(); });
     valFeePlate?.addEventListener('input', () => { manualOverride.plate = true; recalculateAll(); });
     valFeeRoad?.addEventListener('input', () => { manualOverride.road = true; recalculateAll(); });
@@ -1293,7 +1316,6 @@ const firstCar = enrichedVehicles[0] || {
       chk?.addEventListener('change', recalculateAll);
     });
 
-    // Khi đổi Giá xe, Chiết khấu, Tỉnh/thành, Hình thức ĐK, Tải trọng, Tổng tải, Số ghế -> Cập nhật tự động theo Biểu phí
     [inputPrice, inputDiscount].forEach((el) => {
       el?.addEventListener('input', () => {
         syncAutoFeeInputs();
@@ -1361,34 +1383,111 @@ const firstCar = enrichedVehicles[0] || {
         saleActiveFees?.classList.add('hidden');
         if (btnToggleSaleMode) {
           btnToggleSaleMode.innerText = '🔒 Nội bộ';
-          btnToggleSaleMode.className = 'text-[11px] font-bold text-slate-400 hover:text-blue-700 bg-white border border-slate-200 px-2.5 py-1 rounded-lg transition cursor-pointer shrink-0';
+          btnToggleSaleMode.className = 'text-[11px] font-bold text-slate-500 hover:text-blue-700 bg-white border border-slate-200 px-2.5 py-1 rounded-lg transition cursor-pointer shrink-0';
         }
       }
       syncAutoFeeInputs();
       recalculateAll();
     }
 
-    btnToggleSaleMode?.addEventListener('click', () => {
-      if (isSaleMode) {
-        isSaleMode = false;
-        localStorage.removeItem('phucuong_sale_mode');
+    const inlinePinBox = document.getElementById('inlinePinBox');
+    const inputInlineSalePin = document.getElementById('inputInlineSalePin') as HTMLInputElement | null;
+    const inputInlineSalePass = document.getElementById('inputInlineSalePass') as HTMLInputElement | null;
+    const chkRememberDevice = document.getElementById('chkRememberDevice') as HTMLInputElement | null;
+    const btnConfirmInlinePin = document.getElementById('btnConfirmInlinePin');
+    const btnCloseInlinePin = document.getElementById('btnCloseInlinePin');
+
+    function verifyAndUnlockPin() {
+      const enteredPin = inputInlineSalePin?.value?.trim() || '';
+      const enteredPass = inputInlineSalePass?.value?.trim() || '';
+
+      if (!enteredPin || !enteredPass) {
+        alert('⚠️ Vui lòng nhập đầy đủ Mã PIN và Mật khẩu bảo mật!');
+        inputInlineSalePass?.focus();
+        return;
+      }
+
+      let encoded = '';
+      try {
+        encoded = btoa(enteredPin + '|' + enteredPass);
+      } catch (e) {
+        encoded = '';
+      }
+
+      if (encoded === EXPECTED_TOKEN) {
+        isSaleMode = true;
+        try {
+          sessionStorage.setItem(SALE_SESSION_KEY, EXPECTED_TOKEN);
+          if (chkRememberDevice?.checked) {
+            isDeviceTrusted = true;
+            localStorage.setItem(SALE_DEVICE_KEY, EXPECTED_TOKEN);
+          } else {
+            localStorage.removeItem(SALE_DEVICE_KEY);
+          }
+        } catch (e) {}
+
+        inlinePinBox?.classList.add('hidden');
+        if (inputInlineSalePin) inputInlineSalePin.value = '';
+        if (inputInlineSalePass) inputInlineSalePass.value = '';
         applySaleModeUI();
       } else {
-        const pin = prompt('🔑 Nhập mã PIN Chuyên viên Phú Cường để mở khóa Báo giá & Xuất PDF:');
-        if (pin && pin.trim() === SALE_PIN) {
-          isSaleMode = true;
-          localStorage.setItem('phucuong_sale_mode', 'true');
-          applySaleModeUI();
-        } else if (pin !== null) {
-          alert('❌ Mã PIN chưa đúng!');
+        alert('❌ Mã PIN hoặc Mật khẩu bảo mật chưa đúng!');
+        if (inputInlineSalePass) {
+          inputInlineSalePass.value = '';
+          inputInlineSalePass.focus();
+        }
+      }
+    }
+
+    btnToggleSaleMode?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isSaleMode) {
+        isSaleMode = false;
+        applySaleModeUI();
+      } else if (isDeviceTrusted || localStorage.getItem(SALE_DEVICE_KEY) === EXPECTED_TOKEN) {
+        isSaleMode = true;
+        isDeviceTrusted = true;
+        applySaleModeUI();
+      } else if (inlinePinBox) {
+        inlinePinBox.classList.toggle('hidden');
+        if (!inlinePinBox.classList.contains('hidden')) {
+          setTimeout(() => inputInlineSalePin?.focus(), 40);
         }
       }
     });
 
+    btnTempPreviewPublic?.addEventListener('click', () => {
+      isSaleMode = false;
+      applySaleModeUI();
+    });
+
+    btnCloseInlinePin?.addEventListener('click', () => {
+      inlinePinBox?.classList.add('hidden');
+    });
+
+    btnConfirmInlinePin?.addEventListener('click', (e) => {
+      e.preventDefault();
+      verifyAndUnlockPin();
+    });
+
+    [inputInlineSalePin, inputInlineSalePass].forEach((inp) => {
+      inp?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          verifyAndUnlockPin();
+        }
+      });
+    });
+
     btnLockSaleMode?.addEventListener('click', () => {
       isSaleMode = false;
-      localStorage.removeItem('phucuong_sale_mode');
+      isDeviceTrusted = false;
+      try {
+        localStorage.removeItem(SALE_DEVICE_KEY);
+        sessionStorage.removeItem(SALE_SESSION_KEY);
+      } catch (e) {}
       applySaleModeUI();
+      alert('🔒 Đã đăng xuất và xóa ghi nhớ trên thiết bị này.');
     });
 
     function loadSelectedCarDefaults() {
