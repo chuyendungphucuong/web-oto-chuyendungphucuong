@@ -38,7 +38,8 @@ const enrichedVehicles = vehicleList.map((v: any) => {
     brand: v.brand || 'Khác',
     subKey: rawKey,
     subCategory: syncedSubCategory,
-    price: v.price || 0,
+    price: Number(v.price || 0),
+    minPrice: Number(v.minPrice || v.price || 0),
     image: firstImg,
     isBus: metrics.isBus,
     payloadKg: metrics.payloadKg,
@@ -321,6 +322,7 @@ const firstCar = enrichedVehicles[0] || {
                   data-brand={v.brand}
                   data-cat={v.subCategory}
                   data-price={v.price}
+                  data-minprice={v.minPrice || v.price || 0}
                   data-image={v.image}
                   data-chassis={JSON.stringify(v.chassisSpecs)}
                   data-special={JSON.stringify(v.specialSpecs)}
@@ -346,14 +348,30 @@ const firstCar = enrichedVehicles[0] || {
             </div>
 
             <!-- Giá xe & Chiết khấu -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-extrabold text-slate-800 mb-1">💰 Giá xe tiêu chuẩn (VNĐ):</label>
-                <input type="number" id="inputCustomPrice" step="1000000" class="w-full p-2 border-2 border-red-400 rounded-xl text-sm font-black text-red-600 bg-white outline-none focus:border-red-600" />
+            <div class="space-y-2">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-extrabold text-slate-800 mb-1">💰 Giá công bố CSBH (VNĐ):</label>
+                  <input type="number" id="inputCustomPrice" step="1000000" class="w-full p-2 border-2 border-red-400 rounded-xl text-sm font-black text-red-600 bg-white outline-none focus:border-red-600" />
+                </div>
+                <div>
+                  <label class="block text-xs font-extrabold text-emerald-800 mb-1">🎁 Chiết khấu / Giảm giá (VNĐ):</label>
+                  <input type="number" id="inputDiscountAmount" value="0" step="1000000" placeholder="Tự động = Giá công bố - Giá tối thiểu" class="w-full p-2 border-2 border-emerald-400 rounded-xl text-sm font-black text-emerald-700 bg-white outline-none focus:border-emerald-600" />
+                </div>
               </div>
-              <div>
-                <label class="block text-xs font-extrabold text-emerald-800 mb-1">🎁 Chiết khấu / Giảm giá (VNĐ):</label>
-                <input type="number" id="inputDiscountAmount" value="0" step="1000000" placeholder="VD: 15000000" class="w-full p-2 border-2 border-emerald-400 rounded-xl text-sm font-black text-emerald-700 bg-white outline-none focus:border-emerald-600" />
+              <div class="bg-white/90 border border-amber-300 rounded-xl px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div class="flex flex-wrap items-center gap-3">
+                  <span class="text-slate-600">📌 Giá tối thiểu CSBH: <strong id="lblCsbhMinPrice" class="text-red-700 font-black">0 đ</strong></span>
+                  <span class="text-slate-600">🎯 Giá bán sau CK: <strong id="lblNetSellingPrice" class="text-emerald-700 font-black">0 đ</strong></span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" id="btnApplyMaxDiscount" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg cursor-pointer transition">
+                    Áp giá tối thiểu
+                  </button>
+                  <button type="button" id="btnZeroDiscount" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-[11px] font-bold px-2.5 py-1 rounded-lg cursor-pointer transition">
+                    Bán đúng giá công bố (CK = 0)
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1348,9 +1366,13 @@ const firstCar = enrichedVehicles[0] || {
       const opt = selectModel.options[selectModel.selectedIndex];
       if (!opt) return;
 
-      const rawPrice = opt.getAttribute('data-price') || '0';
-      if (inputPrice) inputPrice.value = rawPrice;
-      if (inputDiscount) inputDiscount.value = '0';
+      const rawPrice = Number(opt.getAttribute('data-price') || '0');
+      const rawMinPrice = Number(opt.getAttribute('data-minprice') || rawPrice);
+      const defaultCsbhDiscount = (rawPrice > 0 && rawMinPrice > 0 && rawPrice > rawMinPrice) ? (rawPrice - rawMinPrice) : 0;
+      if (inputPrice) inputPrice.value = String(rawPrice);
+      if (inputDiscount) inputDiscount.value = String(defaultCsbhDiscount);
+      const lblMinEl = document.getElementById('lblCsbhMinPrice');
+      if (lblMinEl) lblMinEl.innerText = rawMinPrice > 0 ? rawMinPrice.toLocaleString('vi-VN') + ' đ' : 'Chưa cấu hình';
 
       const isBus = opt.getAttribute('data-isbus') === 'true';
       if (selectType) selectType.value = isBus ? 'bus' : 'special';
@@ -1779,6 +1801,59 @@ const firstCar = enrichedVehicles[0] || {
 
     loadSelectedCarDefaults();
     applySaleModeUI();
+
+    // Xử lý trực tiếp 2 nút [Áp giá tối thiểu] và [Bán đúng giá công bố (CK = 0)]
+    function applyCsbhPricingMode(mode: 'min' | 'public') {
+      if (!selectModel) return;
+      const opt = selectModel.options[selectModel.selectedIndex];
+      if (!opt) return;
+
+      const publishedPrice = Number(opt.getAttribute('data-price') || inputPrice?.value || '0');
+      const floorPrice = Number(opt.getAttribute('data-minprice') || publishedPrice);
+
+      if (inputPrice && (!inputPrice.value || Number(inputPrice.value) === 0)) {
+        inputPrice.value = String(publishedPrice);
+      }
+
+      const currentBasePrice = Number(inputPrice?.value || publishedPrice);
+      const maxDiscount = (currentBasePrice > floorPrice && floorPrice > 0) ? (currentBasePrice - floorPrice) : 0;
+
+      if (inputDiscount) {
+        inputDiscount.value = mode === 'min' ? String(maxDiscount) : '0';
+      }
+
+      // Bỏ cờ sửa tay của Trước bạ & Bảo hiểm thân vỏ để tự động tính lại theo Giá sau chiết khấu mới
+      manualOverride.reg = false;
+      manualOverride.bodyIns = false;
+
+      // Hiệu ứng nhấp nháy nhẹ trên nút vừa bấm và cập nhật giao diện ngay lập tức
+      const btnMin = document.getElementById('btnApplyMaxDiscount');
+      const btnPub = document.getElementById('btnZeroDiscount');
+      if (btnMin && btnPub) {
+        if (mode === 'min') {
+          btnMin.className = 'bg-emerald-700 text-white text-[11px] font-black px-2.5 py-1 rounded-lg cursor-pointer transition ring-2 ring-emerald-400';
+          btnPub.className = 'bg-slate-200 hover:bg-slate-300 text-slate-700 text-[11px] font-bold px-2.5 py-1 rounded-lg cursor-pointer transition';
+        } else {
+          btnPub.className = 'bg-blue-700 text-white text-[11px] font-black px-2.5 py-1 rounded-lg cursor-pointer transition ring-2 ring-blue-400';
+          btnMin.className = 'bg-emerald-600/80 hover:bg-emerald-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg cursor-pointer transition';
+        }
+      }
+
+      syncAutoFeeInputs();
+      recalculateAll();
+    }
+
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      if (target.closest('#btnApplyMaxDiscount')) {
+        e.preventDefault();
+        applyCsbhPricingMode('min');
+      } else if (target.closest('#btnZeroDiscount')) {
+        e.preventDefault();
+        applyCsbhPricingMode('public');
+      }
+    });
 
     // Xử lý gửi Form Báo Giá & Lịch Trả Góp của Khách hàng về Web3Forms
     const btnRolloutSubmit = document.getElementById('btnSubmitRolloutPageLead') as HTMLButtonElement | null;

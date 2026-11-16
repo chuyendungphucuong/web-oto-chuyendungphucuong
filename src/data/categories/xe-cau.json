@@ -78,7 +78,8 @@
         "answer": "Cẩu gập Palfinger có khả năng gấp gọn nép sát sau cabin khi di chuyển, không chiếm dụng không gian thùng chở hàng 8m. Khi làm việc, các khớp gập linh hoạt giúp luồn lách qua cửa hẹp nhà xưởng, gầm cầu hoặc hạ hàng vào góc khuất mà cẩu thước thẳng không thể tiếp cận được."
       }
     ],
-    "isFeatured": false
+    "isFeatured": false,
+    "minPrice": 2990000000
   },
   {
     "slug": "xe-cau-tu-hanh-dongfeng-kr180-soosan-5-2-tan",
@@ -160,7 +161,8 @@
         "answer": "Xe trang bị động cơ Cummins Mỹ ISB180-50 dung tích 5.900 cc (6 xi-lanh thẳng hàng tăng áp) cho công suất 180 mã lực, kết hợp hộp số 2 tầng Fast Gear 8 cấp. Cấu hình này giúp xe vận hành đầm chắc, leo dốc khỏe, tiết kiệm nhiên liệu tối ưu và trích công suất PTO ổn định cho bơm cẩu thủy lực làm việc liên tục."
       }
     ],
-    "isFeatured": false
+    "isFeatured": false,
+    "minPrice": 1850000000
   },
   {
     "slug": "xe-cau-tu-hanh-dongfeng-captain-c-unic-5-tan",
@@ -237,6 +239,7 @@
         "answer": "Xe trang bị khối động cơ Yuchai YC4S170-50 dung tích 3.767 cm3 tích hợp turbo tăng áp, sản sinh công suất cực đại 125 kW (170 mã lực) tại 2.600 vòng/phút. Tiêu chuẩn Euro 5 cùng hệ thống phun dầu điện tử Common Rail giúp xe vận hành đầm chắc, leo dốc khỏe và cung cấp nguồn trích lực PTO ổn định cho cẩu thủy lực."
       }
     ],
-    "isFeatured": false
+    "isFeatured": false,
+    "minPrice": 1690000000
   }
 ]

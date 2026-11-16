@@ -74,7 +74,8 @@
         "answer": "Xe trang bị động cơ Diesel 4 kỳ, 4 xi-lanh thẳng hàng tăng áp HFC4DE1-1D đạt tiêu chuẩn khí thải Euro 5 hiện đại, tích hợp công nghệ phun nhiên liệu điện tử Common Rail áp suất cao giúp xe vận hành êm ái, bốc máy ở dải tốc độ thấp và tối ưu hóa mức tiêu hao nhiên liệu trên đường trường."
       }
     ],
-    "isFeatured": true
+    "isFeatured": true,
+    "minPrice": 679000000
   },
   {
     "slug": "xe-khach-16-cho-hyundai-solati",
@@ -143,6 +144,7 @@
         "answer": "Nhờ trần cao, thân dài, cách âm chuẩn Châu Âu và khoang hành lý rộng rãi, Hyundai Solati là lựa chọn số 1 cho các đơn vị chạy tuyến cố định cao cấp, công ty lữ hành đón tiếp khách du lịch quốc tế, đưa đón chuyên gia - cán bộ công nhân viên và nâng cấp hoán cải thành dòng xe Limousine VIP 10 - 12 chỗ."
       }
     ],
-    "isFeatured": false
+    "isFeatured": false,
+    "minPrice": 1080000000
   }
 ]

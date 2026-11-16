@@ -7,7 +7,7 @@
     "subCategory": "Xe nâng đầu chở máy công trình",
     "subKey": "nang-dau",
     "brand": "Foton",
-    "price": 1280000000,
+    "price": 1290000000,
     "promo": "Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm",
     "images": [
       "/images/products/xe-nang-daucang-keo-foton/xe-nang-daucang-keo-foton-5.webp",
@@ -63,7 +63,8 @@
         "answer": "Có, Ô Tô Phú Cường hỗ trợ gói tài chính vay ngân hàng lên đến 75% - 90% giá trị xe, thủ tục duyệt hồ sơ nhanh chóng, tặng kèm 100% Bảo hiểm Thân Vỏ và bảo hành chính hãng tại 3 Showroom TP.HCM, Tiền Giang, An Giang."
       }
     ],
-    "isFeatured": false
+    "isFeatured": false,
+    "minPrice": 1270000000
   },
   {
     "slug": "xe-nang-dau-jac-n900e5-cho-xe-may-cong-trinh",
@@ -73,7 +74,7 @@
     "subCategory": "Xe nâng đầu chở máy công trình",
     "subKey": "nang-dau",
     "brand": "JAC",
-    "price": 910000000,
+    "price": 925000000,
     "promo": "Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm",
     "images": [
       "/images/products/xe-nang-dau-jac-n900e5-cho-xe-may-cong-trinh/xe-nang-dau-jac-n900e5-cho-xe-may-cong-trinh-2.webp",
@@ -136,6 +137,7 @@
         "answer": "Xe trang bị động cơ B4.5EV210 (4 kỳ, 4 xi-lanh thẳng hàng, tăng áp) với dung tích xi-lanh 4.460 cm3, sản sinh công suất cực đại lên tới 154 kW (khoảng 210 mã lực) tại 2.300 vòng/phút, vận hành mạnh mẽ và tiết kiệm nhiên liệu."
       }
     ],
-    "isFeatured": true
+    "isFeatured": true,
+    "minPrice": 905000000
   }
 ]

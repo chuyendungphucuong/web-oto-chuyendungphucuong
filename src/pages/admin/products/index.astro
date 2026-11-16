@@ -54,7 +54,7 @@ mainMenu.forEach((menu: any) => {
             <th class="p-4">Hình ảnh</th>
             <th class="p-4">Tên sản phẩm & Hãng</th>
             <th class="p-4">Danh mục</th>
-            <th class="p-4">Sửa nhanh Giá Niêm Yết (VNĐ)</th>
+            <th class="p-4">Giá Công Bố &amp; Giá Tối Thiểu (VNĐ)</th>
             <th class="p-4 text-center">Hiện Trang Chủ</th>
             <th class="p-4 text-right">Thao tác</th>
           </tr>
@@ -81,20 +81,34 @@ mainMenu.forEach((menu: any) => {
                   <span class="bg-slate-100 text-slate-700 text-xs font-semibold px-2.5 py-1 rounded-md">{v.subCategory || 'Chuyên dùng'}</span>
                 </td>
                 <td class="p-4">
-                  <div class="flex items-center gap-2">
-                    <input 
-                      type="number" 
-                      value={v.price} 
-                      data-slug={v.slug}
-                      class="price-input p-2 border border-slate-300 rounded-lg w-40 font-bold text-red-600 focus:ring-2 focus:ring-blue-600 outline-none"
-                    />
-                    <button 
-                      type="button"
-                      data-slug={v.slug}
-                      class="btn-save-price bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-2 rounded-lg cursor-pointer transition"
-                    >
-                      Lưu
-                    </button>
+                  <div class="flex flex-col gap-1.5 min-w-[240px]">
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[10px] font-bold text-slate-500 w-16 shrink-0">Công bố:</span>
+                      <input 
+                        type="number" 
+                        step="1000000"
+                        value={v.price ?? 0} 
+                        data-slug={v.slug}
+                        class="price-input p-1.5 border border-slate-300 rounded-lg w-36 text-xs font-extrabold text-red-600 focus:ring-2 focus:ring-blue-600 outline-none"
+                      />
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[10px] font-bold text-emerald-700 w-16 shrink-0">Tối thiểu:</span>
+                      <input 
+                        type="number" 
+                        step="1000000"
+                        value={v.minPrice ?? v.price ?? 0} 
+                        data-slug={v.slug}
+                        class="minprice-input p-1.5 border border-emerald-400 bg-emerald-50/30 rounded-lg w-36 text-xs font-extrabold text-emerald-700 focus:ring-2 focus:ring-emerald-600 outline-none"
+                      />
+                      <button 
+                        type="button"
+                        data-slug={v.slug}
+                        class="btn-save-price bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition shrink-0"
+                      >
+                        Lưu
+                      </button>
+                    </div>
                   </div>
                 </td>
                 <td class="p-4 text-center">
@@ -137,12 +151,14 @@ mainMenu.forEach((menu: any) => {
         const slug = target.getAttribute('data-slug');
         const row = target.closest('tr');
         const newPrice = row.querySelector('.price-input').value;
+        const minInput = row.querySelector('.minprice-input');
+        const newMinPrice = minInput ? minInput.value : newPrice;
 
         try {
           const res = await fetch('/api/update-vehicle', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slug, price: newPrice })
+            body: JSON.stringify({ slug, price: newPrice, minPrice: newMinPrice })
           });
           const result = await res.json();
           if (result.success) {

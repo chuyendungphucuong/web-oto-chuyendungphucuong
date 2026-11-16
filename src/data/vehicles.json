@@ -7,7 +7,7 @@
     "subCategory": "Xe bồn cám thức ăn chăn nuôi",
     "subKey": "bon-thuc-pham",
     "brand": "Chenglong",
-    "price": 2280000000,
+    "price": 2310000000,
     "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng bộ ống thổi cám chuyên dụng & Định vị GPS",
     "images": [
       "/images/bon-cam-thoi-chenglong-4c-inox-1.jpg"
@@ -36,7 +36,8 @@
         "question": "Xe bồn cám thổi Chenglong 4 chân có dung tích bao nhiêu khối?",
         "answer": "Xe có dung tích thùng bồn lớn lên đến 30 khối (30 m³)."
       }
-    ]
+    ],
+    "minPrice": 2260000000
   },
   {
     "slug": "xe-khach-16-cho-hyundai-solati",
@@ -72,7 +73,8 @@
         "question": "Hyundai Solati 16 chỗ có kích thước lớn hơn các đối thủ cùng phân khúc không?",
         "answer": "Có. Solati là dòng xe có kích thước tổng thể lớn nhất phân khúc xe 16 chỗ tại Việt Nam."
       }
-    ]
+    ],
+    "minPrice": 1080000000
   },
   {
     "slug": "xe-cuu-ho-giao-thong-3-chuc-nang",
@@ -109,6 +111,7 @@
         "question": "Xe cứu hộ giao thông Hino có thể cẩu và kéo cùng lúc được không?",
         "answer": "Có. Thiết kế tích hợp cho phép xe vừa chở trên sàn, vừa cẩu hoặc kéo phía sau."
       }
-    ]
+    ],
+    "minPrice": 1850000000
   }
 ]

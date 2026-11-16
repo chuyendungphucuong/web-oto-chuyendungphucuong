@@ -7,7 +7,7 @@
     "subCategory": "Xe cứu hộ giao thông",
     "subKey": "cuu-ho",
     "brand": "Foton",
-    "price": 1750000000,
+    "price": 1760000000,
     "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng bộ cáp tời chuyên dụng & Định vị GPS",
     "isFeatured": false,
     "images": [
@@ -55,7 +55,8 @@
         "question": "Phú Cường Auto có hỗ trợ mua xe cứu hộ trả góp qua ngân hàng không?",
         "answer": "Có. Chúng tôi hỗ trợ vay vốn mua xe lên đến 75% - 80% giá trị xe, thủ tục nhanh gọn tại TP.HCM, Tiền Giang và An Giang."
       }
-    ]
+    ],
+    "minPrice": 1740000000
   },
   {
     "slug": "xe-cuu-ho-giao-thong-foton-2-chuc-nang",
@@ -65,7 +66,7 @@
     "subCategory": "Xe cứu hộ giao thông",
     "subKey": "cuu-ho",
     "brand": "FOTON",
-    "price": 780000000,
+    "price": 790000000,
     "promo": "Hỗ trợ vay trả góp ngân hàng 75% - 85%, trọn gói hồ sơ đăng ký đăng kiểm, giao xe tận nơi trên toàn quốc.",
     "isFeatured": true,
     "images": [
@@ -124,6 +125,7 @@
         "question": "Ô Tô Phú Cường có hỗ trợ trả góp khi mua xe cứu hộ Foton không?",
         "answer": "Có. Ô Tô Phú Cường hỗ trợ vay mua xe trả góp qua ngân hàng lên đến 75% - 85% giá trị xe, thủ tục nhanh chóng và trọn gói đăng ký đăng kiểm."
       }
-    ]
+    ],
+    "minPrice": 770000000
   }
 ]

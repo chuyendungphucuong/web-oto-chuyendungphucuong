@@ -72,7 +72,8 @@
         "answer": "Xe trang bị động cơ Cummins Mỹ B4.5EV210 dung tích 4.460 cm3 sản sinh công suất cực đại 154 kW (~210 mã lực) tại 2.300 vòng/phút, đạt chuẩn Euro 5. Cỗ máy 210 mã lực giúp xe đề-pa tải nặng leo dốc rất êm, bứt tốc mượt trên cao tốc và tiết kiệm dầu vượt trội nhờ hệ thống phun điện tử Common Rail."
       }
     ],
-    "isFeatured": false
+    "isFeatured": false,
+    "minPrice": 1000000000
   },
   {
     "slug": "dau-keo-howo-th7-440hp-gan-cau-palfinger-10-tan",
@@ -153,7 +154,8 @@
         "answer": "Cẩu gập robot Palfinger có khả năng gấp xếp cực gọn nép sát phía sau lưng cabin (bề rộng gập chỉ 2,5m), hoàn toàn không chiếm không gian mâm xoay của rơ-moóc. Nhờ đó, phương tiện vừa đảm nhiệm chức năng kéo rơ-moóc chở hàng nặng 35 tấn đường dài, vừa tự bốc dỡ máy móc, cọc cừ, sắt thép tại công trường mà không cần tốn chi phí thuê xe cẩu phụ trợ."
       }
     ],
-    "isFeatured": false
+    "isFeatured": false,
+    "minPrice": 2560000000
   },
   {
     "slug": "dau-keo-faw-j6p-gan-cau-palfinger-10-tan",
@@ -235,6 +237,7 @@
         "answer": "Cẩu gập Palfinger có khả năng gấp xếp gọn nép sát sau lưng cabin với bề rộng chỉ 2,5m, giải phóng hoàn toàn không gian xoay chuyển của mâm kéo. Xe vừa kéo theo rơ-moóc chở hàng nặng 36.2 tấn đường dài, vừa tự cẩu bốc máy móc, kết cấu thép tại công trường bằng remote điều khiển từ xa mà không cần thuê xe cẩu phụ trợ."
       }
     ],
-    "isFeatured": false
+    "isFeatured": false,
+    "minPrice": 2660000000
   }
 ]
