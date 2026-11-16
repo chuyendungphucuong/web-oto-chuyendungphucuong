@@ -343,7 +343,10 @@ const firstCar = enrichedVehicles[0] || {
               <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded uppercase">🔓 Chế độ Chuyên Viên Nội Bộ (Chuẩn Biểu Phí 11/2026)</span>
               <div class="flex items-center gap-3">
                 <button type="button" id="btnResetDefaultFees" class="text-[11px] font-bold text-blue-700 hover:underline cursor-pointer">🔄 Khôi phục mặc định theo Biểu phí</button>
-                <button type="button" id="btnLockSaleMode" class="text-[11px] font-bold text-red-600 hover:underline cursor-pointer">Khóa lại</button>
+                <div class="flex items-center gap-2.5">
+                <button type="button" id="btnTempPreviewPublic" class="text-[11px] font-bold text-slate-700 bg-white border border-slate-300 px-2 py-0.5 rounded hover:bg-slate-100 cursor-pointer" title="Tạm ẩn giá gốc để cho khách xem màn hình (Không mất ghi nhớ mật khẩu)">👁️ Xem như khách</button>
+                <button type="button" id="btnLockSaleMode" class="text-[11px] font-bold text-red-600 hover:underline cursor-pointer" title="Xóa ghi nhớ mật khẩu trên thiết bị này">🚪 Đăng xuất</button>
+              </div>
               </div>
             </div>
 
@@ -1105,17 +1108,44 @@ const firstCar = enrichedVehicles[0] || {
       };
     }
 
-    // Trạng thái Chế độ Chuyên Viên Nội Bộ (PIN mặc định: 7703)
-    const SALE_PIN = '7703';
+    // Bảo mật 2 lớp Chế độ Chuyên Viên Nội Bộ + Ghi nhớ thiết bị cá nhân (90 ngày)
+    const SALE_AUTH_HASH = '509e460dbfaea93bd9456939e807e93b6f7ac32ca4bd980aa231fd82e0e60e01';
+    const SALE_DEVICE_KEY = 'pc_trusted_device_token_v2';
+    const SALE_SESSION_KEY = 'pc_sale_auth_session_v2';
+    const REMEMBER_TTL_MS = 90 * 24 * 60 * 60 * 1000; // Ghi nhớ thiết bị 90 ngày (tự gia hạn mỗi lần vào)
     let isSaleMode = false;
+    let isDeviceTrusted = false;
+
+    function getDeviceBindSignature() {
+      const ua = navigator.userAgent || '';
+      const pf = navigator.platform || '';
+      return btoa(unescape(encodeURIComponent(ua.slice(0, 48) + '|' + pf))).slice(0, 32);
+    }
 
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('sale') === SALE_PIN) {
-      localStorage.setItem('phucuong_sale_mode', 'true');
+    if (urlParams.has('sale')) {
+      urlParams.delete('sale');
+      const cleanQuery = urlParams.toString();
+      const cleanUrl = window.location.pathname + (cleanQuery ? '?' + cleanQuery : '');
+      window.history.replaceState({}, document.title, cleanUrl);
     }
-    if (localStorage.getItem('phucuong_sale_mode') === 'true') {
-      isSaleMode = true;
-    }
+
+    try {
+      localStorage.removeItem('phucuong_sale_mode');
+      const devSig = getDeviceBindSignature();
+      const trustedRaw = JSON.parse(localStorage.getItem(SALE_DEVICE_KEY) || 'null');
+      const sessionRaw = JSON.parse(sessionStorage.getItem(SALE_SESSION_KEY) || 'null');
+
+      if (trustedRaw && trustedRaw.hash === SALE_AUTH_HASH && trustedRaw.sig === devSig && (Date.now() - trustedRaw.ts) < REMEMBER_TTL_MS) {
+        isSaleMode = true;
+        isDeviceTrusted = true;
+        // Tự động gia hạn thêm 90 ngày mỗi lần anh mở trang trên thiết bị của anh
+        trustedRaw.ts = Date.now();
+        localStorage.setItem(SALE_DEVICE_KEY, JSON.stringify(trustedRaw));
+      } else if (sessionRaw && sessionRaw.hash === SALE_AUTH_HASH) {
+        isSaleMode = true;
+      }
+    } catch (e) {}
 
     const staffOnlyControls = document.getElementById('staffOnlyControls');
     const staffOnlyResults = document.getElementById('staffOnlyResults');
