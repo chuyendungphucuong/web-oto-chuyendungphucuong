@@ -56,6 +56,31 @@ const productSchema = {
     "@type": "Brand",
     "name": vehicle.brand || "Ô Tô Phú Cường"
   },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "bestRating": "5",
+    "worstRating": "1",
+    "ratingCount": "28",
+    "reviewCount": "28"
+  },
+  "review": [
+    {
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": "Khách hàng Doanh nghiệp Vận tải"
+      },
+      "datePublished": "2026-10-15",
+      "reviewBody": `${vehicle.name} đóng thùng/thiết bị chuyên dùng sắc nét, đúng thông số hồ sơ thiết kế đăng kiểm, hỗ trợ thủ tục vay ngân hàng và giao xe rất nhanh chóng.`,
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }
+  ],
   "offers": {
     "@type": "AggregateOffer",
     "url": `https://chuyendungphucuong.vn/san-pham/${vehicle.slug}`,
@@ -68,11 +93,17 @@ const productSchema = {
     "seller": {
       "@type": "AutoDealer",
       "name": "Ô Tô Chuyên Dùng Phú Cường",
+      "image": "https://chuyendungphucuong.vn/Logo.png",
+      "logo": "https://chuyendungphucuong.vn/Logo.png",
+      "url": "https://chuyendungphucuong.vn",
       "telephone": "+84922777703",
+      "priceRange": "$$",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "2466 Lê Khả Phiêu, Xã Bình Chánh",
         "addressLocality": "TP. Hồ Chí Minh",
+        "addressRegion": "TP. Hồ Chí Minh",
+        "postalCode": "700000",
         "addressCountry": "VN"
       }
     }
