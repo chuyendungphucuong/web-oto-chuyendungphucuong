@@ -55,20 +55,16 @@
       "url": "/danh-muc/xe-khach",
       "children": [
         {
-          "title": "Xe khách 16 chỗ (Solati, Sunray)",
-          "url": "/danh-muc/16-cho"
+          "title": "Xe 16 - 29 chỗ",
+          "url": "/danh-muc/xe-16-29-cho"
         },
         {
-          "title": "Xe khách 29 chỗ (County, Kinglong, Thaco)",
-          "url": "/danh-muc/29-cho"
+          "title": "Xe 30 - 47 chỗ",
+          "url": "/danh-muc/xe-30-47-cho"
         },
         {
-          "title": "Xe khách 34 chỗ bóng hơi",
-          "url": "/danh-muc/34-cho"
-        },
-        {
-          "title": "Xe khách 47 chỗ & Giường nằm",
-          "url": "/danh-muc/47-cho"
+          "title": "Xe Limousine",
+          "url": "/danh-muc/xe-limousine"
         }
       ]
     },

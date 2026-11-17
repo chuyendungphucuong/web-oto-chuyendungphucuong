@@ -19,11 +19,7 @@ export function getStaticPaths() {
     'nang-dau',
     'ep-rac',
     'quet-duong-hut-bui',
-    'xe-khach',
-    '16-cho',
-    '29-cho',
-    '34-cho',
-    '47-cho',
+    'xe-khach', 'xe-16-29-cho', 'xe-30-47-cho', 'xe-limousine', '16-cho', '29-cho', '34-cho', '47-cho',
     'xe-cu',
     'xe-4-7-cho-cu',
     'xe-tai-cu',
@@ -58,6 +54,12 @@ export function getStaticPaths() {
 const { cat } = Astro.params;
 const rawCat = (cat || '').trim();
 
+if (rawCat === '16-cho' || rawCat === '29-cho') {
+  return Astro.redirect('/danh-muc/xe-16-29-cho', 301);
+}
+if (rawCat === '34-cho' || rawCat === '47-cho') {
+  return Astro.redirect('/danh-muc/xe-30-47-cho', 301);
+}
 if (rawCat === 'xe-nang-khac') {
   return Astro.redirect('/danh-muc/xe-dau-keo-gan-cau', 301);
 }
@@ -133,6 +135,24 @@ const CATEGORY_SEO_META: Record<string, { title: string; h1: string; desc: strin
     h1: 'Xe Tải Chở Gia Cầm Chuyên Dùng',
     desc: 'Phân phối và đóng mới xe tải chở gia cầm (chở gà, vịt) thùng lồng thông thoáng nhiều tầng trên nền Isuzu, Hino, Hyundai, Chenglong, Dongfeng hỗ trợ vay 80%.',
     intro: 'Dòng xe tải chuyên dùng chở gia cầm thiết kế thùng khung xương kẽm/Inox 304 chắc chắn, sàn chống trượt dễ vệ sinh khử khuẩn và tối ưu đối lưu không khí.'
+  },
+  'xe-16-29-cho': {
+    title: 'Xe Khách 16 - 29 Chỗ Chính Hãng (Solati, Sunray, County, Thaco) | Phú Cường Auto',
+    h1: 'Xe Khách 16 - 29 Chỗ',
+    desc: 'Phân phối các dòng xe khách từ 16 chỗ đến 29 chỗ chính hãng phục vụ đưa đón cán bộ nhân viên, chạy tuyến cố định và hợp đồng du lịch. Hỗ trợ vay 80%.',
+    intro: 'Tổng hợp các dòng xe khách 16 chỗ - 29 chỗ vận hành êm ái, tiết kiệm nhiên liệu, nội thất rộng rãi và đầy đủ hồ sơ đăng kiểm.'
+  },
+  'xe-30-47-cho': {
+    title: 'Xe Khách 30 - 47 Chỗ & Giường Nằm Chính Hãng Giá Tốt | Phú Cường Auto',
+    h1: 'Xe Khách 30 - 47 Chỗ',
+    desc: 'Bảng giá và thông số kỹ thuật các dòng xe khách 30 chỗ, 34 chỗ, 47 chỗ ghế ngồi và giường nằm cao cấp. Hỗ trợ trả góp ngân hàng lên đến 80%.',
+    intro: 'Các mẫu xe khách 30 - 47 chỗ thân dài, hệ thống treo bầu hơi êm ái, động cơ công suất lớn chuyên chạy tuyến đường dài và du lịch lữ hành.'
+  },
+  'xe-limousine': {
+    title: 'Xe Limousine Cao Cấp (9 - 29 Chỗ) Nội Thất Thương Gia | Phú Cường Auto',
+    h1: 'Xe Limousine Cao Cấp',
+    desc: 'Thiết kế và phân phối các dòng xe Limousine ghế massage hạng thương gia trên nền Hyundai Solati, Ford Transit, Thaco, Samco chuẩn đăng kiểm.',
+    intro: 'Dòng xe Limousine nâng cấp nội thất thương gia sang trọng, ghế bọc da cao cấp tích hợp massage, cổng sạc USB và hệ thống giải trí hiện đại.'
   },
   'xe-khach': {
     title: 'Xe Khách & Minibus Gaz, Thaco, Hyundai Chính Hãng Giá Tốt',
@@ -214,6 +234,22 @@ const seoMeta = CATEGORY_SEO_META[rawCat] || {
 const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
 const filteredVehicles = vehicleList.filter((v: any) => {
   const vSubKey = normalizeStr(v.subKey || '');
+  const nNorm = normalizeStr(v.name || '');
+  // Hỗ trợ lọc thông minh theo 3 phân khúc Xe Khách mới
+  if (normCat === 'xe-16-29-cho') {
+    const isBusCat = normalizeStr(v.category || '').includes('khach') || vSubKey.includes('cho') || vSubKey.includes('khach');
+    if (!isBusCat || nNorm.includes('limousine')) return false;
+    return vSubKey === 'xe-16-29-cho' || /\b(1[6-9]|2[0-9])\s*cho\b/.test(nNorm);
+  }
+  if (normCat === 'xe-30-47-cho') {
+    const isBusCat = normalizeStr(v.category || '').includes('khach') || vSubKey.includes('cho') || vSubKey.includes('khach');
+    if (!isBusCat || nNorm.includes('limousine')) return false;
+    return vSubKey === 'xe-30-47-cho' || /\b(3[0-9]|4[0-7])\s*cho\b/.test(nNorm) || nNorm.includes('giuong nam');
+  }
+  if (normCat === 'xe-limousine') {
+    return vSubKey === 'xe-limousine' || nNorm.includes('limousine');
+  }
+
   const vSubCat = normalizeStr(v.subCategory || '');
   const vCat = normalizeStr(v.category || '');
   const normMenuTitle = normalizeStr(menuMatchedTitle);
@@ -246,6 +282,18 @@ const filteredVehicles = vehicleList.filter((v: any) => {
     (normCat === 'xe-cho-gia-cam' && vSubCat.includes('gia cam'))
   );
 });
+
+// Màng lọc an toàn: Khi ở danh mục Xe Khách, loại bỏ triệt để xe tải chở gia cầm, xe bồn, xe cứu hộ...
+if (normCat.includes("xe-khach") || normCat.includes("-cho")) {
+  const nonBusKeywords = ["gia cam", "cho ga", "cho vit", "bon ", "cuu ho", "xe cau", "xe ben", "dong lanh", "ep rac", "tai thung"];
+  for (let i = filteredVehicles.length - 1; i >= 0; i--) {
+    const nNorm = normalizeStr(filteredVehicles[i]?.name || "");
+    const scNorm = normalizeStr(filteredVehicles[i]?.subCategory || "");
+    if (nonBusKeywords.some((kw) => nNorm.includes(kw) || scNorm.includes(kw))) {
+      filteredVehicles.splice(i, 1);
+    }
+  }
+}
 
 function extractWeightsInKg(v: any): { payloadKg: number; grossKg: number } {
   const cs = v?.chassisSpecs || v?.chassis_specs || {};
