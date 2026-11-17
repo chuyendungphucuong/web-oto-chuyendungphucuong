@@ -1,119 +1,72 @@
 [
   {
-    "slug": "xe-cuu-ho-foton-3-chuc-nang",
-    "name": "Xe Cứu Hộ Giao Thông Foton 3 Chức Năng (Cẩu, Kéo, Chở Tải Trọng 2.8 Tấn)",
+    "slug": "xe-cuu-ho-giao-thong-foton-2-chuc-nang",
+    "name": "Xe Cứu Hộ Giao Thông 2 Chức Năng Foton 2.45 Tấn (Sàn Trượt & Càng Kéo) - Nhập Khẩu",
     "category": "xe-tai-chuyen-dung",
     "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Xe Cứu Hộ Giao Thông",
+    "subCategory": "Xe cứu hộ giao thông",
     "subKey": "cuu-ho",
-    "brand": "Foton",
-    "price": 1850000000,
-    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng bộ cáp tời chuyên dụng & Định vị GPS",
+    "brand": "FOTON",
+    "price": 790000000,
+    "promo": "Hỗ trợ vay trả góp ngân hàng 75% - 85%, trọn gói hồ sơ đăng ký đăng kiểm, giao xe tận nơi trên toàn quốc.",
+    "isFeatured": true,
     "images": [
-      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
+      "/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-12.webp",
+      "/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-2.webp",
+      "/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-3.webp",
+      "/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-4.webp",
+      "/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-5.webp",
+      "/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-6.webp",
+      "/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-7.webp",
+      "/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-8.webp",
+      "/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-1.webp"
     ],
-    "summary": "Xe cứu hộ Foton 3 chức năng tích hợp cẩu tự hành Shimei 5 tấn, sàn trượt chở xe 2.8 tấn và càng kéo chữ Y phía sau 10 tấn, động cơ Yuchai 220HP.",
-    "description": "I. Tổng quan Xe Cứu Hộ Foton 3 Chức Năng\nNhập khẩu nguyên chiếc HTW5160TQZPB, tích hợp đồng thời sàn trượt 5.8m, cẩu 5 tấn 5 khúc và càng kéo chữ Y 10 tấn.",
-    "showrooms": [
-      "TP. Hồ Chí Minh",
-      "Tiền Giang",
-      "An Giang"
-    ],
-    "roadTaxPerYear": 7080000,
-    "insuranceTNDS": 3520000,
-    "chassisSpecs": {
-      "Model xe cơ sở": "Foton HTW5160TQZPB nhập khẩu",
-      "Khối lượng chuyên chở": "2.800 kg",
-      "Dung tích xi-lanh": "6.870 cc",
-      "Động cơ": "YC6JA220-50 (Yuchai - 220 Mã lực)"
-    },
-    "specialSpecs": {
-      "Hệ thống chuyên dùng": "Sàn trượt 2.8 tấn + Cẩu Shimei 5 tấn + Càng kéo 10 tấn",
-      "Kích thước sàn chở": "5.800 x 2.470 mm"
-    },
-    "faqs": [
-      {
-        "question": "Sàn trượt của xe cứu hộ Foton chịu được tải trọng bao nhiêu?",
-        "answer": "Sàn trượt chịu tải nâng và chở phương tiện lên đến 2.8 tấn."
-      }
-    ]
-  },
-  {
-    "slug": "xe-cuu-ho-dongfeng-3-chuc-nang",
-    "name": "Xe Cứu Hộ Giao Thông Dongfeng 3 Chức Năng (Cẩu, Kéo, Chở Tải Trọng 3.35 Tấn)",
-    "category": "xe-tai-chuyen-dung",
-    "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Xe Cứu Hộ Giao Thông",
-    "subKey": "cuu-ho",
-    "brand": "Dongfeng",
-    "price": 1650000000,
-    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng bộ cáp tời chuyên dụng & Định vị GPS",
-    "images": [
-      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
-    ],
-    "summary": "Xe cứu hộ Dongfeng 3 chức năng tích hợp cẩu tự hành, sàn trượt chở xe 3.35 tấn và càng kéo phía sau, động cơ Yuchai YC4S160-50 (160HP).",
-    "description": "I. Tổng quan Xe Cứu Hộ Dongfeng 3 Chức Năng\nGiải pháp cứu hộ đa năng cẩu, kéo và chở xe với tải trọng sàn trượt lên đến 3.350 kg, động cơ Yuchai 3.767 cc tiết kiệm nhiên liệu.",
+    "summary": "Xe cứu hộ giao thông 2 chức năng Foton (Model HTW5090TQZPB) nhập khẩu nguyên chiếc. Tải trọng chở xe trên sàn 2.450 kg, tổng trọng lượng toàn bộ 8.495 kg (hoặc cấu hình lưu hành linh hoạt theo thông tư mới), trang bị động cơ Cummins ISF3.8s5154 (154 mã lực) bền bỉ, tích hợp sàn trượt thủy lực dài 5.8 mét và càng kéo phía sau.",
+    "description": "<h2>Tổng Quan Xe Cứu Hộ Giao Thông 2 Chức Năng Foton 2.45 Tấn Nhập Khẩu</h2><p>Trong công tác cứu hộ giao thông đô thị và giải tỏa ùn tắc trên các tuyến quốc lộ, cao tốc, việc sở hữu một phương tiện chuyên dụng linh hoạt, kích thước gọn gàng nhưng vẫn đảm bảo tải trọng chở xe lớn là ưu tiên hàng đầu của các garage và doanh nghiệp vận tải. Dòng sản phẩm <strong>Xe cứu hộ giao thông 2 chức năng Foton tải trọng 2.45 tấn (Model: HTW5090TQZPB) nhập khẩu nguyên chiếc</strong> chính là giải pháp đầu tư hiệu quả và kinh tế.</p><p>Sở hữu khối động cơ Cummins Mỹ mạnh mẽ, sàn trượt thủy lực dài đến 5.8 mét cùng cơ cấu càng kéo chuyên nghiệp, chiếc xe đáp ứng trọn vẹn mọi yêu cầu khắt khe trong nghiệp vụ cứu hộ hiện đại.</p><p><img src=\"/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-13.webp\"></p><h2>1. Động Cơ Cummins Mạnh Mẽ &amp; Khung Gầm Bền Bỉ</h2><ul><li><strong>Động cơ Cummins ISF3.8s5154 danh tiếng:</strong> Xe trang bị khối động cơ Diesel 4 kỳ, 4 xi-lanh thẳng hàng có tăng áp, dung tích xi-lanh <strong>3.760 cm³</strong>, sản sinh công suất cực đại <strong>115 kW tại 2.600 vòng/phút (~154 HP)</strong>. Động cơ hoạt động bền bỉ, momen xoắn lớn giúp xe vận hành khỏe khoắn, leo dốc dễ dàng khi chở hoặc kéo tải nặng.</li><li><strong>Sàn chở xe siêu dài 5.8 mét:</strong> Kích thước lòng sàn lên tới <code>5.800 x 2.300 mm</code> kết hợp tải trọng cho phép chở trên sàn đạt <strong>2.450 kg</strong>, giúp chuyên chở thoải mái các dòng xe ô tô con, xe du lịch 7 chỗ, xe SUV và xe bán tải cỡ lớn.</li><li><strong>Cỡ lốp 7.50R16 đồng bộ:</strong> Hệ thống lốp bố thép chịu lực cao (Trục 1: 02 lốp, Trục 2: 04 lốp) giúp xe bám đường tốt, ổn định khi di chuyển trong điều kiện thời tiết khắc nghiệt.</li></ul><p><br></p><h2>2. Hệ Thống Thủy Lực 2 Chức Năng Đa Nhiệm</h2><ul><li><strong>Sàn trượt hạ sát đất &amp; Tời kéo thủy lực:</strong> Cơ cấu xi-lanh hành trình dài giúp hạ mặt sàn xuống góc nghiêng nhỏ nhất, kết hợp tời kéo cáp khỏe khoắn giúp đưa các dòng xe gầm thấp hoặc xe bị bó phanh lên sàn an toàn.</li><li><strong>Càng kéo thủy lực phía sau:</strong> Hỗ trợ lai dắt thêm một phương tiện thứ hai khi cần thiết, tối ưu hóa năng suất cứu hộ trong mỗi chuyến đi.</li></ul><p><img src=\"/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-14.webp\"></p><h2>3. Phân Tích Yếu Tố Giấy Phép Lái Xe (Bằng B2 cũ)</h2><p>Theo quy định phân hạng giấy phép lái xe hiện hành, dòng xe cứu hộ Foton 2.45 tấn với tổng trọng lượng toàn bộ thiết kế là 8.495 kg tuy nhiên tải trọng cho phép chở là 2.450kg sẽ <strong>phù hợp với các tài xế sở hữu Giấy phép lái xe hạng B2 cũ</strong>. Tài xế cần lưu ý đối chiếu kỹ thông số tổng tải trên Giấy chứng nhận kiểm định thực tế để chấp hành đúng quy định pháp luật khi tham gia giao thông.</p><p><img src=\"/images/products/xe-cuu-ho-giao-thong-foton-2-chuc-nang/xe-cuu-ho-giao-thong-foton-2-chuc-nang-15.webp\"></p><h2>4. Đầu Tư Xe Cứu Hộ Foton Tại Ô Tô Phú Cường</h2><p>Quý khách hàng và doanh nghiệp quan tâm đến dòng <strong>Xe cứu hộ giao thông Foton 2.45 tấn nhập khẩu</strong>, vui lòng liên hệ ngay với hệ thống <strong><a href=\"https://chuyendungphucuong.vn\">Ô Tô Chuyên Dùng Phú Cường</a></strong> để nhận ưu đãi:</p><ul><li><strong>Giá bán cạnh tranh nhất thị trường:</strong> Đi kèm hồ sơ nhập khẩu nguyên chiếc, phiếu xuất xưởng và giấy chứng nhận chất lượng đạt chuẩn đăng kiểm theo Thông tư 54/2024/TT-BGTVT.</li><li><strong>Hỗ trợ vay trả góp 75% – 85%:</strong> Thủ tục tài chính nhanh gọn, lãi suất ưu đãi cho cả khách hàng cá nhân và doanh nghiệp.</li><li><strong>Dịch vụ trọn gói:</strong> Đăng ký biển số, đăng kiểm lưu hành và giao xe tận nơi trên toàn quốc.</li></ul><p>Liên hệ ngay <strong>Hotline/Zalo: 0922 77 77 03</strong> để nhận báo giá chi tiết và lịch giao xe sớm nhất!</p>",
     "showrooms": [
       "TP. Hồ Chí Minh",
       "Tiền Giang",
       "An Giang"
     ],
     "roadTaxPerYear": 4680000,
-    "insuranceTNDS": 2600000,
+    "insuranceTNDS": 2850000,
     "chassisSpecs": {
-      "Model xe cơ sở": "Dongfeng nhập khẩu nguyên chiếc",
-      "Tải trọng cho phép chở": "3.350 kg",
-      "Dung tích xi-lanh": "3.767 cc",
-      "Động cơ": "YC4S160-50 (Yuchai - 160 Mã lực)"
+      "Nhãn hiệu & Tên thương mại": "FOTON - HTW5090TQZPB",
+      "Loại phương tiện": "Ô tô kéo, chở xe (Xe cứu hộ giao thông 2 chức năng)",
+      "Khối lượng bản thân": "5.850 kg",
+      "Tải trọng chuyên chở cho phép": "2.450 kg (Khi chở xe trên sàn)",
+      "Khối lượng toàn bộ (Tổng tải)": "8.495 kg",
+      "Số người cho phép chở": "02 người (ngồi)",
+      "Kích thước tổng thể (D x R x C)": "7.600 x 2.300 x 2.490 mm",
+      "Kích thước lòng sàn chở xe": "5.800 x 2.300 mm",
+      "Công thức bánh xe": "4 x 2",
+      "Khoảng cách trục": "3.800 mm",
+      "Động cơ": "ISF3.8s5154, Diesel 4 kỳ, 4 xi-lanh thẳng hàng, tăng áp",
+      "Dung tích xi-lanh": "3.760 cm³",
+      "Công suất lớn nhất / Tốc độ quay": "115 kW / 2.600 vòng/phút (~154 Mã lực)",
+      "Loại nhiên liệu": "Diesel",
+      "Cỡ lốp": "7.50R16 đồng bộ (Trục 1: 02 lốp; Trục 2: 04 lốp)"
     },
     "specialSpecs": {
-      "Hệ thống chuyên dùng": "Tích hợp 3 chức năng: Cẩu, Kéo và Chở xe",
-      "Sàn trượt thủy lực": "Tải trọng chở 3.35 tấn"
+      "Cơ chế cứu hộ 2 trong 1 tối ưu": "Tích hợp đồng thời sàn trượt thủy lực hạ sát đất và cơ cấu càng kéo chữ L phía sau, hỗ trợ kéo/chở linh hoạt phương tiện gặp sự cố",
+      "Sàn trượt siêu dài 5.8 mét": "Kích thước lòng sàn 5.800 x 2.300 mm thoải mái cõng các dòng xe du lịch 4-7 chỗ, xe SUV và xe bán tải gầm thấp",
+      "Động cơ Cummins ISF3.8 mạnh mẽ": "Dung tích 3.760 cm³, công suất 154 mã lực giúp xe vận hành đầm chắc, tiết kiệm nhiên liệu và cung cấp lực kéo thủy lực ổn định",
+      "Loại bằng lái phù hợp:": "Tổng tải trọng tiêu chuẩn phù hợp hoàn hảo với quy định giấy phép lái xe hạng B2 cũ hoặc bằng C"
     },
     "faqs": [
       {
-        "question": "Xe cứu hộ Dongfeng 3 chức năng có tải trọng sàn bao nhiêu?",
-        "answer": "Khối lượng chuyên chở cho phép trên sàn trượt là 3.350 kg."
-      }
-    ]
-  },
-  {
-    "slug": "xe-cuu-ho-foton-aumark-2-chuc-nang-2-45-tan",
-    "name": "Xe Cứu Hộ Giao Thông Foton Aumark 2 Chức Năng (Sàn Trượt & Càng Kéo, Tải 2.45 Tấn)",
-    "category": "xe-tai-chuyen-dung",
-    "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Xe Cứu Hộ Giao Thông",
-    "subKey": "cuu-ho",
-    "brand": "Foton",
-    "price": 980000000,
-    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng tời kéo thủy lực & Định vị GPS",
-    "images": [
-      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80"
-    ],
-    "summary": "Xe cứu hộ đô thị Foton Aumark 2 chức năng tích hợp sàn trượt chở xe và càng kéo phía sau, tải trọng 2.45 tấn, động cơ Cummins ISF3.8.",
-    "description": "I. Tổng quan Xe Cứu Hộ Foton Aumark 2 Chức Năng\nThiết kế linh hoạt cho đô thị, tích hợp sàn trượt 5.800 x 2.300 mm và càng kéo sau, động cơ Cummins 3.760 cc.",
-    "showrooms": [
-      "TP. Hồ Chí Minh",
-      "Tiền Giang",
-      "An Giang"
-    ],
-    "roadTaxPerYear": 4680000,
-    "insuranceTNDS": 2002000,
-    "chassisSpecs": {
-      "Model xe cơ sở": "Foton Aumark (Nhập khẩu)",
-      "Tải trọng cho phép chở": "2.450 kg",
-      "Dung tích xi-lanh": "3.760 cc",
-      "Động cơ": "Cummins ISF3.8s5154"
-    },
-    "specialSpecs": {
-      "Hệ thống chuyên dùng": "Sàn trượt chở xe + Càng kéo phía sau",
-      "Kích thước sàn chở": "5.800 x 2.300 mm"
-    },
-    "faqs": [
+        "question": "Xe cứu hộ giao thông Foton 2.45 tấn có kích thước sàn và tải trọng bao nhiêu?",
+        "answer": "Theo Giấy chứng nhận chất lượng số 26KOT/222243, xe có tải trọng chở trên sàn là 2.450 kg, kích thước tổng thể 7.600 x 2.300 x 2.490 mm và lòng sàn chở xe dài 5.800 x rộng 2.300 mm."
+      },
       {
-        "question": "Xe cứu hộ Foton Aumark 2.45 tấn phù hợp cứu hộ xe nào?",
-        "answer": "Chuyên cứu hộ xe con 4-7 chỗ, xe du lịch và xe tải nhẹ trong đô thị."
+        "question": "Xe cứu hộ Foton HTW5090TQZPB phù hợp với loại giấy phép lái xe nào?",
+        "answer": "Với tổng trọng lượng toàn bộ thiết kế, xe phù hợp với các tài xế sở hữu giấy phép lái xe hạng B2 (theo quy định cũ) hoặc hạng C (theo quy định mới)."
+      },
+      {
+        "question": "Ô Tô Phú Cường có hỗ trợ trả góp khi mua xe cứu hộ Foton không?",
+        "answer": "Có. Ô Tô Phú Cường hỗ trợ vay mua xe trả góp qua ngân hàng lên đến 75% - 85% giá trị xe, thủ tục nhanh chóng và trọn gói đăng ký đăng kiểm."
       }
-    ]
+    ],
+    "minPrice": 770000000
   }
 ]

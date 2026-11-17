@@ -254,7 +254,11 @@ const filteredVehicles = vehicleList.filter((v: any) => {
   const vCat = normalizeStr(v.category || '');
   const normMenuTitle = normalizeStr(menuMatchedTitle);
   const isUsedItem = (vSubKey.includes('cu') && !vSubKey.includes('cuu-ho')) || vSubCat.includes('xe cu') || vCat === 'xe-cu';
-  const isBusItem = vCat === 'xe-khach' || vSubKey.includes('cho') || vSubCat.includes('khach');
+  const isBusItem = (vCat === 'xe-khach' || vSubKey.endsWith('-cho') || vSubKey.includes('limousine') || vSubCat.includes('khach')) && !vSubKey.includes('gia-cam');
+
+  if (normCat === 'xe-cho-gia-cam') {
+    return vSubKey === 'xe-cho-gia-cam' || nNorm.includes('gia cam') || vSubCat.includes('gia cam') || normalizeStr(v.slug || '').includes('gia-cam');
+  }
 
   if (!rawCat || rawCat === 'all' || rawCat === 'xe-tai-chuyen-dung') {
     return !isUsedItem && !isBusItem;
@@ -279,12 +283,12 @@ const filteredVehicles = vehicleList.filter((v: any) => {
     ((normCat === 'cuu-ho' || normCat === 'xe-cuu-ho-giao-thong') && vSubCat.includes('cuu ho')) ||
     (normCat === 'nang-dau' && vSubCat.includes('nang dau')) ||
     (normCat === 'xe-dau-keo-gan-cau' && vSubCat.includes('dau keo')) ||
-    (normCat === 'xe-cho-gia-cam' && vSubCat.includes('gia cam'))
+    (normCat === 'xe-cho-gia-cam' && (vSubCat.includes('gia cam') || nNorm.includes('gia cam') || nNorm.includes('cho ga') || nNorm.includes('cho vit')))
   );
 });
 
 // Màng lọc an toàn: Khi ở danh mục Xe Khách, loại bỏ triệt để xe tải chở gia cầm, xe bồn, xe cứu hộ...
-if (normCat.includes("xe-khach") || normCat.includes("-cho")) {
+if ((normCat.includes("xe-khach") || normCat.endsWith("-cho") || normCat === "xe-limousine") && !normCat.includes("gia-cam")) {
   const nonBusKeywords = ["gia cam", "cho ga", "cho vit", "bon ", "cuu ho", "xe cau", "xe ben", "dong lanh", "ep rac", "tai thung"];
   for (let i = filteredVehicles.length - 1; i >= 0; i--) {
     const nNorm = normalizeStr(filteredVehicles[i]?.name || "");
