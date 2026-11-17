@@ -1,6 +1,25 @@
 import fs from 'fs';
 import path from 'path';
 
+function resolveTargetCategoryFile(subKey, category, name) {
+  const sk = String(subKey || '').toLowerCase().trim();
+  const cat = String(category || '').toLowerCase().trim();
+  const nm = String(name || '').toLowerCase();
+
+  if (cat === 'xe-khach' || sk.includes('khach') || sk.endsWith('-cho') || sk.includes('limousine')) {
+    if (sk === 'xe-16-29-cho' || /\b(1[6-9]|2[0-9])\s*chỗ/.test(nm)) {
+      return 'xe-khach-16-cho.json';
+    }
+    return 'xe-khach-29-47-cho.json';
+  }
+  if (sk === 'bon-thuc-pham') return 'xe-bon-cam.json';
+  if (sk === 'bon-nuoc' || sk === 'bon-hut-chat-thai') return 'xe-bon-chuyen-dung.json';
+  if (sk === 'xe-cau') return 'xe-cau.json';
+  if (sk === 'cuu-ho' || sk === 'xe-cuu-ho-giao-thong') return 'xe-cuu-ho.json';
+  if (sk === 'nang-dau') return 'xe-nang-dau.json';
+  return 'xe-moi-truong-nang.json';
+}
+
 export async function POST({ request }) {
   try {
     const data = await request.json();
@@ -9,6 +28,7 @@ export async function POST({ request }) {
       name,
       brand,
       price,
+      minPrice,
       promo,
       customBadges,
       videoUrl,
@@ -53,6 +73,7 @@ export async function POST({ request }) {
         if (name !== undefined) vehicles[index].name = name;
         if (brand !== undefined) vehicles[index].brand = brand;
         if (price !== undefined && price !== '') vehicles[index].price = parseFloat(price);
+        if (minPrice !== undefined && minPrice !== '') vehicles[index].minPrice = parseFloat(minPrice);
         if (promo !== undefined) vehicles[index].promo = promo;
         if (customBadges !== undefined) vehicles[index].customBadges = customBadges;
         if (videoUrl !== undefined) vehicles[index].videoUrl = videoUrl;
@@ -74,15 +95,7 @@ export async function POST({ request }) {
     }
 
     if (!updated) {
-      let targetFile = files[0] || 'vehicles.json';
-      if (category === 'xe-khach') {
-        const busFile = files.find(f => f.includes('khach') || f.includes('bus'));
-        if (busFile) targetFile = busFile;
-      } else {
-        const truckFile = files.find(f => !f.includes('khach') && !f.includes('bus'));
-        if (truckFile) targetFile = truckFile;
-      }
-
+      const targetFile = resolveTargetCategoryFile(subKey, category, name);
       const targetPath = path.join(categoriesDir, targetFile);
       let vehicles = [];
       if (fs.existsSync(targetPath)) {
@@ -93,13 +106,18 @@ export async function POST({ request }) {
         }
       }
 
+      const parsedPrice = price !== undefined && price !== '' ? parseFloat(price) : 0;
+      const parsedMinPrice = minPrice !== undefined && minPrice !== '' ? parseFloat(minPrice) : parsedPrice;
+
       const newProduct = {
         slug,
         name: name || '',
         brand: brand || 'Phú Cường',
-        price: price !== undefined && price !== '' ? parseFloat(price) : 0,
+        price: parsedPrice,
+        minPrice: parsedMinPrice,
         promo: promo || 'Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm',
-      videoUrl: videoUrl || "",
+        customBadges: Array.isArray(customBadges) ? customBadges : [],
+        videoUrl: videoUrl || '',
         summary: summary || '',
         description: description || '',
         subCategory: subCategory || 'Xe Chuyên Dùng',
@@ -116,7 +134,7 @@ export async function POST({ request }) {
       vehicles.unshift(newProduct);
       fs.writeFileSync(targetPath, JSON.stringify(vehicles, null, 2), 'utf-8');
 
-      return new Response(JSON.stringify({ success: true, message: 'Đã tạo mới sản phẩm thành công!' }), {
+      return new Response(JSON.stringify({ success: true, message: `Đã tạo mới sản phẩm vào nhóm ${targetFile} thành công!` }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });

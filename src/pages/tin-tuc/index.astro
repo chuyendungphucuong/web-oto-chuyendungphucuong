@@ -164,7 +164,6 @@ function itemHasVideo(item) {
           .trim();
       }
 
-      // Hàm đo khoảng cách sai chính tả Levenshtein (cho phép gõ nhầm 1-2 ký tự)
       function editDistance(a, b) {
         if (Math.abs(a.length - b.length) > 2) return 99;
         const dp = Array.from({ length: a.length + 1 }, (_, i) => [i]);
@@ -179,7 +178,6 @@ function itemHasVideo(item) {
         return dp[a.length][b.length];
       }
 
-      // Kiểm tra khớp gần đúng (hỗ trợ cả có dấu, không dấu và sai chính tả)
       function fuzzyMatch(queryRaw, targetTextRaw) {
         const q = toUnsigned(queryRaw);
         if (!q) return true;
@@ -189,7 +187,6 @@ function itemHasVideo(item) {
         const qWords = q.split(" ").filter(Boolean);
         const tWords = text.split(" ").filter(Boolean);
 
-        // Đếm số từ trong câu tìm kiếm khớp (hoặc gần giống) với các từ trong bài viết
         let matchedWords = 0;
         for (const qw of qWords) {
           if (text.includes(qw)) {
@@ -263,45 +260,39 @@ function itemHasVideo(item) {
         }
       }
 
-      // Tự động đọc tham số ?cat=... hoặc ?category=... khi bấm từ Menu chính trên Header
-      const params = new URLSearchParams(window.location.search);
-      const urlCat = params.get("cat") || params.get("category") || "";
-      if (urlCat) {
-        const u = toUnsigned(urlCat);
-        if (u.includes("so sanh") || u.includes("danh gia")) setActiveTab("danh-gia-so-sanh");
-        else if (u.includes("phap ly") || u.includes("dang kiem") || u.includes("thu tuc")) setActiveTab("phap-ly-dang-kiem");
-        else if (u.includes("kinh nghiem") || u.includes("van tai") || u.includes("dau tu")) setActiveTab("kinh-nghiem-van-tai");
-        else if (u.includes("ban giao") || u.includes("showroom") || u.includes("tin tuc")) setActiveTab("tin-tuc-ban-giao");
-      }
-
+      // 1. Gắn sự kiện click cho thanh Menu ngang chuyên mục phía dưới
       catTabs.forEach((btn) => {
         btn.addEventListener("click", () => {
-          setActiveTab(btn.getAttribute("data-cat-key"));
+          const key = btn.getAttribute("data-cat-key") || "all";
+          setActiveTab(key);
           applyFilter();
+          const newUrl = key === "all" ? "/tin-tuc" : "/tin-tuc?chuyen-muc=" + encodeURIComponent(key);
+          window.history.replaceState({}, "", newUrl);
         });
       });
 
-      if (searchInput) {
-        searchInput.addEventListener("input", applyFilter);
-      }
+      // 2. Gắn sự kiện ô tìm kiếm & nút đặt lại bộ lọc
+      searchInput?.addEventListener("input", applyFilter);
 
-      if (btnClear) {
-        btnClear.addEventListener("click", () => {
-          searchInput.value = "";
-          applyFilter();
-          searchInput.focus();
-        });
-      }
+      btnClear?.addEventListener("click", () => {
+        if (searchInput) searchInput.value = "";
+        applyFilter();
+      });
 
-      if (btnReset) {
-        btnReset.addEventListener("click", () => {
-          if (searchInput) searchInput.value = "";
-          setActiveTab("all");
-          applyFilter();
-        });
-      }
+      btnReset?.addEventListener("click", () => {
+        if (searchInput) searchInput.value = "";
+        setActiveTab("all");
+        applyFilter();
+        window.history.replaceState({}, "", "/tin-tuc");
+      });
 
-      applyFilter();
+      // 3. Tự động lọc khi bấm từ Menu chính phía trên (?chuyen-muc=...)
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialCat = urlParams.get("chuyen-muc");
+      if (initialCat && catTabs.some((b) => b.getAttribute("data-cat-key") === initialCat)) {
+        setActiveTab(initialCat);
+        applyFilter();
+      }
     })();
   </script>
 </BaseLayout>

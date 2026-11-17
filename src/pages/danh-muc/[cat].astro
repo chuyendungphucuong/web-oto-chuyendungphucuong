@@ -3,53 +3,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { allVehicles } from '../../data/vehicles.js';
 import navData from '../../data/navigation.json';
 
-export function getStaticPaths() {
-  const vehicles = Array.isArray(allVehicles) ? allVehicles : [];
-  const mainMenu = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
-  const catSet = new Set([
-    'xe-tai-chuyen-dung',
-    'xe-cuu-ho-giao-thong',
-    'cuu-ho',
-    'bon-thuc-pham',
-    'bon-nuoc',
-    'bon-hut-chat-thai',
-    'xe-cau',
-    'xe-dau-keo-gan-cau',
-    'xe-cho-gia-cam',
-    'nang-dau',
-    'ep-rac',
-    'quet-duong-hut-bui',
-    'xe-khach', 'xe-16-29-cho', 'xe-30-47-cho', 'xe-limousine', '16-cho', '29-cho', '34-cho', '47-cho',
-    'xe-cu',
-    'xe-4-7-cho-cu',
-    'xe-tai-cu',
-    'xe-chuyen-dung-cu',
-    'xe-khach-cu'
-  ]);
-
-  mainMenu.forEach((menu: any) => {
-    if (Array.isArray(menu.children)) {
-      menu.children.forEach((child: any) => {
-        if (typeof child.url === 'string') {
-          if (child.url.includes('cat=')) {
-            catSet.add(child.url.split('cat=')[1].split('&')[0].trim());
-          } else if (child.url.startsWith('/danh-muc/')) {
-            catSet.add(child.url.replace('/danh-muc/', '').split('?')[0].replace(/\/$/, '').trim());
-          }
-        }
-      });
-    }
-  });
-
-  vehicles.forEach((v: any) => {
-    if (v?.subKey) catSet.add(String(v.subKey).trim());
-    if (v?.category) catSet.add(String(v.category).trim());
-  });
-
-  return Array.from(catSet).filter(Boolean).map((cat) => ({
-    params: { cat }
-  }));
-}
 
 const { cat } = Astro.params;
 const rawCat = (cat || '').trim();
@@ -282,8 +235,7 @@ const filteredVehicles = vehicleList.filter((v: any) => {
     (normCat === 'xe-cau' && vSubCat.includes('cau') && !vSubCat.includes('cuu ho') && !vSubCat.includes('dau keo')) ||
     ((normCat === 'cuu-ho' || normCat === 'xe-cuu-ho-giao-thong') && vSubCat.includes('cuu ho')) ||
     (normCat === 'nang-dau' && vSubCat.includes('nang dau')) ||
-    (normCat === 'xe-dau-keo-gan-cau' && vSubCat.includes('dau keo')) ||
-    (normCat === 'xe-cho-gia-cam' && (vSubCat.includes('gia cam') || nNorm.includes('gia cam') || nNorm.includes('cho ga') || nNorm.includes('cho vit')))
+    (normCat === 'xe-dau-keo-gan-cau' && vSubCat.includes('dau keo'))
   );
 });
 

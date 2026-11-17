@@ -99,24 +99,20 @@
       "url": "/tin-tuc",
       "children": [
         {
-          "title": "Xem tất cả bài viết",
-          "url": "/tin-tuc"
-        },
-        {
           "title": "Đánh giá & So sánh xe",
-          "url": "/tin-tuc"
+          "url": "/tin-tuc?chuyen-muc=danh-gia-so-sanh"
         },
         {
           "title": "Thủ tục pháp lý & Đăng kiểm",
-          "url": "/tin-tuc"
+          "url": "/tin-tuc?chuyen-muc=phap-ly-dang-kiem"
         },
         {
           "title": "Kinh nghiệm vận tải & Đầu tư",
-          "url": "/tin-tuc"
+          "url": "/tin-tuc?chuyen-muc=kinh-nghiem-van-tai"
         },
         {
           "title": "Tin tức & Bàn giao xe showroom",
-          "url": "/tin-tuc"
+          "url": "/tin-tuc?chuyen-muc=tin-tuc-ban-giao"
         }
       ]
     },
