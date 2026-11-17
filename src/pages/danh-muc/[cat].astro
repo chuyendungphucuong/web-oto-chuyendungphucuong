@@ -766,14 +766,59 @@ const breadcrumbSchema = {
             return;
           }
           const items = Array.from(selectedSlugs).map(getCardData).filter(Boolean);
-          const allSpecKeys = Array.from(new Set(items.flatMap((it) => Object.keys(it.specs)))).slice(0, 12);
 
-          let html = `<table class="w-full text-left border-collapse text-xs sm:text-sm">
+          // Bộ ánh xạ gom nhóm thông số đồng nghĩa về đúng 1 tiêu chí chuẩn
+          const STANDARD_ROWS = [
+            { label: 'Kích thước tổng thể (D x R x C)', keys: ['kích thước tổng thể', 'kích thước bao', 'kích thước xe'] },
+            { label: 'Chiều dài cơ sở', keys: ['chiều dài cơ sở', 'khoảng cách trục'] },
+            { label: 'Động cơ & Dung tích xy-lanh', keys: ['động cơ', 'kiểu động cơ', 'loại động cơ', 'dung tích'] },
+            { label: 'Công suất cực đại', keys: ['công suất', 'công suất lớn nhất'] },
+            { label: 'Hộp số & Cỡ lốp', keys: ['hộp số', 'cỡ lốp', 'lốp xe'] },
+            { label: 'Thể tích / Dung tích chuyên dùng', keys: ['thể tích', 'dung tích bồn', 'dung tích chứa', 'sức chứa'] },
+            { label: 'Vật liệu chế tạo thùng / bồn', keys: ['vật liệu', 'chất liệu', 'inox', 'thép'] },
+            { label: 'Số khoang / Kết cấu sàn', keys: ['số khoang', 'kích thước lòng', 'kích thước sàn', 'sàn trượt'] },
+            { label: 'Cơ chế xả / Thiết bị chuyên dùng', keys: ['cơ chế xả', 'hệ thống xả', 'trục vít', 'thổi khí', 'tời', 'cẩu', 'càng kéo', 'chức năng', 'hệ thống chuyên dùng'] },
+            { label: 'Hệ thống thủy lực & Bơm', keys: ['thủy lực', 'bơm', 'pto', 'van'] }
+          ];
+
+          function extractStandardValue(specsObj, aliases) {
+            if (!specsObj) return '';
+            const entries = Object.entries(specsObj);
+            // Ưu tiên khớp chính xác cụm từ khóa
+            for (const alias of aliases) {
+              for (const [k, v] of entries) {
+                if (k.toLowerCase().includes(alias) && String(v).trim()) {
+                  return String(v).trim();
+                }
+              }
+            }
+            return '';
+          }
+
+          // Lọc các tiêu chí chuẩn mà có ít nhất 1 trong các xe đang chọn có dữ liệu
+          const populatedStandardRows = STANDARD_ROWS.map((row) => {
+            const values = items.map((it) => extractStandardValue(it.specs, row.keys));
+            const hasAny = values.some((v) => v !== '');
+            const uniqueNonEmpty = new Set(values.filter(Boolean));
+            const isDifferent = uniqueNonEmpty.size > 1;
+            return { label: row.label, values, hasAny, isDifferent };
+          }).filter((r) => r.hasAny);
+
+          let html = `<div class="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 bg-blue-50/80 border border-blue-100 px-3.5 py-2 rounded-xl">
+            <span>💡 Hệ thống tự động chuẩn hóa &amp; gom nhóm các thông số tương đương để đối chiếu chính xác.</span>
+            <span class="font-bold text-blue-800">Các dòng tô nền vàng nhạt là điểm khác biệt giữa các xe</span>
+          </div>
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full table-fixed text-left border-collapse text-xs sm:text-sm min-w-[680px]">
+            <colgroup>
+              <col class="w-40 sm:w-48" />
+              ${items.map(() => `<col style="width: calc((100% - 12rem) / ${items.length});" />`).join('')}
+            </colgroup>
             <thead>
               <tr class="border-b border-slate-200">
-                <th class="p-3 bg-slate-50 font-extrabold text-slate-700 w-44">Tiêu chí đối chiếu</th>
+                <th class="p-3 bg-slate-100 font-extrabold text-slate-800 border-r border-slate-200">Tiêu chí đối chiếu</th>
                 ${items.map((it) => `
-                  <th class="p-3 align-top min-w-[200px]">
+                  <th class="p-3 align-top bg-white border-r last:border-r-0 border-slate-200">
                     <img src="${it.img}" alt="${it.name}" class="w-full h-32 object-cover rounded-xl mb-2 border border-slate-200" />
                     <a href="/san-pham/${it.slug}" class="font-extrabold text-blue-800 hover:underline block leading-snug">${it.name}</a>
                   </th>
@@ -782,39 +827,40 @@ const breadcrumbSchema = {
             </thead>
             <tbody class="divide-y divide-slate-200">
               <tr>
-                <td class="p-3 bg-slate-50 font-bold text-slate-700">Thương hiệu</td>
-                ${items.map((it) => `<td class="p-3 font-extrabold text-slate-900">${it.brand || 'Chính hãng'}</td>`).join('')}
+                <td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top bg-slate-50 font-bold text-slate-700">Thương hiệu</td>
+                ${items.map((it) => `<td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top font-extrabold text-slate-900 uppercase">${it.brand || 'Chính hãng'}</td>`).join('')}
               </tr>
               <tr>
-                <td class="p-3 bg-slate-50 font-bold text-slate-700">Vốn đối ứng nhận xe</td>
-                ${items.map((it) => `<td class="p-3 font-black text-red-600">${it.downPayment}</td>`).join('')}
+                <td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top bg-slate-50 font-bold text-slate-700">Vốn đối ứng nhận xe</td>
+                ${items.map((it) => `<td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top font-black text-red-600">${it.downPayment}</td>`).join('')}
+              </tr>
+              <tr class="bg-amber-50/40">
+                <td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top bg-slate-50 font-bold text-slate-700">Tải trọng cho phép</td>
+                ${items.map((it) => `<td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top font-extrabold text-blue-900">${it.payloadKg > 0 ? (it.payloadKg / 1000).toFixed(2).replace(/\.?0+$/, '') + ' Tấn' : 'Theo phiếu ĐK'}</td>`).join('')}
               </tr>
               <tr>
-                <td class="p-3 bg-slate-50 font-bold text-slate-700">Tải trọng cho phép</td>
-                ${items.map((it) => `<td class="p-3 font-bold text-slate-900">${it.payloadKg > 0 ? (it.payloadKg / 1000).toFixed(2).replace(/\.?0+$/, '') + ' Tấn' : 'Theo phiếu đăng kiểm'}</td>`).join('')}
+                <td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top bg-slate-50 font-bold text-slate-700">Tổng trọng tải</td>
+                ${items.map((it) => `<td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top font-bold text-slate-900">${it.grossKg > 0 ? (it.grossKg / 1000).toFixed(2).replace(/\.?0+$/, '') + ' Tấn' : 'Theo phiếu ĐK'}</td>`).join('')}
               </tr>
-              <tr>
-                <td class="p-3 bg-slate-50 font-bold text-slate-700">Tổng trọng tải</td>
-                ${items.map((it) => `<td class="p-3 font-bold text-slate-900">${it.grossKg > 0 ? (it.grossKg / 1000).toFixed(2).replace(/\.?0+$/, '') + ' Tấn' : 'Theo phiếu đăng kiểm'}</td>`).join('')}
-              </tr>
-              ${allSpecKeys.map((k) => `
-                <tr>
-                  <td class="p-3 bg-slate-50 font-semibold text-slate-600">${k}</td>
-                  ${items.map((it) => `<td class="p-3 text-slate-800">${it.specs[k] || '—'}</td>`).join('')}
+              ${populatedStandardRows.map((row) => `
+                <tr class="${row.isDifferent ? 'bg-amber-50/50' : ''}">
+                  <td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top bg-slate-50 font-bold text-slate-700">${row.label}</td>
+                  ${row.values.map((val) => `<td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top ${row.isDifferent && val ? 'font-bold text-slate-950' : 'text-slate-700'}">${val || '<span class="text-slate-400 italic">Theo cấu hình chuẩn</span>'}</td>`).join('')}
                 </tr>
               `).join('')}
               <tr>
-                <td class="p-3 bg-slate-50 font-bold text-slate-700">Hành động</td>
+                <td class="p-3 border-r last:border-r-0 border-slate-200/80 break-words align-top bg-slate-50 font-bold text-slate-700">Chi tiết &amp; Hồ sơ</td>
                 ${items.map((it) => `
                   <td class="p-3">
-                    <a href="/san-pham/${it.slug}" class="inline-block w-full text-center bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-3 rounded-xl text-xs">
-                      Xem chi tiết &amp; Báo giá
+                    <a href="/san-pham/${it.slug}" class="inline-block w-full text-center bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 px-3 rounded-xl text-xs shadow-xs">
+                      Xem chi tiết &amp; Xuất PDF
                     </a>
                   </td>
                 `).join('')}
               </tr>
             </tbody>
-          </table>`;
+          </table>
+          </div>`;
 
           if (tableContainer) tableContainer.innerHTML = html;
           modal?.classList.remove('hidden');
