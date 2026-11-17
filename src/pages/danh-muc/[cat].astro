@@ -921,6 +921,53 @@ const breadcrumbSchema = {
       })();
     </script>
 
+  
+    <!-- KHỐI HỎI ĐÁP CHUYÊN GIA & FAQ SCHEMA TỐI ƯU GOOGLE AI OVERVIEW -->
+    <section class="mt-12 bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-5">
+      <div class="border-b border-slate-100 pb-3">
+        <span class="text-[11px] font-extrabold uppercase tracking-wider text-blue-700">Giải Đáp Đầu Tư &amp; Đăng Kiểm</span>
+        <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-0.5">
+          Câu Hỏi Thường Gặp Về {seoMeta.h1}
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-1.5">
+          <h3 class="font-extrabold text-slate-900">1. Mua {seoMeta.h1} được hỗ trợ vay trả góp bao nhiêu phần trăm?</h3>
+          <p class="text-slate-600 leading-relaxed">
+            Tại Ô Tô Chuyên Dùng Phú Cường, khách hàng doanh nghiệp và cá nhân được hỗ trợ vay ngân hàng từ <strong>70% đến 85% giá trị xe</strong>, thời hạn vay linh hoạt 3 – 7 năm với lãi suất ưu đãi, thủ tục duyệt hồ sơ nhanh trong 24 giờ.
+          </p>
+        </div>
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-1.5">
+          <h3 class="font-extrabold text-slate-900">2. Xe đóng mới tại Phú Cường có đảm bảo hồ sơ thiết kế và đăng kiểm không?</h3>
+          <p class="text-slate-600 leading-relaxed">
+            Tất cả các dòng {seoMeta.h1} đều có <strong>Giấy chứng nhận chất lượng an toàn kỹ thuật và bảo vệ môi trường</strong> do Cục Đăng kiểm Việt Nam cấp phép, hỗ trợ trọn gói bấm biển số và đăng kiểm lưu hành toàn quốc.
+          </p>
+        </div>
+      </div>
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": `Mua ${seoMeta.h1} được hỗ trợ vay trả góp bao nhiêu phần trăm?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Tại Ô Tô Chuyên Dùng Phú Cường, khách hàng được hỗ trợ vay ngân hàng từ 70% đến 85% giá trị xe, thời hạn vay linh hoạt 3 - 7 năm với lãi suất ưu đãi.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": `Xe đóng mới tại Phú Cường có đảm bảo hồ sơ thiết kế và đăng kiểm không?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Tất cả các dòng ${seoMeta.h1} đều có Giấy chứng nhận chất lượng an toàn kỹ thuật và bảo vệ môi trường do Cục Đăng kiểm Việt Nam cấp phép, hỗ trợ trọn gói đăng ký đăng kiểm toàn quốc.`
+            }
+          }
+        ]
+      })} />
+    </section>
+
   </main>
 
   <script is:inline>

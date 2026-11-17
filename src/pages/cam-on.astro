@@ -23,4 +23,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
     </div>
   </div>
+
+  <script is:inline>
+    (function () {
+      try {
+        if (!sessionStorage.getItem("pc_lead_converted_once")) {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: "generate_lead_success",
+            lead_source: "chuyendungphucuong_web",
+            currency: "VND",
+            value: 1000000
+          });
+          sessionStorage.setItem("pc_lead_converted_once", "1");
+        }
+      } catch (e) {}
+    })();
+  </script>
+
 </BaseLayout>
