@@ -550,6 +550,11 @@ const breadcrumbSchema = {
                 data-payload={payloadKg}
                 data-gross={grossKg}
                 data-search={searchBlob}
+                data-slug={v.slug}
+                data-name={v.name}
+                data-img={v.images?.[0] || '/Logo.png'}
+                data-downpayment={downPayment > 0 ? `~${downPayment.toLocaleString('vi-VN')} Triệu` : 'Từ 20% giá xe'}
+                data-specs={JSON.stringify({ ...(v.specialSpecs || {}), ...(v.chassisSpecs || {}) })}
                 class="cat-vehicle-card bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-blue-400 transition-all duration-300 overflow-hidden flex flex-col justify-between group"
               >
                 <div>
@@ -618,6 +623,13 @@ const breadcrumbSchema = {
                       Tính lăn bánh
                     </a>
                   </div>
+                  <button
+                    type="button"
+                    data-compare-slug={v.slug}
+                    class="btn-compare-toggle w-full py-2 px-3 rounded-xl border border-slate-200 hover:border-blue-600 text-slate-700 hover:text-blue-700 font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer bg-slate-50/70"
+                  >
+                    + Chọn so sánh cấu hình
+                  </button>
                 </div>
               </article>
             );
@@ -637,6 +649,184 @@ const breadcrumbSchema = {
         </div>
       </>
     )}
+  
+    <!-- BƯỚC 3: THANH SO SÁNH NHANH & BẢNG ĐỐI CHIẾU SONG SONG 2-3 MẪU XE -->
+    <div id="compareFloatingBar" class="hidden fixed bottom-16 md:bottom-5 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-3xl bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 p-3.5 sm:px-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 flex-wrap justify-center sm:justify-start">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-sky-300">Đang chọn so sánh (<span id="compareCountBadge">0</span>/3):</span>
+        <div id="compareSelectedNames" class="flex flex-wrap gap-1.5 text-xs"></div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button type="button" id="btnClearCompare" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold cursor-pointer">
+          Xóa chọn
+        </button>
+        <button type="button" id="btnOpenCompareModal" class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold shadow-sm cursor-pointer">
+          So sánh chi tiết ngay
+        </button>
+      </div>
+    </div>
+
+    <div id="compareResultModal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6">
+      <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[88vh] overflow-hidden flex flex-col shadow-2xl border border-slate-200">
+        <div class="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-5 py-4 flex items-center justify-between">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-sky-300">Tư Vấn Lựa Chọn Cấu Hình</span>
+            <h3 class="text-base sm:text-xl font-extrabold">Bảng Đối Chiếu Thông Số Kỹ Thuật &amp; Vốn Đầu Tư</h3>
+          </div>
+          <button type="button" id="btnCloseCompareModal" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 text-white font-bold flex items-center justify-center cursor-pointer">
+            ×
+          </button>
+        </div>
+        <div id="compareTableContainer" class="p-4 sm:p-6 overflow-auto flex-1"></div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (function() {
+        const selectedSlugs = new Set();
+        const toggleBtns = document.querySelectorAll('.btn-compare-toggle');
+        const floatingBar = document.getElementById('compareFloatingBar');
+        const countBadge = document.getElementById('compareCountBadge');
+        const namesContainer = document.getElementById('compareSelectedNames');
+        const btnClear = document.getElementById('btnClearCompare');
+        const btnOpenModal = document.getElementById('btnOpenCompareModal');
+        const modal = document.getElementById('compareResultModal');
+        const btnCloseModal = document.getElementById('btnCloseCompareModal');
+        const tableContainer = document.getElementById('compareTableContainer');
+
+        function getCardData(slug) {
+          const card = document.querySelector(`.cat-vehicle-card[data-slug="${slug}"]`);
+          if (!card) return null;
+          let specsObj = {};
+          try {
+            specsObj = JSON.parse(card.getAttribute('data-specs') || '{}');
+          } catch (e) {}
+          return {
+            slug,
+            name: card.getAttribute('data-name') || slug,
+            brand: card.getAttribute('data-brand') || '',
+            img: card.getAttribute('data-img') || '/Logo.png',
+            downPayment: card.getAttribute('data-downpayment') || 'Từ 20% giá xe',
+            payloadKg: Number(card.getAttribute('data-payload') || 0),
+            grossKg: Number(card.getAttribute('data-gross') || 0),
+            specs: specsObj
+          };
+        }
+
+        function syncCompareUI() {
+          toggleBtns.forEach((btn) => {
+            const s = btn.getAttribute('data-compare-slug');
+            const isSelected = selectedSlugs.has(s);
+            if (isSelected) {
+              btn.className = "btn-compare-toggle w-full py-2 px-3 rounded-xl border border-blue-700 bg-blue-700 text-white font-extrabold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer";
+              btn.textContent = "✓ Đã chọn so sánh";
+            } else {
+              btn.className = "btn-compare-toggle w-full py-2 px-3 rounded-xl border border-slate-200 hover:border-blue-600 text-slate-700 hover:text-blue-700 font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer bg-slate-50/70";
+              btn.textContent = "+ Chọn so sánh cấu hình";
+            }
+          });
+
+          if (countBadge) countBadge.textContent = String(selectedSlugs.size);
+          if (floatingBar) {
+            floatingBar.classList.toggle('hidden', selectedSlugs.size === 0);
+          }
+          if (namesContainer) {
+            namesContainer.innerHTML = Array.from(selectedSlugs).map((s) => {
+              const info = getCardData(s);
+              return `<span class="bg-white/15 px-2.5 py-1 rounded-lg font-semibold truncate max-w-[160px]">${info?.name || s}</span>`;
+            }).join('');
+          }
+        }
+
+        toggleBtns.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const slug = btn.getAttribute('data-compare-slug');
+            if (!slug) return;
+            if (selectedSlugs.has(slug)) {
+              selectedSlugs.delete(slug);
+            } else {
+              if (selectedSlugs.size >= 3) {
+                alert('Anh/chị chỉ có thể chọn tối đa 3 mẫu xe để đối chiếu cùng lúc.');
+                return;
+              }
+              selectedSlugs.add(slug);
+            }
+            syncCompareUI();
+          });
+        });
+
+        btnClear?.addEventListener('click', () => {
+          selectedSlugs.clear();
+          syncCompareUI();
+        });
+
+        btnOpenModal?.addEventListener('click', () => {
+          if (selectedSlugs.size < 2) {
+            alert('Vui lòng chọn ít nhất 2 mẫu xe để bắt đầu so sánh thông số.');
+            return;
+          }
+          const items = Array.from(selectedSlugs).map(getCardData).filter(Boolean);
+          const allSpecKeys = Array.from(new Set(items.flatMap((it) => Object.keys(it.specs)))).slice(0, 12);
+
+          let html = `<table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="border-b border-slate-200">
+                <th class="p-3 bg-slate-50 font-extrabold text-slate-700 w-44">Tiêu chí đối chiếu</th>
+                ${items.map((it) => `
+                  <th class="p-3 align-top min-w-[200px]">
+                    <img src="${it.img}" alt="${it.name}" class="w-full h-32 object-cover rounded-xl mb-2 border border-slate-200" />
+                    <a href="/san-pham/${it.slug}" class="font-extrabold text-blue-800 hover:underline block leading-snug">${it.name}</a>
+                  </th>
+                `).join('')}
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="p-3 bg-slate-50 font-bold text-slate-700">Thương hiệu</td>
+                ${items.map((it) => `<td class="p-3 font-extrabold text-slate-900">${it.brand || 'Chính hãng'}</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="p-3 bg-slate-50 font-bold text-slate-700">Vốn đối ứng nhận xe</td>
+                ${items.map((it) => `<td class="p-3 font-black text-red-600">${it.downPayment}</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="p-3 bg-slate-50 font-bold text-slate-700">Tải trọng cho phép</td>
+                ${items.map((it) => `<td class="p-3 font-bold text-slate-900">${it.payloadKg > 0 ? (it.payloadKg / 1000).toFixed(2).replace(/\.?0+$/, '') + ' Tấn' : 'Theo phiếu đăng kiểm'}</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="p-3 bg-slate-50 font-bold text-slate-700">Tổng trọng tải</td>
+                ${items.map((it) => `<td class="p-3 font-bold text-slate-900">${it.grossKg > 0 ? (it.grossKg / 1000).toFixed(2).replace(/\.?0+$/, '') + ' Tấn' : 'Theo phiếu đăng kiểm'}</td>`).join('')}
+              </tr>
+              ${allSpecKeys.map((k) => `
+                <tr>
+                  <td class="p-3 bg-slate-50 font-semibold text-slate-600">${k}</td>
+                  ${items.map((it) => `<td class="p-3 text-slate-800">${it.specs[k] || '—'}</td>`).join('')}
+                </tr>
+              `).join('')}
+              <tr>
+                <td class="p-3 bg-slate-50 font-bold text-slate-700">Hành động</td>
+                ${items.map((it) => `
+                  <td class="p-3">
+                    <a href="/san-pham/${it.slug}" class="inline-block w-full text-center bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-3 rounded-xl text-xs">
+                      Xem chi tiết &amp; Báo giá
+                    </a>
+                  </td>
+                `).join('')}
+              </tr>
+            </tbody>
+          </table>`;
+
+          if (tableContainer) tableContainer.innerHTML = html;
+          modal?.classList.remove('hidden');
+        });
+
+        btnCloseModal?.addEventListener('click', () => modal?.classList.add('hidden'));
+        modal?.addEventListener('click', (e) => {
+          if (e.target === modal) modal.classList.add('hidden');
+        });
+      })();
+    </script>
+
   </main>
 
   <script is:inline>

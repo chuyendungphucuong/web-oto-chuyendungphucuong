@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { allVehicles } from '../../data/vehicles.js';
 import { FINANCIAL_CONFIG } from '../../data/config.js';
+import postsData from '../../data/posts.json';
 
 export function getStaticPaths() {
   const vehicles = Array.isArray(allVehicles) ? allVehicles : [];
@@ -267,6 +268,78 @@ function extractShortBadge(v) {
   }
   relatedVehicles = relatedVehicles.slice(0, 4);
 // === END B2B & AI OVERVIEW HELPERS ===
+
+// === START STEP 2: B2B TECHNICAL ADVISOR & REAL HANDOVER EVIDENCE ===
+function buildSpecializedAdvisorProfile(v, specsObj, specialObj) {
+  const nameLower = String(v?.name || "").toLowerCase();
+  const subLower = String(v?.subCategory || v?.subKey || "").toLowerCase();
+  const allEntries = Object.entries({ ...(specialObj || {}), ...(specsObj || {}) });
+
+  const findSpec = (keywords) => {
+    for (const [k, val] of allEntries) {
+      const kl = k.toLowerCase();
+      if (keywords.some((kw) => kl.includes(kw))) return String(val).trim();
+    }
+    return "";
+  };
+
+  if (subLower.includes("bon-thuc-pham") || subLower.includes("bồn cám") || nameLower.includes("bồn cám") || nameLower.includes("chở cám")) {
+    const isScrew = nameLower.includes("trục vít") || subLower.includes("truc-vit");
+    return {
+      groupTitle: "Hồ Sơ Kỹ Thuật Chuyên Sâu: Hệ Thống Bồn Chở Thức Ăn Chăn Nuôi",
+      items: [
+        { label: "Vật liệu & Độ dày bồn", value: findSpec(["vật liệu", "inox", "thép"]) || "Thép SS400 / Inox SUS304 chuyên dụng (Thân 4mm, chỏm 5mm)" },
+        { label: "Cơ chế xả cám", value: findSpec(["cơ chế", "xả", "bơm"]) || (isScrew ? "Hệ thống trục vít thủy lực 3 đoạn vận hành êm ái" : "Hệ thống thổi khí nén áp lực cao không gây vỡ hạt cám") },
+        { label: "Thể tích & Chia khoang", value: findSpec(["thể tích", "dung tích", "khoang"]) || "Thiết kế chia 3 – 5 khoang độc lập tối ưu phân phối trại" },
+        { label: "Hệ thống thủy lực & PTO", value: findSpec(["thủy lực", "bơm", "pto"]) || "Bơm van thủy lực nhập khẩu đồng bộ, có van chống quá tải" },
+        { label: "Tải trọng cho phép chở", value: findSpec(["tải trọng cho phép", "khối lượng hàng"]) || "Chuẩn phiếu xuất xưởng Cục Đăng Kiểm Việt Nam" },
+        { label: "Chế độ bảo hành bồn", value: "Bảo hành bồn & hệ thống thủy lực 12–24 tháng, hỗ trợ tận trại 24/7" }
+      ]
+    };
+  }
+
+  if (subLower.includes("cuu-ho") || subLower.includes("cứu hộ") || nameLower.includes("cứu hộ")) {
+    return {
+      groupTitle: "Hồ Sơ Kỹ Thuật Chuyên Sâu: Hệ Thống Sàn Trượt, Tời & Cẩu Cứu Hộ",
+      items: [
+        { label: "Kết cấu sàn trượt", value: findSpec(["sàn", "kích thước sàn", "lòng thùng"]) || "Thép cường lực gân chống trượt, chịu tải tập trung cao" },
+        { label: "Tời kéo thủy lực", value: findSpec(["tời", "sức kéo"]) || "Tời thủy lực chuyên dụng kèm cáp thép lõi dầu chống xoắn" },
+        { label: "Càng kéo & Cẩu (nếu có)", value: findSpec(["cẩu", "càng kéo", "chức năng"]) || "Càng nâng thủy lực kẹp lốp chắc chắn, khóa an toàn 2 chiều" },
+        { label: "Hệ thống van điều khiển", value: findSpec(["thủy lực", "van", "xy lanh"]) || "Bộ chia thủy lực đa tầng đồng bộ, thao tác mượt hai bên hông" },
+        { label: "Tải trọng chuyên chở", value: findSpec(["tải trọng cho phép", "khối lượng hàng"]) || "Đúng tải trọng đăng kiểm lưu hành toàn quốc" },
+        { label: "Hỗ trợ sự cố & Bảo hành", value: "Bảo hành phần chuyên dùng 12–24 tháng, hỗ trợ kỹ thuật 24/7" }
+      ]
+    };
+  }
+
+  return {
+    groupTitle: "Hồ Sơ Kiểm Soát Chất Lượng & Thiết Bị Chuyên Dùng Phú Cường",
+    items: [
+      { label: "Đơn vị gia công & lắp đặt", value: "Trực tiếp tại xưởng cơ khí Ô Tô Phú Cường (Bình Chánh, TP.HCM)" },
+      { label: "Vật liệu kết cấu chính", value: findSpec(["vật liệu", "inox", "thép"]) || "Thép chịu lực SS400 / Inox 304 đúng bản vẽ thiết kế" },
+      { label: "Thông số chuyên dùng", value: findSpec(["thể tích", "kích thước", "cẩu", "bơm"]) || "Lắp đặt đồng bộ theo tiêu chuẩn Cục Đăng Kiểm Việt Nam" },
+      { label: "Hồ sơ đăng kiểm & Biển số", value: "Trọn gói bản vẽ cải tạo, nghiệm thu xuất xưởng & cấp biển số vàng" },
+      { label: "Động cơ & Khung gầm", value: findSpec(["động cơ", "công suất"]) || "Xe cơ sở chính hãng mới 100%, bảo hành toàn quốc" },
+      { label: "Cam kết hậu mãi", value: "Bảo hành đồng bộ một đầu mối cho cả xe nền và thiết bị chuyên dùng" }
+    ]
+  };
+}
+
+const advisorProfile = buildSpecializedAdvisorProfile(vehicle, specs, specialSpecs);
+
+const relatedHandoverPosts = (Array.isArray(postsData) ? postsData : [])
+  .filter((p) => {
+    const title = String(p.title || "").toLowerCase();
+    const cat = String(p.category || "").toLowerCase();
+    const brand = String(vehicle.brand || "").toLowerCase();
+    const sub = String(vehicle.subCategory || "").toLowerCase();
+    const isRealEvidence = cat.includes("bàn giao") || title.includes("bàn giao") || title.includes("xuất xưởng") || title.includes("nghiệm thu") || title.includes("đánh giá");
+    if (!isRealEvidence) return false;
+    return (brand && title.includes(brand)) || (sub.includes("cám") && title.includes("cám")) || (sub.includes("cứu hộ") && title.includes("cứu hộ"));
+  })
+  .slice(0, 3);
+// === END STEP 2 ===
+
 ---
 
 <BaseLayout title={`${vehicle.name} | Ô Tô Chuyên Dùng Phú Cường`} description={vehicle.summary || vehicle.name} image={images[0]}>
@@ -275,7 +348,149 @@ function extractShortBadge(v) {
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
 
-  <main class="container mx-auto px-4 py-8 max-w-7xl">
+  
+  
+  <style is:inline>
+    #printTechContainer {
+      display: none;
+    }
+    @media print {
+      header, footer, nav, main, .no-print, #techProposalModal, .fixed {
+        display: none !important;
+      }
+      html, body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      #printTechContainer {
+        display: block !important;
+        position: static !important;
+        width: 210mm !important;
+        margin: 0 auto !important;
+        background: #ffffff !important;
+      }
+      .print-page-tech {
+        display: block !important;
+        box-sizing: border-box !important;
+        padding: 8mm 10mm !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        width: 210mm !important;
+        margin: 0 auto !important;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+    }
+  </style>
+
+  <!-- KHU VỰC IN VECTOR 1 TRANG A4 CHUẨN MỰC (KHÔNG HIỂN THỊ GIÁ) -->
+    <div id="printTechContainer">
+      <div class="print-page-tech bg-white max-w-[210mm] mx-auto text-slate-900 font-sans space-y-3">
+        <!-- Header Công Ty -->
+        <div class="border-b-2 border-blue-900 pb-2 flex justify-between items-start">
+          <div>
+            <h1 class="text-[11px] font-black text-blue-900 uppercase">Ô TÔ PHÚ CƯỜNG - NHÀ CUNG CẤP &amp; SẢN XUẤT Ô TÔ CHUYÊN DÙNG</h1>
+            <p class="text-[8.5px] text-slate-600 mt-0.5">Showroom 1: 2466 Lê Khả Phiêu, Xã Bình Chánh, TP. Hồ Chí Minh</p>
+            <p class="text-[8.5px] text-slate-600">Showroom 2: 95 Quốc lộ 1A, Nhị Quý, Tiền Giang | Showroom 3: Bình Đức, An Giang</p>
+            <p class="text-[8.5px] font-bold text-red-600 mt-0.5">Hotline Kỹ Thuật: 0922 77 77 03 | Website: chuyendungphucuong.vn</p>
+          </div>
+          <div class="text-right">
+            <span class="bg-blue-900 text-white text-[7.5px] font-extrabold px-2.5 py-1 rounded inline-block">HỒ SƠ KỸ THUẬT ĐẦU TƯ</span>
+            <p id="printTechDate" class="text-[8.5px] text-slate-500 mt-1 font-semibold"></p>
+          </div>
+        </div>
+
+        <!-- Tiêu đề biểu mẫu -->
+        <div class="text-center space-y-1 pt-1">
+          <span class="bg-blue-100 text-blue-900 text-[8px] font-black px-2.5 py-0.5 rounded uppercase">Tài liệu phê duyệt cấu hình kỹ thuật</span>
+          <h2 class="text-[12px] font-black uppercase text-blue-950">BẢNG THÔNG SỐ KỸ THUẬT &amp; THIẾT BỊ CHUYÊN DÙNG</h2>
+          <p class="text-[10.5px] font-extrabold text-blue-800">{vehicle.name}</p>
+          <div id="printTechCustomerLine" class="text-[9px] font-bold text-red-700 hidden"></div>
+        </div>
+
+        <!-- Khung hình ảnh xe lớn -->
+        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-center gap-4">
+          <div class="bg-white p-1 rounded-lg border border-slate-200 w-40 h-28 flex items-center justify-center overflow-hidden shrink-0">
+            <img src={images[0]} alt={vehicle.name} style="max-height: 100px; width: auto; object-fit: contain;" />
+          </div>
+          <div class="space-y-1 flex-1">
+            <span class="text-[7.5px] font-extrabold text-blue-700 uppercase bg-blue-100 px-2 py-0.5 rounded">Mẫu xe &amp; Phân khúc</span>
+            <h3 class="text-[11px] font-black text-blue-950 leading-snug">{vehicle.name}</h3>
+            <p class="text-[8.5px] text-slate-600">Thương hiệu: <strong class="text-slate-900 uppercase">{vehicle.brand || 'Chính hãng'}</strong> | Phân loại: <strong class="text-slate-900">{vehicle.subCategory || 'Xe chuyên dùng'}</strong></p>
+            <p class="text-[8px] text-emerald-800 font-semibold">Đạt chuẩn thiết kế cải tạo &amp; nghiệm thu đăng kiểm lưu hành toàn quốc.</p>
+          </div>
+        </div>
+
+        <!-- Bảng thông số xe cơ sở & Thiết bị chuyên dùng -->
+        <div class="grid grid-cols-2 gap-2.5 text-[9px]">
+          <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 space-y-1">
+            <h3 class="font-extrabold text-blue-900 uppercase tracking-wide text-[8.5px] border-b border-slate-300 pb-0.5">1. Thông số xe cơ sở (Chassis):</h3>
+            <div class="space-y-0.5">
+              {Object.entries(specs).map(([k, v]) => (
+                <div class="flex justify-between border-b border-slate-200/80 pb-0.5 gap-2">
+                  <span class="text-slate-600">{k}:</span>
+                  <strong class="text-slate-900 text-right">{String(v)}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 space-y-1">
+            <h3 class="font-extrabold text-red-800 uppercase tracking-wide text-[8.5px] border-b border-slate-300 pb-0.5">2. Thiết bị &amp; Hệ thống chuyên dùng:</h3>
+            <div class="space-y-0.5">
+              {Object.entries(specialSpecs).map(([k, v]) => (
+                <div class="flex justify-between border-b border-slate-200/80 pb-0.5 gap-2">
+                  <span class="text-slate-600">{k}:</span>
+                  <strong class="text-slate-900 text-right">{String(v)}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Tiêu chuẩn kiểm soát chất lượng -->
+        <div class="space-y-1 text-[9px]">
+          <h3 class="font-extrabold text-slate-900 uppercase tracking-wide text-[8.5px] border-b border-slate-300 pb-0.5">3. Tiêu chuẩn chế tạo &amp; Cam kết bảo hành Phú Cường Auto:</h3>
+          <table class="w-full border-collapse">
+            <tbody class="divide-y divide-slate-200">
+              {advisorProfile.items.map((spec) => (
+                <tr>
+                  <td class="py-1 pr-3 font-bold text-slate-700 w-1/3 bg-slate-50 px-2">{spec.label}</td>
+                  <td class="py-1 pl-3 font-semibold text-slate-900 px-2">{spec.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Ghi chú liên hệ -->
+        <div class="bg-blue-50 border border-blue-200 p-2 rounded-lg text-blue-950 leading-tight font-medium text-[8px]">
+          <em>Hồ sơ kỹ thuật được cung cấp bởi Ô Tô Chuyên Dùng Phú Cường làm cơ sở trình Ban Giám Đốc phê duyệt cấu hình đầu tư (Chưa bao gồm báo giá). Quý doanh nghiệp cần báo giá chi tiết và phương án trả góp xin liên hệ trực tiếp Hotline: <strong class="text-red-600">0922 77 77 03 - Mr. Hoàng Vũ</strong>.</em>
+        </div>
+
+        <!-- Chữ ký -->
+        <div class="flex justify-between pt-3 text-center text-[8.5px]">
+          <div class="w-[45%] space-y-9">
+            <p class="font-bold text-slate-700 m-0 uppercase">Đại Diện Kỹ Thuật Phú Cường</p>
+            <p class="font-extrabold text-slate-900 m-0">Mr. Hoàng Vũ</p>
+          </div>
+          <div class="w-[45%] space-y-9">
+            <p class="font-bold text-slate-700 m-0 uppercase">Xác Nhận / Phê Duyệt Của Ban Giám Đốc</p>
+            <p class="text-slate-400 italic m-0">(Ký, đóng dấu duyệt cấu hình)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+
+  <main class="container mx-auto px-4 py-8 max-w-7xl no-print">
     <nav class="text-sm text-gray-500 mb-6">
       <a href="/" class="hover:text-blue-600">Trang chủ</a> &gt; 
       <a href="/san-pham" class="hover:text-blue-600">Sản phẩm</a> &gt; 
@@ -938,7 +1153,229 @@ function extractShortBadge(v) {
 </script>
 <!-- === END INLINE YOUTUBE AUTO-EMBED === -->
 
-</main>
+
+    <!-- BƯỚC 2 (HOÀN THIỆN): HỒ SƠ KỸ THUẬT & BIỂU MẪU TRÌNH SẾP (KHÔNG HIỂN THỊ GIÁ) -->
+    <section class="mt-10 space-y-8 no-print">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8 space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+          <div>
+            <span class="inline-block bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-1.5">
+              Tư Vấn Kỹ Thuật Chuyên Sâu
+            </span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">
+              {advisorProfile.groupTitle}
+            </h2>
+          </div>
+          <button
+            type="button"
+            id="btnOpenTechPdfModal"
+            class="shrink-0 inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-blue-800 text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition shadow-sm cursor-pointer"
+          >
+            Xem &amp; In Biểu Mẫu Kỹ Thuật Trình Sếp (PDF)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {advisorProfile.items.map((specItem) => (
+            <div class="bg-slate-50/90 border border-slate-200/90 rounded-xl p-4 space-y-1">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wide block">
+                {specItem.label}
+              </span>
+              <p class="text-sm font-extrabold text-slate-900 leading-snug">
+                {specItem.value}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div class="bg-blue-50/60 border border-blue-100 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm">
+          <p class="text-slate-700 font-medium">
+            <strong class="text-blue-900">Cam kết từ xưởng Phú Cường:</strong> Khách hàng được trực tiếp kiểm tra độ dày vật liệu, nghiệm thu thử tải hệ thống thủy lực tại xưởng Bình Chánh trước khi xuất hóa đơn và đăng kiểm.
+          </p>
+          <a href="tel:0922777703" class="shrink-0 font-extrabold text-red-600 hover:text-red-700 whitespace-nowrap">
+            Gọi kỹ sư tư vấn: 0922 77 77 03 &rarr;
+          </a>
+        </div>
+      </div>
+
+      {relatedHandoverPosts.length > 0 && (
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-[11px] font-extrabold uppercase tracking-wider text-red-600">Hình Ảnh &amp; Dự Án Thực Tế</span>
+              <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Nhật Ký Xuất Xưởng &amp; Bàn Giao Thực Tế Cùng Dòng Xe</h3>
+            </div>
+            <a href="/tin-tuc" class="text-xs sm:text-sm font-bold text-blue-700 hover:underline">
+              Xem thêm các xe đã bàn giao &rarr;
+            </a>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {relatedHandoverPosts.map((post) => (
+              <a href={`/tin-tuc/${post.slug}`} class="group bg-slate-50 rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-blue-500 transition">
+                <div>
+                  <div class="h-40 bg-slate-200 overflow-hidden relative">
+                    <img src={post.image || '/Logo.png'} alt={post.title} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                    <span class="absolute top-2 left-2 bg-blue-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                      Xe thực tế đã bàn giao
+                    </span>
+                  </div>
+                  <div class="p-3.5 space-y-1">
+                    <span class="text-[11px] text-slate-400 font-semibold">{post.date}</span>
+                    <h4 class="text-sm font-bold text-slate-900 group-hover:text-blue-700 line-clamp-2 leading-snug">
+                      {post.title}
+                    </h4>
+                  </div>
+                </div>
+                <div class="px-3.5 pb-3 text-xs font-bold text-blue-700">
+                  Xem chi tiết bàn giao &rarr;
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+
+    
+
+    <!-- MODAL XEM TRƯỚC BIỂU MẪU KỸ THUẬT TRÌNH SẾP -->
+    <div id="techProposalModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 overflow-y-auto no-print">
+      <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto flex flex-col shadow-2xl border border-slate-300">
+        <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between sticky top-0 z-10">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-sky-300">Biểu Mẫu Kỹ Thuật Trình Sếp (Không Hiển Thị Giá)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              id="btnPrintTechSheetAction"
+              class="bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold px-4 py-2 rounded-xl shadow-sm cursor-pointer"
+            >
+              In / Lưu PDF Kỹ Thuật Ngay
+            </button>
+            <button
+              type="button"
+              id="btnCloseTechModal"
+              class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 text-white font-bold flex items-center justify-center cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <div class="p-4 sm:p-8 space-y-4 bg-slate-100 flex-1">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tên Đơn vị / Khách hàng trình sếp (Tùy chọn hiển thị trên biểu mẫu in):</label>
+            <input type="text" id="inputTechCustomerName" placeholder="VD: Công ty TNHH Vận Tải XYZ..." class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm font-bold text-blue-900 outline-none focus:border-blue-600" />
+          </div>
+
+          <!-- Khung xem trước trực quan đúng chuẩn bản in A4 -->
+          <div class="bg-white p-6 sm:p-8 rounded-xl shadow-md border border-slate-300 max-w-[210mm] mx-auto space-y-4 text-slate-900 text-xs">
+            <div class="border-b-2 border-blue-900 pb-3 flex flex-col sm:flex-row justify-between items-start gap-2">
+              <div>
+                <h3 class="text-xs font-black text-blue-900 uppercase">Ô TÔ PHÚ CƯỜNG - NHÀ CUNG CẤP &amp; SẢN XUẤT Ô TÔ CHUYÊN DÙNG</h3>
+                <p class="text-[10px] text-slate-600 mt-0.5">Showroom 1: 2466 Lê Khả Phiêu, Xã Bình Chánh, TP. Hồ Chí Minh</p>
+                <p class="text-[10px] font-bold text-red-600 mt-0.5">Hotline Kỹ Thuật: 0922 77 77 03 | chuyendungphucuong.vn</p>
+              </div>
+              <div class="sm:text-right">
+                <span class="bg-blue-900 text-white text-[9px] font-extrabold px-2.5 py-1 rounded inline-block">HỒ SƠ KỸ THUẬT ĐẦU TƯ</span>
+              </div>
+            </div>
+
+            <div class="text-center space-y-1">
+              <h2 class="text-sm sm:text-base font-black uppercase text-blue-950">BẢNG THÔNG SỐ KỸ THUẬT &amp; THIẾT BỊ CHUYÊN DÙNG</h2>
+              <p class="text-xs sm:text-sm font-extrabold text-blue-800">{vehicle.name}</p>
+              <p id="previewTechCustLine" class="text-xs font-bold text-red-700 hidden"></p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
+              <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
+                <h4 class="font-extrabold text-blue-900 uppercase border-b pb-1">1. Thông số xe cơ sở (Chassis):</h4>
+                {Object.entries(specs).map(([k, v]) => (
+                  <div class="flex justify-between border-b border-slate-200/70 py-0.5 gap-2">
+                    <span class="text-slate-600">{k}:</span>
+                    <strong class="text-slate-900 text-right">{String(v)}</strong>
+                  </div>
+                ))}
+              </div>
+              <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
+                <h4 class="font-extrabold text-red-800 uppercase border-b pb-1">2. Thiết bị chuyên dùng:</h4>
+                {Object.entries(specialSpecs).map(([k, v]) => (
+                  <div class="flex justify-between border-b border-slate-200/70 py-0.5 gap-2">
+                    <span class="text-slate-600">{k}:</span>
+                    <strong class="text-slate-900 text-right">{String(v)}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <table class="w-full border-collapse text-[11px]">
+              <tbody class="divide-y divide-slate-200">
+                {advisorProfile.items.map((spec) => (
+                  <tr>
+                    <td class="py-1.5 pr-3 font-bold text-slate-700 w-1/3 bg-slate-50 px-3">{spec.label}</td>
+                    <td class="py-1.5 pl-3 font-semibold text-slate-900 px-3">{spec.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (function() {
+        const btnOpen = document.getElementById('btnOpenTechPdfModal');
+        const btnClose = document.getElementById('btnCloseTechModal');
+        const modal = document.getElementById('techProposalModal');
+        const btnPrintAction = document.getElementById('btnPrintTechSheetAction');
+        const inputCustName = document.getElementById('inputTechCustomerName');
+        const previewCustLine = document.getElementById('previewTechCustLine');
+        const printTechCustomerLine = document.getElementById('printTechCustomerLine');
+        const printTechDate = document.getElementById('printTechDate');
+
+        btnOpen?.addEventListener('click', () => {
+          modal?.classList.remove('hidden');
+        });
+        btnClose?.addEventListener('click', () => {
+          modal?.classList.add('hidden');
+        });
+        modal?.addEventListener('click', (e) => {
+          if (e.target === modal) modal.classList.add('hidden');
+        });
+
+        inputCustName?.addEventListener('input', () => {
+          const val = (inputCustName.value || '').trim();
+          if (val) {
+            if (previewCustLine) {
+              previewCustLine.innerText = 'Kính gửi: ' + val;
+              previewCustLine.classList.remove('hidden');
+            }
+            if (printTechCustomerLine) {
+              printTechCustomerLine.innerText = 'Kính gửi: ' + val;
+              printTechCustomerLine.classList.remove('hidden');
+            }
+          } else {
+            previewCustLine?.classList.add('hidden');
+            printTechCustomerLine?.classList.add('hidden');
+          }
+        });
+
+        btnPrintAction?.addEventListener('click', () => {
+          const now = new Date();
+          const day = String(now.getDate()).padStart(2, '0');
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const year = now.getFullYear();
+          if (printTechDate) {
+            printTechDate.innerText = 'Ngày xuất hồ sơ: ' + day + '/' + month + '/' + year;
+          }
+          window.print();
+        });
+      })();
+    </script>
+  
+  </main>
 
   <script is:inline define:vars={{ rawImages: images, basePrice: vehicle.price || 0, roadTax: dynamicRoadTax, insurance: dynamicInsuranceTNDS, otherFixed: fixedServiceAndPlate }}>
     let currentImgIdx = 0;
