@@ -125,7 +125,7 @@ const breadcrumbSchema = {
       "@type": "ListItem",
       "position": 2,
       "name": vehicle.subCategory || "Xe Chuyên Dùng",
-      "item": `https://chuyendungphucuong.vn/san-pham?cat=${vehicle.subKey || 'xe-tai-chuyen-dung'}`
+      "item": `https://chuyendungphucuong.vn/danh-muc/${vehicle.subKey || 'xe-tai-chuyen-dung'}`
     },
     {
       "@type": "ListItem",
@@ -746,7 +746,7 @@ function extractShortBadge(v) {
             <span class="w-2 h-6 bg-red-600 rounded-full"></span>
             Các Dòng Xe Cùng Phân Khúc ({vehicle.subCategory || "Chuyên Dùng"}) Để So Sánh
           </h2>
-          <a href={`/san-pham?cat=${vehicle.subKey || "xe-tai-chuyen-dung"}`} class="text-sm font-bold text-blue-600 hover:underline">
+          <a href={`/danh-muc/${vehicle.subKey || "xe-tai-chuyen-dung"}`} class="text-sm font-bold text-blue-600 hover:underline">
             Xem tất cả cùng loại &rarr;
           </a>
         </div>

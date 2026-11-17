@@ -6,65 +6,65 @@
     },
     {
       "title": "Xe Tải Chuyên Dùng",
-      "url": "/san-pham?cat=xe-tai-chuyen-dung",
+      "url": "/danh-muc/xe-tai-chuyen-dung",
       "children": [
         {
           "title": "Xe bồn cám thức ăn chăn nuôi",
-          "url": "/san-pham?cat=bon-thuc-pham"
+          "url": "/danh-muc/bon-thuc-pham"
         },
         {
           "title": "Xe cứu hộ giao thông",
-          "url": "/san-pham?cat=cuu-ho"
+          "url": "/danh-muc/cuu-ho"
         },
         {
           "title": "Xe nâng đầu chở máy công trình",
-          "url": "/san-pham?cat=nang-dau"
+          "url": "/danh-muc/nang-dau"
         },
         {
           "title": "Xe bồn chở nước tưới cây",
-          "url": "/san-pham?cat=bon-nuoc"
+          "url": "/danh-muc/bon-nuoc"
         },
         {
           "title": "Xe bồn hút chất thải",
-          "url": "/san-pham?cat=bon-hut-chat-thai"
+          "url": "/danh-muc/bon-hut-chat-thai"
         },
         {
           "title": "Xe tải gắn cẩu tự hành",
-          "url": "/san-pham?cat=xe-cau"
+          "url": "/danh-muc/xe-cau"
         },
         {
           "title": "Xe cuốn ép rác môi trường",
-          "url": "/san-pham?cat=ep-rac"
+          "url": "/danh-muc/ep-rac"
         },
         {
           "title": "Đầu kéo gắn cẩu & Chở gia cầm",
-          "url": "/san-pham?cat=xe-nang-khac"
+          "url": "/danh-muc/xe-nang-khac"
         },
         {
           "title": "Xe quét đường hút bụi",
-          "url": "/san-pham?cat=quet-duong-hut-bui"
+          "url": "/danh-muc/quet-duong-hut-bui"
         }
       ]
     },
     {
       "title": "Ô Tô Khách",
-      "url": "/san-pham?cat=xe-khach",
+      "url": "/danh-muc/xe-khach",
       "children": [
         {
           "title": "Xe khách 16 chỗ (Solati, Sunray)",
-          "url": "/san-pham?cat=16-cho"
+          "url": "/danh-muc/16-cho"
         },
         {
           "title": "Xe khách 29 chỗ (County, Kinglong, Thaco)",
-          "url": "/san-pham?cat=29-cho"
+          "url": "/danh-muc/29-cho"
         },
         {
           "title": "Xe khách 34 chỗ bóng hơi",
-          "url": "/san-pham?cat=34-cho"
+          "url": "/danh-muc/34-cho"
         },
         {
           "title": "Xe khách 47 chỗ & Giường nằm",
-          "url": "/san-pham?cat=47-cho"
+          "url": "/danh-muc/47-cho"
         }
       ]
     },
@@ -130,23 +130,23 @@
     },
     {
       "title": "Xe Cũ",
-      "url": "/san-pham?cat=xe-cu",
+      "url": "/danh-muc/xe-cu",
       "children": [
         {
           "title": "Xe 4 - 7 chỗ",
-          "url": "/san-pham?cat=xe-4-7-cho-cu"
+          "url": "/danh-muc/xe-4-7-cho-cu"
         },
         {
           "title": "Xe tải cũ",
-          "url": "/san-pham?cat=xe-tai-cu"
+          "url": "/danh-muc/xe-tai-cu"
         },
         {
           "title": "Xe chuyên dùng cũ",
-          "url": "/san-pham?cat=xe-chuyen-dung-cu"
+          "url": "/danh-muc/xe-chuyen-dung-cu"
         },
         {
           "title": "Xe khách cũ",
-          "url": "/san-pham?cat=xe-khach-cu"
+          "url": "/danh-muc/xe-khach-cu"
         }
       ]
     }

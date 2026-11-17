@@ -1,86 +1,597 @@
 ---
-import AdminLayout from '../../../layouts/AdminLayout.astro';
-import postsData from '../../../data/posts.json';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { allVehicles } from '../data/vehicles.js';
+import postsData from '../data/posts.json';
 
-const posts = Array.isArray(postsData) ? postsData : [];
+const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
+
+// Danh sách các phân khúc thực tế để đưa vào ô chọn gọn trên tiêu đề
+const productCategories = Array.from(
+  new Set(vehicleList.map((v: any) => String(v.subCategory || v.categoryName || "").trim()).filter(Boolean))
+);
+
+const coreServices = [
+  { title: "Cứu Hộ Chuyên Dùng 24/7", desc: "Đội ngũ xe sàn trượt và cẩu trực chiến hỗ trợ khẩn cấp mọi lúc mọi nơi.", icon: "🚨", link: "/dich-vu/cuu-ho-chuyen-dung" },
+  { title: "Sửa Chữa Động Cơ & Thủy Lực", desc: "Đại tu động cơ Cummins, Yuchai, Hino và phục hồi hệ thống bơm van.", icon: "⚙️", link: "/dich-vu/sua-xe-chuyen-dung" },
+  { title: "Sửa Chữa & Gia Cố Thùng Bồn", desc: "Hàn vá bồn xitec, gia cố khung xương thùng xe tải, chống rò rỉ.", icon: "🚛", link: "/dich-vu/sua-thung-bon" },
+  { title: "Đăng Kiểm & Cải Tạo Hồ Sơ", desc: "Trọn gói thủ tục thiết kế hoán cải, đăng kiểm và cấp biển số vàng.", icon: "📄", link: "/dich-vu/cai-tao-ho-so" }
+];
+
+// Lấy tối đa 24 tin tức để chia cho các Tab chuyên mục
+const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 24) : [];
+
+// === START HAS VIDEO HELPER ===
+function itemHasVideo(item: any) {
+  if (!item) return false;
+  if (item.videoUrl && String(item.videoUrl).trim() !== "") return true;
+  if (item.youtubeUrl && String(item.youtubeUrl).trim() !== "") return true;
+  const bodyText = String(item.description || item.content || "");
+  return /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)[a-zA-Z0-9_-]{11}/i.test(bodyText);
+}
+// === END HAS VIDEO HELPER ===
+
+// === START SPEC BADGE EXTRACTOR ===
+function getCardSpecBadges(p: any) {
+  if (!p) return [];
+  if (p.customBadges) {
+    const manualList = Array.isArray(p.customBadges)
+      ? p.customBadges.map((s: any) => String(s).trim()).filter(Boolean)
+      : String(p.customBadges).split(/[,|]/).map((s: string) => s.trim()).filter(Boolean);
+    if (manualList.length > 0) return manualList.slice(0, 3);
+  }
+  const badges = [];
+  const chassis = p.chassisSpecs || {};
+  const special = p.specialSpecs || {};
+  const all = [...Object.entries(chassis), ...Object.entries(special)];
+
+  for (const [k, v] of all) {
+    const kl = String(k).toLowerCase();
+    const vs = String(v);
+    if (kl.includes("thể tích") || kl.includes("dung tích")) {
+      const m = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+      if (m) {
+        badges.push(`🛢️ Bồn ${m[1]} Khối`);
+        break;
+      }
+    }
+  }
+
+  for (const [k, v] of all) {
+    const kl = String(k).toLowerCase();
+    const vs = String(v);
+    if (kl.includes("tải trọng cho phép") || kl.includes("tải trọng chuyên chở") || kl.includes("khối lượng hàng") || kl.includes("tải trọng chở")) {
+      const kgMatch = vs.match(/(\d{1,2}\.\d{3}|\d{3,5})\s*kg/i);
+      if (kgMatch) {
+        const ton = (parseFloat(kgMatch[1].replace(".", "")) / 1000).toFixed(2).replace(/\.?0+$/, "");
+        badges.push(`⚖️ Tải ${ton} Tấn`);
+        break;
+      }
+      const tonMatch = vs.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan)/i);
+      if (tonMatch) {
+        badges.push(`⚖️ Tải ${tonMatch[1]} Tấn`);
+        break;
+      }
+    }
+  }
+
+  for (const [k, v] of all) {
+    if (badges.length >= 2) break;
+    const vs = String(v);
+    if (/inox\s*304/i.test(vs)) {
+      badges.push("🛡️ Inox 304");
+      break;
+    } else if (/sàn trượt/i.test(vs) && /càng kéo/i.test(vs)) {
+      badges.push("🔧 Sàn trượt + Càng kéo");
+      break;
+    } else if (/kích thước.*sàn|lòng thùng/i.test(String(k))) {
+      const dim = vs.match(/(\d[.,]\d+|\d{4})\s*x\s*(\d[.,]\d+|\d{4})/i);
+      if (dim) {
+        const d1 = dim[1].length === 4 ? (parseInt(dim[1]) / 1000).toFixed(1) + "m" : dim[1] + "m";
+        badges.push(`📏 Sàn dài ${d1}`);
+        break;
+      }
+    }
+  }
+
+  const nameStr = String(p.name || "");
+  if (badges.length === 0) {
+    const vMatch = nameStr.match(/(\d+(?:[.,]\d+)?)\s*(?:khối|khoi|m3|m³)/i);
+    if (vMatch) badges.push(`🛢️ Bồn ${vMatch[1]} Khối`);
+
+    const tMatch1 = nameStr.match(/(\d+)t(\d+)/i);
+    if (tMatch1) badges.push(`⚖️ Tải ${tMatch1[1]}.${tMatch1[2]} Tấn`);
+    else {
+      const tMatch2 = nameStr.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan|t\b)/i);
+      if (tMatch2) badges.push(`⚖️ Tải ${tMatch2[1]} Tấn`);
+    }
+
+    const sMatch = nameStr.match(/(\d+)\s*chỗ/i);
+    if (sMatch) badges.push(`💺 ${sMatch[1]} Chỗ ngồi`);
+  }
+
+  if (badges.length < 2) {
+    if (/2 chức năng/i.test(nameStr) && !badges.some(b => b.includes("Sàn trượt"))) {
+      badges.push("🔧 Sàn trượt + Càng kéo");
+    } else if (/3 chức năng/i.test(nameStr)) {
+      badges.push("🏗️ Cẩu + Sàn + Càng kéo");
+    } else if (/trục vít/i.test(nameStr)) {
+      badges.push("⚙️ Bơm trục vít");
+    } else if (/cám thổi|khí nén/i.test(nameStr)) {
+      badges.push("💨 Bơm khí nén");
+    }
+  }
+
+  return badges.slice(0, 2);
+}
+// === END SPEC BADGE EXTRACTOR ===
+
+// Phân tách 2 nhóm xe cho 2 hàng băng chuyền trang chủ
+// Hàng 1: Xe bồn chở thức ăn chăn nuôi (Bồn cám) - Ưu tiên xe có tick isFeatured lên đầu
+const feedTrucksRaw = vehicleList.filter((v: any) => {
+  const subKey = String(v.subKey || "").toLowerCase();
+  const subCat = String(v.subCategory || "").toLowerCase();
+  const name = String(v.name || "").toLowerCase();
+  return subKey.includes("bon-cho-cam") || subKey.includes("bon-cam") || subCat.includes("bồn cám") || subCat.includes("thức ăn chăn nuôi") || name.includes("bồn cám") || name.includes("chở cám");
+});
+const featuredFeed = feedTrucksRaw.filter((v: any) => v.isFeatured === true);
+const feedTrucks = featuredFeed.length > 0 ? featuredFeed : feedTrucksRaw;
+
+// Hàng 2: Các dòng xe chuyên dùng & xe khách còn lại - Ưu tiên xe có tick isFeatured lên đầu
+const feedSlugs = new Set(feedTrucks.map((v: any) => v.slug));
+const otherVehiclesRaw = vehicleList.filter((v: any) => !feedSlugs.has(v.slug));
+const featuredOther = otherVehiclesRaw.filter((v: any) => v.isFeatured === true);
+const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRaw;
 ---
 
-<AdminLayout title="Quản Lý Bài Viết Tin Tức & Kiến Thức" activeTab="posts">
-  <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6 flex justify-between items-center">
-    <div class="text-sm font-bold text-slate-700">
-      Tổng số: <span class="text-blue-600">{posts.length}</span> bài viết
-    </div>
-    <a href="/admin/posts/edit" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-sm transition shadow-md">
-      + Viết Bài Mới
-    </a>
-  </div>
+<BaseLayout title="Ô Tô Chuyên Dùng Phú Cường | Xe Tải, Xe Bồn, Xe Cứu Hộ Hàng Đầu">
+  <style is:inline>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 
-  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-    <table class="w-full text-left border-collapse text-sm">
-      <thead>
-        <tr class="bg-slate-800 text-white text-xs uppercase">
-          <th class="p-4">Ảnh</th>
-          <th class="p-4">Tiêu đề bài viết</th>
-          <th class="p-4">Chuyên mục</th>
-          <th class="p-4">Ngày đăng</th>
-          <th class="p-4 text-right">Thao tác</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-200">
-        {posts.map((p: any) => (
-          <tr class="hover:bg-slate-50 post-row">
-            <td class="p-4 w-20">
-              <img src={p.image} alt={p.title} class="w-16 h-12 object-cover rounded-lg border" />
-            </td>
-            <td class="p-4 font-bold text-slate-900 max-w-md line-clamp-2">{p.title}</td>
-            <td class="p-4"><span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">{p.category}</span></td>
-            <td class="p-4 text-slate-500 whitespace-nowrap">{p.date}</td>
-            <td class="p-4 text-right whitespace-nowrap space-x-2">
-              <a href={`/tin-tuc/${p.slug}`} target="_blank" class="inline-block bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 font-bold px-3 py-1.5 rounded-lg text-xs transition">
-                👁️ Xem
+  <main class="space-y-12 pb-16 bg-slate-50/50">
+
+    <!-- HERO SECTION (Đã tinh chỉnh màu Xanh than sang trọng, nhã nhặn) -->
+    <section class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 text-white py-12 lg:py-16 px-4 border-b border-slate-800">
+      <div class="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-6">
+          <span class="bg-blue-600/90 text-white text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block">
+            Đại Lý Phân Phối &amp; Đóng Mới Độc Quyền
+          </span>
+          <h1 class="text-3xl md:text-5xl font-black leading-tight tracking-tight">
+            Ô Tô Chuyên Dùng <span class="text-amber-400">Phú Cường</span>
+          </h1>
+          <p class="text-slate-300 text-base md:text-lg max-w-xl leading-relaxed font-normal">
+            Chuyên cung cấp và đóng mới các dòng xe tải chuyên dùng, xe bồn, xe cẩu, xe cứu hộ và ô tô khách chất lượng cao. Hỗ trợ trả góp lên đến 90%, bảo hành toàn quốc.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-2">
+            <a href="/san-pham" class="bg-blue-600 hover:bg-blue-700 text-white font-extrabold px-8 py-3.5 rounded-xl transition shadow-lg shadow-blue-900/30 text-base">
+              🚗 Khám Phá Kho Xe ({vehicleList.length}+ Mẫu)
+            </a>
+            <a href="/tinh-lan-banh" class="bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold px-6 py-3.5 rounded-xl transition text-base backdrop-blur-sm">
+              🧮 Tính Giá Lăn Bánh
+            </a>
+          </div>
+        </div>
+        <div class="lg:col-span-5">
+          <div class="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700 shadow-xl space-y-4">
+            <h3 class="text-xl font-bold border-b border-slate-700 pb-3 text-slate-100 flex items-center gap-2">
+              <span>📍</span> Hệ Thống Showroom Miền Nam
+            </h3>
+            <div class="space-y-3 text-sm text-slate-300">
+              <p><strong>Showroom 1:</strong> 2466 Lê Khả Phiêu, Xã Bình Chánh, TP. HCM</p>
+              <p><strong>Showroom 2:</strong> 95 Quốc lộ 1A, Nhị Quý, Tiền Giang</p>
+              <p><strong>Showroom 3:</strong> 26 Trần Hưng Đạo, Bình Đức, An Giang</p>
+            </div>
+            <a href="tel:0922777703" class="block bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 rounded-xl text-center transition shadow-sm">
+              📞 Hotline Tư Vấn: 0922 77 77 03
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KHỐI SẢN PHẨM NỔI BẬT (2 HÀNG BĂNG CHUYỀN ĐỘC LẬP) -->
+    <section class="container mx-auto px-4 max-w-7xl space-y-12 pt-4">
+      
+      <!-- HÀNG 1: XE BỒN CHỞ THỨC ĂN CHĂN NUÔI (BỒN CÁM) -->
+      {feedTrucks.length > 0 && (
+        <div>
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-5 border-b border-slate-200 pb-3.5 gap-3">
+            <div>
+              <span class="text-blue-600 font-bold text-xs uppercase tracking-wider">Sản Phẩm Thế Mạnh</span>
+              <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 mt-0.5">Xe Bồn Chở Thức Ăn Chăn Nuôi (Bồn Cám)</h2>
+            </div>
+            <div class="flex items-center gap-3 self-end sm:self-auto">
+              <div class="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  id="btnPrevFeed"
+                  aria-label="Xe bồn cám trước"
+                  class="w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-900 hover:text-white hover:border-slate-900 text-slate-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
+                >
+                  &#10094;
+                </button>
+                <button
+                  type="button"
+                  id="btnNextFeed"
+                  aria-label="Xe bồn cám tiếp theo"
+                  class="w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-900 hover:text-white hover:border-slate-900 text-slate-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
+                >
+                  &#10095;
+                </button>
+              </div>
+              <a href="/danh-muc/xe-bon-cho-cam" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 ml-1">
+                Xem tất cả ({feedTrucks.length}) &rarr;
               </a>
-              <a href={`/admin/posts/edit?slug=${p.slug}`} class="inline-block bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 font-bold px-3 py-1.5 rounded-lg text-xs transition">
-                ✏️ Sửa
+            </div>
+          </div>
+
+          <div
+            id="feedTruckCarousel"
+            class="flex gap-6 overflow-x-auto no-scrollbar pb-2"
+          >
+            {feedTrucks.map((vehicle: any) => (
+              <div class="shrink-0 w-[86%] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] min-w-[260px] bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-slate-400 transition group">
+                <div>
+                  <div class="relative overflow-hidden bg-slate-100 h-48">
+                    <span class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-sm text-white text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-sm z-10 flex items-center gap-1">⭐ Thế Mạnh</span>
+                    <a href={`/san-pham/${vehicle.slug}`} class="block w-full h-full">
+                      <img src={vehicle.images?.[0] || '/Logo.png'} alt={vehicle.name} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                    </a>
+                    {itemHasVideo(vehicle) && (
+                      <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                    )}
+                  </div>
+                  <div class="p-4 space-y-2">
+                    <span class="text-xs font-bold text-slate-500 uppercase">{vehicle.brand}</span>
+                    {getCardSpecBadges(vehicle).length > 0 && (
+                      <div class="flex flex-wrap gap-1.5 mb-2">
+                        {getCardSpecBadges(vehicle).map((badge: string) => (
+                          <span class="inline-flex items-center bg-slate-100 text-slate-700 border border-slate-200 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <h3 class="font-bold text-base text-slate-900 break-words leading-snug group-hover:text-blue-600 transition">
+                      <a href={`/san-pham/${vehicle.slug}`}>{vehicle.name}</a>
+                    </h3>
+                    <p class="text-xs text-slate-600 font-medium bg-slate-50 p-2 rounded-xl break-words leading-relaxed border border-slate-100">
+                      {vehicle.specialSpecs ? Object.values(vehicle.specialSpecs)[0] : 'Đóng mới chuẩn cục Đăng kiểm'}
+                    </p>
+                    <div class="pt-1 bg-blue-50/50 border border-blue-100/60 rounded-xl p-2.5">
+                      <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
+                        💳 Vốn đối ứng nhận xe :
+                      </p>
+                      <p class="text-blue-700 font-black text-base sm:text-lg leading-snug break-words">
+                        {vehicle.price && Number(vehicle.price) > 0
+                          ? `Trả trước chỉ từ ~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu`
+                          : 'Trả trước chỉ từ 20% giá xe'}
+                      </p>
+                      <p class="text-[11px] font-semibold text-slate-500 mt-0.5">
+                        🔒 Báo giá chi tiết: Nhắn Zalo / Email
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4 pt-0">
+                  <a href={`/san-pham/${vehicle.slug}`} class="block w-full bg-slate-900 hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-center transition text-sm shadow-sm">
+                    Xem thông số &amp; Báo giá
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- HÀNG 2: CÁC DÒNG XE CHUYÊN DÙNG KHÁC -->
+      {otherVehicles.length > 0 && (
+        <div>
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-5 border-b border-slate-200 pb-3.5 gap-3">
+            <div>
+              <span class="text-blue-600 font-bold text-xs uppercase tracking-wider">Sản Phẩm Nổi Bật</span>
+              <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 mt-0.5">Xe Cứu Hộ, Xe Cẩu &amp; Chuyên Dùng Khác</h2>
+            </div>
+            <div class="flex items-center gap-3 self-end sm:self-auto">
+              <div class="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  id="btnPrevOther"
+                  aria-label="Xe chuyên dùng trước"
+                  class="w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-900 hover:text-white hover:border-slate-900 text-slate-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
+                >
+                  &#10094;
+                </button>
+                <button
+                  type="button"
+                  id="btnNextOther"
+                  aria-label="Xe chuyên dùng tiếp theo"
+                  class="w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-900 hover:text-white hover:border-slate-900 text-slate-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
+                >
+                  &#10095;
+                </button>
+              </div>
+              <a href="/san-pham" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 ml-1">
+                Xem tất cả ({vehicleList.length}) &rarr;
               </a>
-              <button 
-                type="button" 
-                data-slug={p.slug}
-                class="btn-delete-post bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold px-3 py-1.5 rounded-lg text-xs transition cursor-pointer"
-              >
-                🗑️ Xóa
-              </button>
-            </td>
-          </tr>
+            </div>
+          </div>
+
+          <div
+            id="otherVehicleCarousel"
+            class="flex gap-6 overflow-x-auto no-scrollbar pb-2"
+          >
+            {otherVehicles.map((vehicle: any) => (
+              <div class="shrink-0 w-[86%] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] min-w-[260px] bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-slate-400 transition group">
+                <div>
+                  <div class="relative overflow-hidden bg-slate-100 h-48">
+                    <span class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-sm text-white text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-sm z-10 flex items-center gap-1">🔥 Nổi Bật</span>
+                    <a href={`/san-pham/${vehicle.slug}`} class="block w-full h-full">
+                      <img src={vehicle.images?.[0] || '/Logo.png'} alt={vehicle.name} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                    </a>
+                    {itemHasVideo(vehicle) && (
+                      <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                    )}
+                  </div>
+                  <div class="p-4 space-y-2">
+                    <span class="text-xs font-bold text-slate-500 uppercase">{vehicle.brand}</span>
+                    {getCardSpecBadges(vehicle).length > 0 && (
+                      <div class="flex flex-wrap gap-1.5 mb-2">
+                        {getCardSpecBadges(vehicle).map((badge: string) => (
+                          <span class="inline-flex items-center bg-slate-100 text-slate-700 border border-slate-200 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <h3 class="font-bold text-base text-slate-900 break-words leading-snug group-hover:text-blue-600 transition">
+                      <a href={`/san-pham/${vehicle.slug}`}>{vehicle.name}</a>
+                    </h3>
+                    <p class="text-xs text-slate-600 font-medium bg-slate-50 p-2 rounded-xl break-words leading-relaxed border border-slate-100">
+                      {vehicle.specialSpecs ? Object.values(vehicle.specialSpecs)[0] : 'Chính hãng chất lượng cao'}
+                    </p>
+                    <div class="pt-1 bg-blue-50/50 border border-blue-100/60 rounded-xl p-2.5">
+                      <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
+                        💳 Vốn đối ứng nhận xe :
+                      </p>
+                      <p class="text-blue-700 font-black text-base sm:text-lg leading-snug break-words">
+                        {vehicle.price && Number(vehicle.price) > 0
+                          ? `Trả trước chỉ từ ~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu`
+                          : 'Trả trước chỉ từ 20% giá xe'}
+                      </p>
+                      <p class="text-[11px] font-semibold text-slate-500 mt-0.5">
+                        🔒 Báo giá chi tiết: Nhắn Zalo / Email
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4 pt-0">
+                  <a href={`/san-pham/${vehicle.slug}`} class="block w-full bg-slate-900 hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-center transition text-sm shadow-sm">
+                    Xem thông số &amp; Báo giá
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+    </section>
+
+    <!-- KHỐI DỊCH VỤ KỸ THUẬT (Đã tinh chỉnh tông màu nhã nhặn, chuyên nghiệp) -->
+    <section class="bg-slate-900 text-white py-16 px-4 border-y border-slate-800">
+      <div class="container mx-auto max-w-7xl">
+        <div class="text-center max-w-2xl mx-auto mb-12 space-y-2">
+          <span class="text-blue-400 font-bold text-xs uppercase tracking-widest">Hậu Mãi &amp; Kỹ Thuật Chuyên Sâu</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-100">Dịch Vụ Kỹ Thuật &amp; Pháp Lý Hàng Đầu</h2>
+          <p class="text-slate-400 text-sm">Cam kết đồng hành trọn đời cùng xe của quý khách với trạm bảo dưỡng và cứu hộ trực chiến 24/7.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {coreServices.map((service) => (
+            <div class="bg-slate-800/80 border border-slate-700/80 p-6 rounded-2xl flex flex-col justify-between hover:border-slate-500 transition shadow-sm">
+              <div class="space-y-3">
+                <div class="w-12 h-12 bg-blue-600/10 text-blue-400 rounded-xl flex items-center justify-center text-2xl font-bold border border-blue-500/20">{service.icon}</div>
+                <h3 class="font-bold text-base text-white">{service.title}</h3>
+                <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">{service.desc}</p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-slate-700/80">
+                <a href={service.link} class="text-blue-400 hover:text-blue-300 font-bold text-xs sm:text-sm flex items-center gap-1 transition">
+                  Xem chi tiết dịch vụ &rarr;
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- KHỐI TIN TỨC ĐỘNG TỪ POSTS.JSON -->
+    <section class="container mx-auto px-4 max-w-7xl pt-2">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-6 border-b border-slate-200 pb-4 gap-4">
+        <div>
+          <span class="text-blue-600 font-bold text-xs uppercase tracking-wider">Kiến Thức Chuyên Sâu &amp; Cập Nhật</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1">Tin Tức, Kỹ Thuật &amp; Kinh Nghiệm Đầu Tư Xe</h2>
+        </div>
+        <a href="/tin-tuc" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 shrink-0">
+          Xem toàn bộ kho bài viết &rarr;
+        </a>
+      </div>
+
+      <!-- Thanh Tab Lọc Nhanh Theo Chuyên Mục -->
+      <div id="homeNewsTabs" class="flex flex-wrap items-center gap-2 pb-3 mb-6">
+        <button
+          type="button"
+          data-news-tab="all"
+          class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-slate-900 text-white shadow-sm"
+        >
+          Tất cả mới nhất
+        </button>
+        {Array.from(new Set(latestPosts.map((p: any) => p.category).filter(Boolean))).map((catName: any) => (
+          <button
+            type="button"
+            data-news-tab={String(catName).trim()}
+            class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-slate-100 text-slate-700 border border-slate-200"
+          >
+            {catName}
+          </button>
         ))}
-      </tbody>
-    </table>
-  </div>
+      </div>
+
+      <!-- Lưới 6 bài viết -->
+      <div id="homeNewsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {latestPosts.map((post: any, idx: number) => (
+          <article
+            data-post-cat={String(post.category || "").trim()}
+            class={`home-news-card bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md hover:border-slate-400 transition group ${idx >= 6 ? "hidden" : ""}`}
+          >
+            <div>
+              {post.image && (
+                <a href={`/tin-tuc/${post.slug}`} class="block relative overflow-hidden h-48 border-b bg-slate-100">
+                  <img src={post.image} alt={post.title} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                  {itemHasVideo(post) && (
+                    <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                  )}
+                </a>
+              )}
+              <div class="p-5 space-y-2.5">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="bg-blue-50 text-blue-700 font-bold px-2.5 py-1 rounded-md border border-blue-100">{post.category || "Tin tức"}</span>
+                  <span class="text-slate-400">{post.date}</span>
+                </div>
+                <h3 class="font-bold text-base text-slate-900 leading-snug group-hover:text-blue-600 transition break-words">
+                  <a href={`/tin-tuc/${post.slug}`}>{post.title}</a>
+                </h3>
+                {post.excerpt && (
+                  <p class="text-xs text-slate-600 leading-relaxed break-words">{post.excerpt}</p>
+                )}
+              </div>
+            </div>
+            <div class="px-5 pb-5 pt-2 border-t border-slate-50 flex items-center justify-between">
+              <a href={`/tin-tuc/${post.slug}`} class="text-blue-600 hover:text-blue-700 font-bold text-xs sm:text-sm inline-flex items-center gap-1 group-hover:translate-x-0.5 transition">
+                Đọc chi tiết &rarr;
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+  </main>
 
   <script is:inline>
-    document.querySelectorAll('.btn-delete-post').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        const slug = e.currentTarget.getAttribute('data-slug');
-        if (!confirm('⚠️ Bạn có chắc chắn muốn xóa bài viết này? Tất cả hình ảnh liên quan trong bài cũng sẽ được tự động xóa khỏi máy chủ!')) {
-          return;
-        }
+    // 1. Khởi tạo Băng chuyền vòng tròn vô tận cho 2 hàng sản phẩm
+    function setupSeamlessRowCarousel(containerId: string, prevBtnId: string, nextBtnId: string, intervalMs = 3200) {
+      const container = document.getElementById(containerId);
+      const prevBtn = document.getElementById(prevBtnId);
+      const nextBtn = document.getElementById(nextBtnId);
+      if (!container) return;
 
-        try {
-          const res = await fetch('/api/delete-post', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slug })
-          });
-          const result = await res.json();
-          if (result.success) {
-            alert('🎉 ' + result.message);
-            location.reload();
-          } else {
-            alert('❌ Lỗi: ' + result.message);
-          }
-        } catch (err) {
-          alert('❌ Lỗi kết nối đến máy chủ!');
+      const items = Array.from(container.children);
+      if (items.length <= 4) {
+        if (prevBtn) prevBtn.style.display = "none";
+        if (nextBtn) nextBtn.style.display = "none";
+        return;
+      }
+
+      const originalHTML = container.innerHTML;
+      container.innerHTML = originalHTML + originalHTML;
+
+      const smoothScrollBy = (targetLeft: number, duration = 350) => {
+        const startLeft = container.scrollLeft;
+        const distance = targetLeft - startLeft;
+        let startTime: number | null = null;
+        function stepAnim(now: number) {
+          if (!startTime) startTime = now;
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          container.scrollLeft = startLeft + distance * ease;
+          if (elapsed < duration) requestAnimationFrame(stepAnim);
         }
+        requestAnimationFrame(stepAnim);
+      };
+
+      const getStepWidth = () => {
+        const firstCard = container.firstElementChild as HTMLElement;
+        return firstCard ? firstCard.getBoundingClientRect().width + 24 : 300;
+      };
+
+      const slideNext = () => {
+        const halfWidth = container.scrollWidth / 2;
+        if (container.scrollLeft >= halfWidth - 5) {
+          container.scrollLeft = 0;
+        }
+        smoothScrollBy(container.scrollLeft + getStepWidth(), 350);
+      };
+
+      const slidePrev = () => {
+        const halfWidth = container.scrollWidth / 2;
+        if (container.scrollLeft <= 5) {
+          container.scrollLeft = halfWidth;
+        }
+        smoothScrollBy(container.scrollLeft - getStepWidth(), 350);
+      };
+
+      nextBtn?.addEventListener("click", slideNext);
+      prevBtn?.addEventListener("click", slidePrev);
+
+      let timer: any = setInterval(slideNext, intervalMs);
+      const pause = () => clearInterval(timer);
+      const resume = () => {
+        clearInterval(timer);
+        timer = setInterval(slideNext, intervalMs);
+      };
+
+      container.addEventListener("mouseenter", pause);
+      container.addEventListener("mouseleave", resume);
+      prevBtn?.addEventListener("mouseenter", pause);
+      prevBtn?.addEventListener("mouseleave", resume);
+      nextBtn?.addEventListener("mouseenter", pause);
+      nextBtn?.addEventListener("mouseleave", resume);
+    }
+
+    setupSeamlessRowCarousel("feedTruckCarousel", "btnPrevFeed", "btnNextFeed", 3000);
+    setupSeamlessRowCarousel("otherVehicleCarousel", "btnPrevOther", "btnNextOther", 3600);
+
+    // 2. Bộ lọc Tab Tin tức
+    (function() {
+      const tabBtns = document.querySelectorAll(".news-tab-btn");
+      const cards = document.querySelectorAll(".home-news-card");
+      if (!tabBtns.length || !cards.length) return;
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const selectedTab = btn.getAttribute("data-news-tab") || "all";
+
+          tabBtns.forEach(b => {
+            if (b === btn) {
+              b.className = "news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-slate-900 text-white shadow-sm";
+            } else {
+              b.className = "news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-slate-100 text-slate-700 border border-slate-200";
+            }
+          });
+
+          let shownCount = 0;
+          cards.forEach((card: any) => {
+            const cardCat = card.getAttribute("data-post-cat") || "";
+            const isMatch = (selectedTab === "all") || (cardCat === selectedTab);
+            if (isMatch && shownCount < 6) {
+              card.classList.remove("hidden");
+              shownCount++;
+            } else {
+              card.classList.add("hidden");
+            }
+          });
+        });
       });
-    });
+    })();
   </script>
-</AdminLayout>
+</BaseLayout>

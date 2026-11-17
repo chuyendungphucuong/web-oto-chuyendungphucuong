@@ -1,0 +1,389 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { allVehicles } from '../../data/vehicles.js';
+import navData from '../../data/navigation.json';
+
+export function getStaticPaths() {
+  const vehicles = Array.isArray(allVehicles) ? allVehicles : [];
+  const mainMenu = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
+  const catSet = new Set([
+    'xe-tai-chuyen-dung',
+    'xe-cuu-ho-giao-thong',
+    'cuu-ho',
+    'bon-thuc-pham',
+    'bon-nuoc',
+    'bon-hut-chat-thai',
+    'xe-cau',
+    'nang-dau',
+    'xe-khach',
+    'xe-cu'
+  ]);
+
+  mainMenu.forEach((menu: any) => {
+    if (Array.isArray(menu.children)) {
+      menu.children.forEach((child: any) => {
+        if (typeof child.url === 'string') {
+          if (child.url.includes('cat=')) {
+            catSet.add(child.url.split('cat=')[1].split('&')[0].trim());
+          } else if (child.url.startsWith('/danh-muc/')) {
+            catSet.add(child.url.replace('/danh-muc/', '').split('?')[0].replace(/\/$/, '').trim());
+          }
+        }
+      });
+    }
+  });
+
+  vehicles.forEach((v: any) => {
+    if (v?.subKey) catSet.add(String(v.subKey).trim());
+    if (v?.category) catSet.add(String(v.category).trim());
+  });
+
+  return Array.from(catSet).filter(Boolean).map((cat) => ({
+    params: { cat }
+  }));
+}
+
+const { cat } = Astro.params;
+const rawCat = (cat || '').trim();
+
+function normalizeStr(str: string) {
+  return (str || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[đĐ]/g, 'd')
+    .trim();
+}
+
+const normCat = normalizeStr(rawCat);
+
+// Từ điển SEO chuyên sâu cho từng danh mục chủ lực
+const CATEGORY_SEO_META: Record<string, { title: string; h1: string; desc: string; intro: string }> = {
+  'bon-thuc-pham': {
+    title: 'Xe Bồn Chở Cám (Thức Ăn Chăn Nuôi) Bồn Thổi & Trục Vít Chính Hãng',
+    h1: 'Xe Bồn Chở Thức Ăn Chăn Nuôi (Xe Bồn Cám)',
+    desc: 'Bảng giá và thông số xe bồn chở thức ăn chăn nuôi (xe bồn cám) trục vít & khí nén Inox 304/Sắt trên nền Chenglong H7, FAW JH6, Dongfeng, Isuzu. Hỗ trợ vay 80%.',
+    intro: 'Chuyên phân phối và đóng mới xe ô tô xi téc chở thức ăn chăn nuôi (xe bồn cám trục vít và bồn thổi khí nén) thể tích từ 12 khối đến 36 khối trên nền xe cơ sở Chenglong, FAW, Isuzu, Hino, Dongfeng chuẩn đăng kiểm.'
+  },
+  'cuu-ho': {
+    title: 'Xe Cứu Hộ Giao Thông 2 - 3 Chức Năng Sàn Trượt Gắn Cẩu Chính Hãng',
+    h1: 'Xe Cứu Hộ Giao Thông Sàn Trượt & Gắn Cẩu 2 - 3 Chức Năng',
+    desc: 'Tổng hợp các dòng xe cứu hộ giao thông 2 chức năng sàn trượt càng kéo và xe cứu hộ 3 chức năng gắn cẩu tự hành Foton, Dongfeng, Howo, Chenglong đời mới nhất.',
+    intro: 'Cung cấp đầy đủ cấu hình xe cứu hộ giao thông sàn trượt chở xe, càng kéo thủy lực 2 chức năng và xe cứu hộ 3 chức năng gắn cẩu XCMG, Shimei, Unic từ 2.45 tấn đến 15 tấn.'
+  },
+  'xe-cuu-ho-giao-thong': {
+    title: 'Xe Cứu Hộ Giao Thông 2 - 3 Chức Năng Sàn Trượt Gắn Cẩu Chính Hãng',
+    h1: 'Xe Cứu Hộ Giao Thông Sàn Trượt & Gắn Cẩu 2 - 3 Chức Năng',
+    desc: 'Tổng hợp các dòng xe cứu hộ giao thông 2 chức năng sàn trượt càng kéo và xe cứu hộ 3 chức năng gắn cẩu tự hành Foton, Dongfeng, Howo, Chenglong đời mới nhất.',
+    intro: 'Cung cấp đầy đủ cấu hình xe cứu hộ giao thông sàn trượt chở xe, càng kéo thủy lực 2 chức năng và xe cứu hộ 3 chức năng gắn cẩu XCMG, Shimei, Unic từ 2.45 tấn đến 15 tấn.'
+  },
+  'nang-dau': {
+    title: 'Xe Nâng Đầu Chở Máy Công Trình Kết Hợp Càng Kéo Chính Hãng',
+    h1: 'Xe Nâng Đầu Chở Máy Công Trình & Cơ Giới',
+    desc: 'Báo giá xe nâng đầu chở máy công trình, máy gặt, xe lu, máy xúc kết hợp sàn trượt càng kéo trên nền Foton, Dongfeng, JAC N900, Howo Max tải trọng 5 - 18 tấn.',
+    intro: 'Dòng xe nâng đầu chở máy công trình thiết kế chân chống thủy lực chịu tải cao, sàn thép gân chống trượt và tời kéo thủy lực chuyên chở máy xúc, xe lu, máy gặt đập liên hợp.'
+  },
+  'bon-nuoc': {
+    title: 'Xe Bồn Phun Nước Rửa Đường Tưới Cây 5 Khối - 14 Khối Nhập Khẩu',
+    h1: 'Xe Bồn Phun Nước Rửa Đường & Tưới Cây Công Viên',
+    desc: 'Chuyên xe ô tô xi téc phun nước rửa đường, tưới cây xanh đô thị dung tích 5.3 khối, 7 khối, 9 khối, 14 khối Dongfeng, Isuzu nhập khẩu nguyên chiếc có sẵn giao ngay.',
+    intro: 'Các dòng xe bồn phun nước rửa đường, tưới cây, dập bụi công trường trang bị bơm lưu lượng lớn, bép phun mỏ vịt phía trước và súng phun cao áp xoay 360 độ phía sau.'
+  },
+  'bon-hut-chat-thai': {
+    title: 'Xe Môi Trường: Xe Hút Chất Thải, Xe Quét Đường & Cuốn Ép Rác',
+    h1: 'Xe Phục Vụ Môi Trường: Bồn Hút Chất Thải, Quét Đường & Ép Rác',
+    desc: 'Phân phối xe bồn hút chất thải, hút hầm cầu, xe quét đường hút bụi Isuzu/Dongfeng và xe cuốn ép rác chuyên dùng đạt chuẩn Cục Đăng kiểm Việt Nam.',
+    intro: 'Giải pháp thiết bị xe môi trường đồng bộ phục vụ công ty công trình đô thị, khu công nghiệp và dịch vụ vệ sinh môi trường trên toàn quốc.'
+  },
+  'xe-cau': {
+    title: 'Xe Tải Gắn Cẩu Tự Hành 3 Tấn - 15 Tấn (Unic, Tadano, Soosan, XCMG)',
+    h1: 'Xe Tải Gắn Cẩu Tự Hành Chính Hãng',
+    desc: 'Đóng mới xe tải gắn cẩu tự hành cần thẳng và cẩu gập từ 3 tấn, 5 tấn, 8 tấn đến 15 tấn trên nền xe cơ sở Dongfeng, Chenglong, Foton, Hino, Isuzu, Howo.',
+    intro: 'Thiết kế, lắp đặt và nghiệm thu trọn gói xe tải gắn cẩu tự hành phục vụ nâng hạ hàng hóa, kết cấu thép và thiết bị điện lực công trình.'
+  },
+  'xe-khach': {
+    title: 'Xe Khách & Minibus Gaz, Thaco, Hyundai Chính Hãng Giá Tốt',
+    h1: 'Xe Khách & Minibus Thương Mại',
+    desc: 'Phân phối các dòng xe khách, xe minibus 16 chỗ - 47 chỗ phục vụ đưa đón cán bộ nhân viên, chạy tuyến cố định và hợp đồng du lịch.',
+    intro: 'Các mẫu xe khách và minibus vận hành bền bỉ, tiết kiệm nhiên liệu, hỗ trợ vay trả góp ngân hàng lên đến 80%.'
+  },
+  'xe-cu': {
+    title: 'Xe Chuyên Dùng Đã Qua Sử Dụng (Xe Lướt Chất Lượng Cao)',
+    h1: 'Xe Chuyên Dùng Đã Qua Sử Dụng & Thanh Lý Chính Hãng',
+    desc: 'Danh sách xe tải chuyên dùng, xe cứu hộ, xe bồn cám, xe cẩu đã qua sử dụng được kiểm định kỹ thuật nghiêm ngặt tại Ô Tô Chuyên Dùng Phú Cường.',
+    intro: 'Tổng hợp các mẫu xe chuyên dùng lướt, xe đã qua sử dụng còn nguyên bản, hồ sơ pháp lý rõ ràng, sang tên ngay trong ngày.'
+  }
+};
+
+// Tìm tên hiển thị từ Menu nếu chưa có trong từ điển
+const mainMenu = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
+let menuMatchedTitle = '';
+const allCategoryLinks: { title: string; slug: string }[] = [];
+
+mainMenu.forEach((menu: any) => {
+  if (Array.isArray(menu.children)) {
+    menu.children.forEach((child: any) => {
+      let cKey = '';
+      if (typeof child.url === 'string') {
+        if (child.url.includes('cat=')) {
+          cKey = child.url.split('cat=')[1].split('&')[0].trim();
+        } else if (child.url.startsWith('/danh-muc/')) {
+          cKey = child.url.replace('/danh-muc/', '').split('?')[0].replace(/\/$/, '').trim();
+        }
+      }
+      if (cKey) {
+        if (!allCategoryLinks.some((x) => x.slug === cKey)) {
+          allCategoryLinks.push({ title: child.title, slug: cKey });
+        }
+        if (normalizeStr(cKey) === normCat) {
+          menuMatchedTitle = child.title;
+        }
+      }
+    });
+  }
+});
+
+const seoMeta = CATEGORY_SEO_META[rawCat] || {
+  title: menuMatchedTitle
+    ? `${menuMatchedTitle} Chính Hãng | Báo Giá & Thông Số Đăng Kiểm Mới Nhất`
+    : 'Danh Mục Xe Tải Chuyên Dùng Chính Hãng | Ô Tô Phú Cường',
+  h1: menuMatchedTitle || 'Xe Tải Chuyên Dùng Phú Cường',
+  desc: `Danh sách các dòng ${menuMatchedTitle || 'xe tải chuyên dùng'} chính hãng tại Ô Tô Chuyên Dùng Phú Cường. Hỗ trợ vay trả góp ngân hàng 60% - 85%, giao xe toàn quốc.`,
+  intro: `Khám phá các mẫu ${menuMatchedTitle || 'xe tải chuyên dùng'} được thiết kế, nhập khẩu và phân phối chính hãng tại Ô Tô Chuyên Dùng Phú Cường với đầy đủ hồ sơ đăng kiểm.`
+};
+
+const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
+const filteredVehicles = vehicleList.filter((v: any) => {
+  if (!rawCat || rawCat === 'all' || rawCat === 'xe-tai-chuyen-dung') return true;
+  const vSubKey = normalizeStr(v.subKey || '');
+  const vSubCat = normalizeStr(v.subCategory || '');
+  const vCat = normalizeStr(v.category || '');
+  const normMenuTitle = normalizeStr(menuMatchedTitle);
+
+  return (
+    vSubKey === normCat ||
+    vCat === normCat ||
+    (normMenuTitle && vSubCat === normMenuTitle) ||
+    (normCat === 'bon-thuc-pham' && vSubCat.includes('bon cam')) ||
+    (normCat === 'bon-hut-chat-thai' && (vSubCat.includes('hut chat thai') || vSubCat.includes('quet duong') || vSubCat.includes('ep rac') || vSubCat.includes('moi truong'))) ||
+    (normCat === 'bon-nuoc' && (vSubCat.includes('bon nuoc') || vSubCat.includes('phun nuoc'))) ||
+    (normCat === 'xe-cau' && vSubCat.includes('cau') && !vSubCat.includes('cuu ho')) ||
+    ((normCat === 'cuu-ho' || normCat === 'xe-cuu-ho-giao-thong') && vSubCat.includes('cuu ho')) ||
+    (normCat === 'nang-dau' && vSubCat.includes('nang dau'))
+  );
+});
+
+const canonicalUrl = `https://chuyendungphucuong.vn/danh-muc/${rawCat}`;
+
+function hasVideo(v: any) {
+  const u = v?.videoUrl || v?.youtubeUrl || '';
+  return typeof u === 'string' && u.trim().length > 5;
+}
+
+function getBadges(v: any): string[] {
+  if (Array.isArray(v?.customBadges) && v.customBadges.length > 0) {
+    return v.customBadges.slice(0, 3);
+  }
+  const list: string[] = [];
+  const cs = v?.chassisSpecs || v?.chassis_specs || {};
+  const payload = cs['Tải trọng cho phép chở'] || cs['Khối lượng hàng chuyên chở'];
+  if (payload) list.push(`⚖️ Tải: ${payload}`);
+  if (v?.brand) list.push(`🏷️ ${v.brand}`);
+  return list.slice(0, 2);
+}
+
+// Tạo Schema CollectionPage + ItemList + BreadcrumbList chuẩn Google
+const collectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": seoMeta.h1,
+  "description": seoMeta.desc,
+  "url": canonicalUrl,
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": filteredVehicles.length,
+    "itemListElement": filteredVehicles.map((v: any, idx: number) => ({
+      "@type": "ListItem",
+      "position": idx + 1,
+      "url": `https://chuyendungphucuong.vn/san-pham/${v.slug}`,
+      "name": v.name
+    }))
+  }
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Trang chủ",
+      "item": "https://chuyendungphucuong.vn/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Sản phẩm",
+      "item": "https://chuyendungphucuong.vn/san-pham"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": seoMeta.h1,
+      "item": canonicalUrl
+    }
+  ]
+};
+---
+
+<BaseLayout title={`${seoMeta.title} | Ô Tô Chuyên Dùng Phú Cường`} description={seoMeta.desc} canonicalUrl={canonicalUrl}>
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Breadcrumb điều hướng -->
+    <nav class="text-xs sm:text-sm text-slate-500 mb-5 flex flex-wrap items-center gap-1.5" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-blue-700 font-medium">Trang chủ</a>
+      <span>/</span>
+      <a href="/san-pham" class="hover:text-blue-700 font-medium">Kho xe chuyên dùng</a>
+      <span>/</span>
+      <span class="text-slate-900 font-bold">{seoMeta.h1}</span>
+    </nav>
+
+    <!-- Header Danh mục chuẩn SEO -->
+    <header class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white rounded-2xl p-6 sm:p-8 mb-8 shadow-lg border border-blue-900/40">
+      <div class="max-w-4xl space-y-2.5">
+        <span class="inline-block bg-red-600 text-white text-[11px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
+          Chuyên Mục Sản Phẩm Chính Hãng ({filteredVehicles.length} mẫu xe)
+        </span>
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight">
+          {seoMeta.h1}
+        </h1>
+        <p class="text-sm sm:text-base text-blue-100 leading-relaxed">
+          {seoMeta.intro}
+        </p>
+      </div>
+
+      <!-- Thanh chuyển nhanh giữa các Danh mục tĩnh chuẩn SEO -->
+      {allCategoryLinks.length > 0 && (
+        <div class="mt-6 pt-4 border-t border-white/15 flex flex-wrap gap-2">
+          <a
+            href="/san-pham"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white transition"
+          >
+            Tất cả dòng xe
+          </a>
+          {allCategoryLinks.map((item) => {
+            const active = normalizeStr(item.slug) === normCat;
+            return (
+              <a
+                href={`/danh-muc/${item.slug}`}
+                class={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${
+                  active
+                    ? 'bg-amber-400 text-slate-950 font-black shadow'
+                    : 'bg-white/10 hover:bg-white/20 text-white'
+                }`}
+              >
+                {item.title}
+              </a>
+            );
+          })}
+        </div>
+      )}
+    </header>
+
+    <!-- Lưới danh sách sản phẩm thuộc danh mục -->
+    {filteredVehicles.length === 0 ? (
+      <div class="bg-white rounded-2xl p-10 text-center border border-slate-200 space-y-4">
+        <p class="text-lg font-bold text-slate-700">Hiện đang cập nhật thêm cấu hình xe mới cho danh mục này.</p>
+        <a href="/san-pham" class="inline-block bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 py-3 rounded-xl text-sm transition">
+          Xem toàn bộ kho xe chuyên dùng &rarr;
+        </a>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredVehicles.map((v: any) => {
+          const basePrice = Number(v.price || 0);
+          const downPayment = basePrice > 0 ? Math.round((basePrice * 0.2) / 1000000) : 0;
+          const badges = getBadges(v);
+
+          return (
+            <article class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group">
+              <a href={`/san-pham/${v.slug}`} class="relative block aspect-[4/3] overflow-hidden bg-slate-100">
+                <img
+                  src={v.images?.[0] || '/Logo.png'}
+                  alt={v.name}
+                  loading="lazy"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                {v.brand && (
+                  <span class="absolute top-3 left-3 bg-blue-900/90 backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">
+                    {v.brand}
+                  </span>
+                )}
+                {hasVideo(v) && (
+                  <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-md shadow flex items-center gap-1">
+                    🎬 Có Video
+                  </span>
+                )}
+              </a>
+
+              <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+                <div class="space-y-2">
+                  <div class="text-[11px] font-bold text-blue-700 uppercase tracking-wide line-clamp-1">
+                    {v.subCategory || seoMeta.h1}
+                  </div>
+                  <h2 class="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-blue-700 transition leading-snug line-clamp-2">
+                    <a href={`/san-pham/${v.slug}`}>{v.name}</a>
+                  </h2>
+
+                  {badges.length > 0 && (
+                    <div class="flex flex-wrap gap-1.5 pt-1">
+                      {badges.map((b: string) => (
+                        <span class="bg-slate-100 text-slate-700 text-[11px] font-semibold px-2 py-0.5 rounded-md">
+                          {b}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 space-y-2.5">
+                  {downPayment > 0 ? (
+                    <div>
+                      <span class="block text-[11px] text-slate-500 font-medium">Vốn đối ứng nhận xe:</span>
+                      <span class="text-sm sm:text-base font-black text-red-600">
+                        Trả trước chỉ từ ~{downPayment.toLocaleString('vi-VN')} Triệu
+                      </span>
+                    </div>
+                  ) : (
+                    <div>
+                      <span class="block text-[11px] text-slate-500 font-medium">Báo giá ưu đãi dự án:</span>
+                      <span class="text-sm sm:text-base font-black text-red-600">Liên hệ 0922 77 77 03</span>
+                    </div>
+                  )}
+
+                  <div class="grid grid-cols-2 gap-2">
+                    <a
+                      href={`/san-pham/${v.slug}`}
+                      class="text-center bg-slate-100 hover:bg-blue-700 hover:text-white text-slate-800 font-bold py-2 px-3 rounded-xl text-xs transition"
+                    >
+                      Chi tiết xe
+                    </a>
+                    <a
+                      href={`/tinh-lan-banh?xe=${v.slug}`}
+                      class="text-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-xl text-xs transition"
+                    >
+                      Tính lăn bánh
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    )}
+  </main>
+</BaseLayout>

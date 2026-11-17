@@ -13,12 +13,16 @@ const mainMenu = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
 const dynamicCategories: { title: string; subKey: string; parentCat: string; groupTitle: string }[] = [];
 
 mainMenu.forEach((menu: any) => {
-  if (typeof menu.url === 'string' && menu.url.includes('/san-pham') && Array.isArray(menu.children)) {
+  if (typeof menu.url === 'string' && (menu.url.includes('/san-pham') || menu.url.includes('/danh-muc')) && Array.isArray(menu.children)) {
     const parentCat = menu.url.includes('xe-cu') ? 'xe-cu' : (menu.url.includes('xe-khach') ? 'xe-khach' : 'xe-tai-chuyen-dung');
     menu.children.forEach((child: any) => {
       let subKey = '';
-      if (typeof child.url === 'string' && child.url.includes('cat=')) {
-        subKey = child.url.split('cat=')[1].split('&')[0].trim();
+      if (typeof child.url === 'string') {
+        if (child.url.includes('cat=')) {
+          subKey = child.url.split('cat=')[1].split('&')[0].trim();
+        } else if (child.url.startsWith('/danh-muc/')) {
+          subKey = child.url.replace('/danh-muc/', '').split('?')[0].replace(/\/$/, '').trim();
+        }
       }
       dynamicCategories.push({
         title: child.title,
