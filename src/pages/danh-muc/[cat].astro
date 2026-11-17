@@ -17,8 +17,18 @@ export function getStaticPaths() {
     'xe-dau-keo-gan-cau',
     'xe-cho-gia-cam',
     'nang-dau',
+    'ep-rac',
+    'quet-duong-hut-bui',
     'xe-khach',
-    'xe-cu'
+    '16-cho',
+    '29-cho',
+    '34-cho',
+    '47-cho',
+    'xe-cu',
+    'xe-4-7-cho-cu',
+    'xe-tai-cu',
+    'xe-chuyen-dung-cu',
+    'xe-khach-cu'
   ]);
 
   mainMenu.forEach((menu: any) => {
@@ -47,6 +57,7 @@ export function getStaticPaths() {
 
 const { cat } = Astro.params;
 const rawCat = (cat || '').trim();
+
 if (rawCat === 'xe-nang-khac') {
   return Astro.redirect('/danh-muc/xe-dau-keo-gan-cau', 301);
 }
@@ -62,8 +73,13 @@ function normalizeStr(str: string) {
 
 const normCat = normalizeStr(rawCat);
 
-// Từ điển SEO chuyên sâu cho từng danh mục chủ lực
 const CATEGORY_SEO_META: Record<string, { title: string; h1: string; desc: string; intro: string }> = {
+  'xe-tai-chuyen-dung': {
+    title: 'Kho Xe Tải Chuyên Dùng & Ô Tô Chuyên Dùng Chính Hãng | Phú Cường Auto',
+    h1: 'Kho Xe Tải Chuyên Dùng Phú Cường',
+    desc: 'Tổng hợp đầy đủ các dòng xe bồn cám, xe cứu hộ giao thông, xe nâng đầu, xe tải gắn cẩu, xe bồn nước, xe cuốn ép rác chính hãng hỗ trợ vay trả góp 80%.',
+    intro: 'Khám phá toàn bộ các dòng xe tải chuyên dùng được thiết kế, nhập khẩu và phân phối chính hãng tại Ô Tô Chuyên Dùng Phú Cường với đầy đủ hồ sơ đăng kiểm.'
+  },
   'bon-thuc-pham': {
     title: 'Xe Bồn Chở Cám (Thức Ăn Chăn Nuôi) Bồn Thổi & Trục Vít Chính Hãng',
     h1: 'Xe Bồn Chở Thức Ăn Chăn Nuôi (Xe Bồn Cám)',
@@ -95,10 +111,16 @@ const CATEGORY_SEO_META: Record<string, { title: string; h1: string; desc: strin
     intro: 'Các dòng xe bồn phun nước rửa đường, tưới cây, dập bụi công trường trang bị bơm lưu lượng lớn, bép phun mỏ vịt phía trước và súng phun cao áp xoay 360 độ phía sau.'
   },
   'bon-hut-chat-thai': {
-    title: 'Xe Môi Trường: Xe Hút Chất Thải, Xe Quét Đường & Cuốn Ép Rác',
-    h1: 'Xe Phục Vụ Môi Trường: Bồn Hút Chất Thải, Quét Đường & Ép Rác',
-    desc: 'Phân phối xe bồn hút chất thải, hút hầm cầu, xe quét đường hút bụi Isuzu/Dongfeng và xe cuốn ép rác chuyên dùng đạt chuẩn Cục Đăng kiểm Việt Nam.',
-    intro: 'Giải pháp thiết bị xe môi trường đồng bộ phục vụ công ty công trình đô thị, khu công nghiệp và dịch vụ vệ sinh môi trường trên toàn quốc.'
+    title: 'Xe Bồn Hút Chất Thải, Hút Hầm Cầu Chuyên Dùng Chính Hãng',
+    h1: 'Xe Bồn Hút Chất Thải & Vệ Sinh Môi Trường',
+    desc: 'Phân phối xe bồn hút chất thải, hút hầm cầu chân không Dongfeng, Isuzu, Hino dung tích 4 khối - 16 khối đạt chuẩn Cục Đăng kiểm Việt Nam.',
+    intro: 'Giải pháp thiết bị xe bồn hút chất thải đồng bộ phục vụ công ty công trình đô thị, khu công nghiệp và dịch vụ vệ sinh môi trường trên toàn quốc.'
+  },
+  'xe-cau': {
+    title: 'Xe Tải Gắn Cẩu Tự Hành 3 Tấn - 15 Tấn (Unic, Tadano, Soosan, XCMG)',
+    h1: 'Xe Tải Gắn Cẩu Tự Hành Chính Hãng',
+    desc: 'Đóng mới xe tải gắn cẩu tự hành cần thẳng và cẩu gập từ 3 tấn, 5 tấn, 8 tấn đến 15 tấn trên nền xe cơ sở Dongfeng, Chenglong, Foton, Hino, Isuzu, Howo.',
+    intro: 'Thiết kế, lắp đặt và nghiệm thu trọn gói xe tải gắn cẩu tự hành phục vụ nâng hạ hàng hóa, kết cấu thép và thiết bị điện lực công trình.'
   },
   'xe-dau-keo-gan-cau': {
     title: 'Xe Đầu Kéo Gắn Cẩu Tự Hành Chính Hãng (Chenglong, Howo, Dongfeng, FAW)',
@@ -111,12 +133,6 @@ const CATEGORY_SEO_META: Record<string, { title: string; h1: string; desc: strin
     h1: 'Xe Tải Chở Gia Cầm Chuyên Dùng',
     desc: 'Phân phối và đóng mới xe tải chở gia cầm (chở gà, vịt) thùng lồng thông thoáng nhiều tầng trên nền Isuzu, Hino, Hyundai, Chenglong, Dongfeng hỗ trợ vay 80%.',
     intro: 'Dòng xe tải chuyên dùng chở gia cầm thiết kế thùng khung xương kẽm/Inox 304 chắc chắn, sàn chống trượt dễ vệ sinh khử khuẩn và tối ưu đối lưu không khí.'
-  },
-  'xe-cau': {
-    title: 'Xe Tải Gắn Cẩu Tự Hành 3 Tấn - 15 Tấn (Unic, Tadano, Soosan, XCMG)',
-    h1: 'Xe Tải Gắn Cẩu Tự Hành Chính Hãng',
-    desc: 'Đóng mới xe tải gắn cẩu tự hành cần thẳng và cẩu gập từ 3 tấn, 5 tấn, 8 tấn đến 15 tấn trên nền xe cơ sở Dongfeng, Chenglong, Foton, Hino, Isuzu, Howo.',
-    intro: 'Thiết kế, lắp đặt và nghiệm thu trọn gói xe tải gắn cẩu tự hành phục vụ nâng hạ hàng hóa, kết cấu thép và thiết bị điện lực công trình.'
   },
   'xe-khach': {
     title: 'Xe Khách & Minibus Gaz, Thaco, Hyundai Chính Hãng Giá Tốt',
@@ -132,65 +148,149 @@ const CATEGORY_SEO_META: Record<string, { title: string; h1: string; desc: strin
   }
 };
 
-// Tìm tên hiển thị từ Menu nếu chưa có trong từ điển
+// Xác định nhóm danh mục cùng loại (Xe Chuyên Dùng / Ô Tô Khách / Xe Cũ)
 const mainMenu = Array.isArray(navData?.mainMenu) ? navData.mainMenu : [];
 let menuMatchedTitle = '';
-const allCategoryLinks: { title: string; slug: string }[] = [];
+let activeGroupRootUrl = '/danh-muc/xe-tai-chuyen-dung';
+let activeGroupLabel = 'Tất cả xe chuyên dùng';
+let siblingCategoryLinks: { title: string; slug: string }[] = [];
 
-mainMenu.forEach((menu: any) => {
-  if (Array.isArray(menu.children)) {
-    menu.children.forEach((child: any) => {
-      let cKey = '';
-      if (typeof child.url === 'string') {
-        if (child.url.includes('cat=')) {
-          cKey = child.url.split('cat=')[1].split('&')[0].trim();
-        } else if (child.url.startsWith('/danh-muc/')) {
-          cKey = child.url.replace('/danh-muc/', '').split('?')[0].replace(/\/$/, '').trim();
-        }
-      }
-      if (cKey) {
-        if (!allCategoryLinks.some((x) => x.slug === cKey)) {
-          allCategoryLinks.push({ title: child.title, slug: cKey });
-        }
-        if (normalizeStr(cKey) === normCat) {
-          menuMatchedTitle = child.title;
-        }
-      }
-    });
-  }
+const extractSlugFromUrl = (u: string) => {
+  if (typeof u !== 'string') return '';
+  if (u.includes('cat=')) return u.split('cat=')[1].split('&')[0].trim();
+  if (u.startsWith('/danh-muc/')) return u.replace('/danh-muc/', '').split('?')[0].replace(/\/$/, '').trim();
+  return '';
+};
+
+const vehicleGroups = mainMenu.filter((m: any) => Array.isArray(m.children) && m.url?.startsWith('/danh-muc/'));
+
+let matchedGroup = vehicleGroups.find((g: any) => {
+  const rootSlug = normalizeStr(extractSlugFromUrl(g.url));
+  if (rootSlug === normCat) return true;
+  return g.children.some((c: any) => normalizeStr(extractSlugFromUrl(c.url)) === normCat);
 });
+
+if (!matchedGroup) {
+  if (normCat.includes('cho') || normCat.includes('khach')) {
+    matchedGroup = vehicleGroups.find((g: any) => g.url === '/danh-muc/xe-khach');
+  } else if (normCat.includes('cu') && !normCat.includes('cuu-ho')) {
+    matchedGroup = vehicleGroups.find((g: any) => g.url === '/danh-muc/xe-cu');
+  } else {
+    matchedGroup = vehicleGroups[0];
+  }
+}
+
+if (matchedGroup) {
+  activeGroupRootUrl = matchedGroup.url;
+  activeGroupLabel =
+    matchedGroup.url === '/danh-muc/xe-khach'
+      ? 'Tất cả ô tô khách'
+      : matchedGroup.url === '/danh-muc/xe-cu'
+      ? 'Tất cả xe cũ'
+      : 'Tất cả xe chuyên dùng';
+
+  matchedGroup.children.forEach((child: any) => {
+    const cSlug = extractSlugFromUrl(child.url);
+    if (cSlug) {
+      if (!siblingCategoryLinks.some((x) => x.slug === cSlug)) {
+        siblingCategoryLinks.push({ title: child.title, slug: cSlug });
+      }
+      if (normalizeStr(cSlug) === normCat) {
+        menuMatchedTitle = child.title;
+      }
+    }
+  });
+}
 
 const seoMeta = CATEGORY_SEO_META[rawCat] || {
   title: menuMatchedTitle
     ? `${menuMatchedTitle} Chính Hãng | Báo Giá & Thông Số Đăng Kiểm Mới Nhất`
-    : 'Danh Mục Xe Tải Chuyên Dùng Chính Hãng | Ô Tô Phú Cường',
-  h1: menuMatchedTitle || 'Xe Tải Chuyên Dùng Phú Cường',
+    : 'Kho Xe Tải Chuyên Dùng Chính Hãng | Ô Tô Phú Cường',
+  h1: menuMatchedTitle || 'Kho Xe Tải Chuyên Dùng Phú Cường',
   desc: `Danh sách các dòng ${menuMatchedTitle || 'xe tải chuyên dùng'} chính hãng tại Ô Tô Chuyên Dùng Phú Cường. Hỗ trợ vay trả góp ngân hàng 60% - 85%, giao xe toàn quốc.`,
   intro: `Khám phá các mẫu ${menuMatchedTitle || 'xe tải chuyên dùng'} được thiết kế, nhập khẩu và phân phối chính hãng tại Ô Tô Chuyên Dùng Phú Cường với đầy đủ hồ sơ đăng kiểm.`
 };
 
 const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
 const filteredVehicles = vehicleList.filter((v: any) => {
-  if (!rawCat || rawCat === 'all' || rawCat === 'xe-tai-chuyen-dung') return true;
   const vSubKey = normalizeStr(v.subKey || '');
   const vSubCat = normalizeStr(v.subCategory || '');
   const vCat = normalizeStr(v.category || '');
   const normMenuTitle = normalizeStr(menuMatchedTitle);
+  const isUsedItem = (vSubKey.includes('cu') && !vSubKey.includes('cuu-ho')) || vSubCat.includes('xe cu') || vCat === 'xe-cu';
+  const isBusItem = vCat === 'xe-khach' || vSubKey.includes('cho') || vSubCat.includes('khach');
+
+  if (!rawCat || rawCat === 'all' || rawCat === 'xe-tai-chuyen-dung') {
+    return !isUsedItem && !isBusItem;
+  }
+  if (rawCat === 'xe-khach') {
+    return isBusItem && !isUsedItem;
+  }
+  if (rawCat === 'xe-cu') {
+    return isUsedItem;
+  }
 
   return (
     vSubKey === normCat ||
     vCat === normCat ||
     (normMenuTitle && vSubCat === normMenuTitle) ||
     (normCat === 'bon-thuc-pham' && vSubCat.includes('bon cam')) ||
-    (normCat === 'bon-hut-chat-thai' && (vSubCat.includes('hut chat thai') || vSubCat.includes('quet duong') || vSubCat.includes('ep rac') || vSubCat.includes('moi truong'))) ||
+    (normCat === 'bon-hut-chat-thai' && (vSubCat.includes('hut chat thai') || vSubCat.includes('moi truong'))) ||
+    (normCat === 'ep-rac' && vSubCat.includes('ep rac')) ||
+    (normCat === 'quet-duong-hut-bui' && vSubCat.includes('quet duong')) ||
     (normCat === 'bon-nuoc' && (vSubCat.includes('bon nuoc') || vSubCat.includes('phun nuoc'))) ||
-    (normCat === 'xe-cau' && vSubCat.includes('cau') && !vSubCat.includes('cuu ho')) ||
+    (normCat === 'xe-cau' && vSubCat.includes('cau') && !vSubCat.includes('cuu ho') && !vSubCat.includes('dau keo')) ||
     ((normCat === 'cuu-ho' || normCat === 'xe-cuu-ho-giao-thong') && vSubCat.includes('cuu ho')) ||
     (normCat === 'nang-dau' && vSubCat.includes('nang dau')) ||
     (normCat === 'xe-dau-keo-gan-cau' && vSubCat.includes('dau keo')) ||
     (normCat === 'xe-cho-gia-cam' && vSubCat.includes('gia cam'))
   );
 });
+
+function extractWeightsInKg(v: any): { payloadKg: number; grossKg: number } {
+  const cs = v?.chassisSpecs || v?.chassis_specs || {};
+  const ss = v?.specialSpecs || v?.special_specs || {};
+  const entries = [...Object.entries(cs), ...Object.entries(ss)];
+
+  let payloadKg = 0;
+  let grossKg = 0;
+
+  const parseNumToKg = (valStr: string): number => {
+    const s = String(valStr || '').toLowerCase();
+    const kgMatch = s.match(/(\d{1,2}[.,]\d{3}|\d{3,5})\s*kg/);
+    if (kgMatch) {
+      return parseFloat(kgMatch[1].replace(/[.,]/g, ''));
+    }
+    const tonMatch = s.match(/(\d+(?:[.,]\d+)?)\s*(?:tấn|tan|t\b)/);
+    if (tonMatch) {
+      return Math.round(parseFloat(tonMatch[1].replace(',', '.')) * 1000);
+    }
+    return 0;
+  };
+
+  for (const [k, val] of entries) {
+    const kl = normalizeStr(k);
+    if (!payloadKg && (kl.includes('tai trong cho phep') || kl.includes('tai trong chuyen cho') || kl.includes('khoi luong hang'))) {
+      payloadKg = parseNumToKg(String(val));
+    }
+    if (!grossKg && (kl.includes('khoi luong toan bo') || kl.includes('tong tai') || kl.includes('tong trong tai'))) {
+      grossKg = parseNumToKg(String(val));
+    }
+  }
+
+  if (!payloadKg && v?.name) {
+    payloadKg = parseNumToKg(String(v.name));
+  }
+
+  return { payloadKg, grossKg };
+}
+
+const brandCountMap = new Map<string, number>();
+filteredVehicles.forEach((v: any) => {
+  const b = String(v?.brand || '').trim().toUpperCase();
+  if (b) brandCountMap.set(b, (brandCountMap.get(b) || 0) + 1);
+});
+const availableBrands = Array.from(brandCountMap.entries()).sort((a, b) => a[0].localeCompare(b[0]));
 
 const canonicalUrl = `https://chuyendungphucuong.vn/danh-muc/${rawCat}`;
 
@@ -206,12 +306,11 @@ function getBadges(v: any): string[] {
   const list: string[] = [];
   const cs = v?.chassisSpecs || v?.chassis_specs || {};
   const payload = cs['Tải trọng cho phép chở'] || cs['Khối lượng hàng chuyên chở'];
-  if (payload) list.push(`⚖️ Tải: ${payload}`);
-  if (v?.brand) list.push(`🏷️ ${v.brand}`);
+  if (payload) list.push(`Tải: ${payload}`);
+  if (v?.brand) list.push(v.brand);
   return list.slice(0, 2);
 }
 
-// Tạo Schema CollectionPage + ItemList + BreadcrumbList chuẩn Google
 const collectionSchema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -234,24 +333,9 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Trang chủ",
-      "item": "https://chuyendungphucuong.vn/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Sản phẩm",
-      "item": "https://chuyendungphucuong.vn/san-pham"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": seoMeta.h1,
-      "item": canonicalUrl
-    }
+    { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "https://chuyendungphucuong.vn/" },
+    { "@type": "ListItem", "position": 2, "name": "Kho xe chuyên dùng", "item": "https://chuyendungphucuong.vn/danh-muc/xe-tai-chuyen-dung" },
+    { "@type": "ListItem", "position": 3, "name": seoMeta.h1, "item": canonicalUrl }
   ]
 };
 ---
@@ -260,149 +344,468 @@ const breadcrumbSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
-  <main class="container mx-auto px-4 py-8 max-w-7xl">
-    <!-- Breadcrumb điều hướng -->
-    <nav class="text-xs sm:text-sm text-slate-500 mb-5 flex flex-wrap items-center gap-1.5" aria-label="Breadcrumb">
+  <style is:inline>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+
+  <main class="container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
+    <!-- Breadcrumb điều hướng đồng nhất -->
+    <nav class="text-xs sm:text-sm text-slate-500 mb-4 flex flex-wrap items-center gap-1.5" aria-label="Breadcrumb">
       <a href="/" class="hover:text-blue-700 font-medium">Trang chủ</a>
       <span>/</span>
-      <a href="/san-pham" class="hover:text-blue-700 font-medium">Kho xe chuyên dùng</a>
-      <span>/</span>
-      <span class="text-slate-900 font-bold">{seoMeta.h1}</span>
+      <a href="/danh-muc/xe-tai-chuyen-dung" class="hover:text-blue-700 font-medium">Kho xe chuyên dùng</a>
+      {rawCat !== 'xe-tai-chuyen-dung' && (
+        <>
+          <span>/</span>
+          <span class="text-slate-900 font-bold">{seoMeta.h1}</span>
+        </>
+      )}
     </nav>
 
-    <!-- Header Danh mục chuẩn SEO -->
-    <header class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white rounded-2xl p-6 sm:p-8 mb-8 shadow-lg border border-blue-900/40">
-      <div class="max-w-4xl space-y-2.5">
-        <span class="inline-block bg-red-600 text-white text-[11px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
+    <!-- Header Danh mục đồng bộ màu xanh dương chủ đạo & Menu trượt ngang 1 dòng cùng nhóm -->
+    <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white rounded-2xl p-5 sm:p-7 mb-6 shadow-md">
+      <div class="max-w-4xl space-y-2">
+        <span class="inline-block bg-red-600 text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
           Chuyên Mục Sản Phẩm Chính Hãng ({filteredVehicles.length} mẫu xe)
         </span>
         <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight">
           {seoMeta.h1}
         </h1>
-        <p class="text-sm sm:text-base text-blue-100 leading-relaxed">
+        <p class="text-xs sm:text-sm lg:text-base text-blue-100 leading-relaxed">
           {seoMeta.intro}
         </p>
       </div>
 
-      <!-- Thanh chuyển nhanh giữa các Danh mục tĩnh chuẩn SEO -->
-      {allCategoryLinks.length > 0 && (
-        <div class="mt-6 pt-4 border-t border-white/15 flex flex-wrap gap-2">
-          <a
-            href="/san-pham"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white transition"
+      <!-- Menu trượt ngang 1 dòng duy nhất (chỉ hiển thị các danh mục cùng nhóm) -->
+      {siblingCategoryLinks.length > 0 && (
+        <div class="mt-5 pt-4 border-t border-white/15 flex items-center gap-2">
+          <button
+            type="button"
+            id="btnCatSlidePrev"
+            aria-label="Cuộn danh mục sang trái"
+            class="shrink-0 w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition cursor-pointer font-bold text-xs border border-white/15"
           >
-            Tất cả dòng xe
-          </a>
-          {allCategoryLinks.map((item) => {
-            const active = normalizeStr(item.slug) === normCat;
-            return (
-              <a
-                href={`/danh-muc/${item.slug}`}
-                class={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${
-                  active
-                    ? 'bg-amber-400 text-slate-950 font-black shadow'
-                    : 'bg-white/10 hover:bg-white/20 text-white'
-                }`}
-              >
-                {item.title}
-              </a>
-            );
-          })}
+            &#10094;
+          </button>
+
+          <div
+            id="siblingCatTrack"
+            class="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth flex-1 py-0.5"
+          >
+            <a
+              href={activeGroupRootUrl}
+              data-active-cat={normalizeStr(extractSlugFromUrl(activeGroupRootUrl)) === normCat ? 'true' : 'false'}
+              class={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${
+                normalizeStr(extractSlugFromUrl(activeGroupRootUrl)) === normCat
+                  ? 'bg-red-600 text-white font-extrabold shadow-sm border border-red-500'
+                  : 'bg-white/10 hover:bg-white/20 text-white border border-white/15'
+              }`}
+            >
+              {activeGroupLabel}
+            </a>
+
+            {siblingCategoryLinks.map((item) => {
+              const active = normalizeStr(item.slug) === normCat;
+              return (
+                <a
+                  href={`/danh-muc/${item.slug}`}
+                  data-active-cat={active ? 'true' : 'false'}
+                  class={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${
+                    active
+                      ? 'bg-red-600 text-white font-extrabold shadow-sm border border-red-500'
+                      : 'bg-white/10 hover:bg-white/20 text-white border border-white/15'
+                  }`}
+                >
+                  {item.title}
+                </a>
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            id="btnCatSlideNext"
+            aria-label="Cuộn danh mục sang phải"
+            class="shrink-0 w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition cursor-pointer font-bold text-xs border border-white/15"
+          >
+            &#10095;
+          </button>
         </div>
       )}
     </header>
 
-    <!-- Lưới danh sách sản phẩm thuộc danh mục -->
+    <!-- THANH CÔNG CỤ TÌM KIẾM, LỌC THƯƠNG HIỆU, LỌC GIÁ & SẮP XẾP (Sạch icon, gọn gàng) -->
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 mb-6 space-y-3.5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
+        <!-- 1. Ô tìm kiếm từ khóa -->
+        <div class="lg:col-span-4 relative">
+          <input
+            type="text"
+            id="catSearchInput"
+            placeholder="Tìm tên xe, model, số khối, tải trọng..."
+            class="w-full pl-3.5 pr-9 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-none transition"
+          />
+          <button
+            type="button"
+            id="btnClearSearch"
+            title="Xóa tìm kiếm"
+            class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-600 font-bold text-sm cursor-pointer"
+          >
+            ×
+          </button>
+        </div>
+
+        <!-- 2. Lọc theo Thương hiệu -->
+        <div class="lg:col-span-3">
+          <select
+            id="catBrandFilter"
+            aria-label="Lọc theo thương hiệu"
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-800 focus:bg-white focus:border-blue-600 focus:outline-none cursor-pointer"
+          >
+            <option value="all">Tất cả thương hiệu ({availableBrands.length})</option>
+            {availableBrands.map(([brandName, count]) => (
+              <option value={brandName}>{brandName} ({count} xe)</option>
+            ))}
+          </select>
+        </div>
+
+        <!-- 3. Lọc theo Khoảng giá -->
+        <div class="lg:col-span-2">
+          <select
+            id="catPriceFilter"
+            aria-label="Lọc theo khoảng giá"
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-800 focus:bg-white focus:border-blue-600 focus:outline-none cursor-pointer"
+          >
+            <option value="all">Tất cả mức giá</option>
+            <option value="under-800">Dưới 800 Triệu</option>
+            <option value="800-1200">800 Triệu – 1,2 Tỷ</option>
+            <option value="1200-1800">1,2 Tỷ – 1,8 Tỷ</option>
+            <option value="over-1800">Trên 1,8 Tỷ</option>
+            <option value="contact">Giá liên hệ / Dự án</option>
+          </select>
+        </div>
+
+        <!-- 4. Sắp xếp theo Giá / Tải trọng / Tổng trọng tải -->
+        <div class="lg:col-span-3">
+          <select
+            id="catSortSelect"
+            aria-label="Sắp xếp sản phẩm"
+            class="w-full px-3.5 py-2.5 bg-blue-50/70 border border-blue-200 rounded-xl text-sm font-bold text-blue-900 focus:bg-white focus:border-blue-600 focus:outline-none cursor-pointer"
+          >
+            <option value="default">Sắp xếp: Mặc định nổi bật</option>
+            <option value="price-asc">Giá bán: Thấp đến Cao</option>
+            <option value="price-desc">Giá bán: Cao đến Thấp</option>
+            <option value="payload-desc">Tải trọng: Lớn đến Nhỏ</option>
+            <option value="payload-asc">Tải trọng: Nhỏ đến Lớn</option>
+            <option value="gross-desc">Tổng trọng tải: Lớn đến Nhỏ</option>
+            <option value="gross-asc">Tổng trọng tải: Nhỏ đến Lớn</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Thanh trạng thái số lượng kết quả & nút đặt lại bộ lọc -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs sm:text-sm">
+        <p class="text-slate-600 font-medium">
+          Hiển thị <strong id="visibleVehicleCount" class="text-blue-700 font-extrabold">{filteredVehicles.length}</strong> / {filteredVehicles.length} mẫu xe phù hợp
+        </p>
+        <button
+          type="button"
+          id="btnResetFilters"
+          class="hidden text-red-600 hover:text-red-700 font-bold cursor-pointer"
+        >
+          Đặt lại bộ lọc
+        </button>
+      </div>
+    </section>
+
+    <!-- LƯỚI DANH SÁCH SẢN PHẨM THUỘC DANH MỤC -->
     {filteredVehicles.length === 0 ? (
       <div class="bg-white rounded-2xl p-10 text-center border border-slate-200 space-y-4">
         <p class="text-lg font-bold text-slate-700">Hiện đang cập nhật thêm cấu hình xe mới cho danh mục này.</p>
-        <a href="/san-pham" class="inline-block bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 py-3 rounded-xl text-sm transition">
-          Xem toàn bộ kho xe chuyên dùng &rarr;
+        <a href="/danh-muc/xe-tai-chuyen-dung" class="inline-block bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 py-3 rounded-xl text-sm transition">
+          Xem toàn bộ kho xe chuyên dùng
         </a>
       </div>
     ) : (
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredVehicles.map((v: any) => {
-          const basePrice = Number(v.price || 0);
-          const downPayment = basePrice > 0 ? Math.round((basePrice * 0.2) / 1000000) : 0;
-          const badges = getBadges(v);
+      <>
+        <div id="categoryVehicleGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredVehicles.map((v: any, idx: number) => {
+            const basePrice = Number(v.price || 0);
+            const downPayment = basePrice > 0 ? Math.round((basePrice * 0.2) / 1000000) : 0;
+            const badges = getBadges(v);
+            const { payloadKg, grossKg } = extractWeightsInKg(v);
+            const searchBlob = normalizeStr(`${v.name || ''} ${v.brand || ''} ${v.subCategory || ''} ${JSON.stringify(v.specialSpecs || {})}`);
 
-          return (
-            <article class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group">
-              <a href={`/san-pham/${v.slug}`} class="relative block aspect-[4/3] overflow-hidden bg-slate-100">
-                <img
-                  src={v.images?.[0] || '/Logo.png'}
-                  alt={v.name}
-                  loading="lazy"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                {v.brand && (
-                  <span class="absolute top-3 left-3 bg-blue-900/90 backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">
-                    {v.brand}
-                  </span>
-                )}
-                {hasVideo(v) && (
-                  <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-md shadow flex items-center gap-1">
-                    🎬 Có Video
-                  </span>
-                )}
-              </a>
+            return (
+              <article
+                data-order={idx}
+                data-brand={String(v.brand || '').trim().toUpperCase()}
+                data-price={basePrice}
+                data-payload={payloadKg}
+                data-gross={grossKg}
+                data-search={searchBlob}
+                class="cat-vehicle-card bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-blue-400 transition-all duration-300 overflow-hidden flex flex-col justify-between group"
+              >
+                <div>
+                  <a href={`/san-pham/${v.slug}`} class="relative block aspect-[4/3] overflow-hidden bg-slate-100">
+                    <img
+                      src={v.images?.[0] || '/Logo.png'}
+                      alt={v.name}
+                      loading="lazy"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {v.brand && (
+                      <span class="absolute top-3 left-3 bg-blue-800/95 backdrop-blur-sm text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider shadow-sm">
+                        {v.brand}
+                      </span>
+                    )}
+                    {hasVideo(v) && (
+                      <span class="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow">
+                        Có Video
+                      </span>
+                    )}
+                  </a>
 
-              <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
-                <div class="space-y-2">
-                  <div class="text-[11px] font-bold text-blue-700 uppercase tracking-wide line-clamp-1">
-                    {v.subCategory || seoMeta.h1}
-                  </div>
-                  <h2 class="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-blue-700 transition leading-snug line-clamp-2">
-                    <a href={`/san-pham/${v.slug}`}>{v.name}</a>
-                  </h2>
-
-                  {badges.length > 0 && (
-                    <div class="flex flex-wrap gap-1.5 pt-1">
-                      {badges.map((b: string) => (
-                        <span class="bg-slate-100 text-slate-700 text-[11px] font-semibold px-2 py-0.5 rounded-md">
-                          {b}
-                        </span>
-                      ))}
+                  <div class="p-4 space-y-2">
+                    <div class="text-[11px] font-bold text-blue-700 uppercase tracking-wide line-clamp-1">
+                      {v.subCategory || seoMeta.h1}
                     </div>
-                  )}
+                    <h2 class="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-blue-700 transition leading-snug">
+                      <a href={`/san-pham/${v.slug}`}>{v.name}</a>
+                    </h2>
+
+                    {badges.length > 0 && (
+                      <div class="flex flex-wrap gap-1.5 pt-0.5">
+                        {badges.map((b: string) => (
+                          <span class="bg-slate-100 text-slate-700 border border-slate-200/80 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                            {b}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div class="pt-3 border-t border-slate-100 space-y-2.5">
-                  {downPayment > 0 ? (
-                    <div>
-                      <span class="block text-[11px] text-slate-500 font-medium">Vốn đối ứng nhận xe:</span>
+                <div class="p-4 pt-0 mt-auto space-y-2.5">
+                  <div class="bg-red-50/70 border border-red-100 rounded-xl p-2.5">
+                    <span class="block text-[11px] text-slate-600 font-bold uppercase tracking-wide">Vốn đối ứng nhận xe:</span>
+                    {downPayment > 0 ? (
                       <span class="text-sm sm:text-base font-black text-red-600">
                         Trả trước chỉ từ ~{downPayment.toLocaleString('vi-VN')} Triệu
                       </span>
-                    </div>
-                  ) : (
-                    <div>
-                      <span class="block text-[11px] text-slate-500 font-medium">Báo giá ưu đãi dự án:</span>
-                      <span class="text-sm sm:text-base font-black text-red-600">Liên hệ 0922 77 77 03</span>
-                    </div>
-                  )}
+                    ) : (
+                      <span class="text-sm sm:text-base font-black text-red-600">Trả trước chỉ từ 20% giá xe</span>
+                    )}
+                  </div>
 
                   <div class="grid grid-cols-2 gap-2">
                     <a
                       href={`/san-pham/${v.slug}`}
-                      class="text-center bg-slate-100 hover:bg-blue-700 hover:text-white text-slate-800 font-bold py-2 px-3 rounded-xl text-xs transition"
+                      class="text-center bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-sm"
                     >
                       Chi tiết xe
                     </a>
                     <a
                       href={`/tinh-lan-banh?xe=${v.slug}`}
-                      class="text-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-xl text-xs transition"
+                      class="text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2.5 px-3 rounded-xl text-xs transition"
                     >
                       Tính lăn bánh
                     </a>
                   </div>
                 </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <div id="emptyFilterNotice" class="hidden bg-white rounded-2xl border border-slate-200 p-10 text-center space-y-3 mt-4">
+          <p class="text-base sm:text-lg font-extrabold text-slate-800">Không tìm thấy mẫu xe nào khớp với điều kiện lọc hiện tại.</p>
+          <p class="text-xs sm:text-sm text-slate-500">Anh/chị có thể thử chọn lại hãng xe khác hoặc nhấn đặt lại bộ lọc để xem toàn bộ danh mục.</p>
+          <button
+            type="button"
+            id="btnResetFiltersEmpty"
+            class="inline-block bg-blue-700 hover:bg-blue-800 text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition cursor-pointer"
+          >
+            Xem tất cả xe trong mục này
+          </button>
+        </div>
+      </>
     )}
   </main>
+
+  <script is:inline>
+    // 1. Điều khiển thanh Menu trượt ngang 1 dòng & tự động đưa danh mục đang chọn vào tầm nhìn
+    (function() {
+      const track = document.getElementById('siblingCatTrack');
+      const prevBtn = document.getElementById('btnCatSlidePrev');
+      const nextBtn = document.getElementById('btnCatSlideNext');
+      if (!track) return;
+
+      const activePill = track.querySelector('[data-active-cat="true"]');
+      if (activePill) {
+        const targetOffset = activePill.offsetLeft - track.clientWidth / 2 + activePill.clientWidth / 2;
+        track.scrollLeft = Math.max(0, targetOffset);
+      }
+
+      prevBtn?.addEventListener('click', () => {
+        track.scrollBy({ left: -240, behavior: 'smooth' });
+      });
+      nextBtn?.addEventListener('click', () => {
+        track.scrollBy({ left: 240, behavior: 'smooth' });
+      });
+    })();
+
+    // 2. Bộ lọc tìm kiếm, thương hiệu, khoảng giá và sắp xếp theo Giá / Tải trọng / Tổng trọng tải
+    (function() {
+      const grid = document.getElementById('categoryVehicleGrid');
+      if (!grid) return;
+
+      const cards = Array.from(grid.querySelectorAll('.cat-vehicle-card'));
+      const searchInput = document.getElementById('catSearchInput');
+      const btnClearSearch = document.getElementById('btnClearSearch');
+      const brandSelect = document.getElementById('catBrandFilter');
+      const priceSelect = document.getElementById('catPriceFilter');
+      const sortSelect = document.getElementById('catSortSelect');
+      const countEl = document.getElementById('visibleVehicleCount');
+      const btnReset = document.getElementById('btnResetFilters');
+      const btnResetEmpty = document.getElementById('btnResetFiltersEmpty');
+      const emptyNotice = document.getElementById('emptyFilterNotice');
+
+      function normalizeClient(str) {
+        return (str || '')
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[đĐ]/g, 'd')
+          .trim();
+      }
+
+      function applyFilterAndSort() {
+        const q = normalizeClient(searchInput?.value || '');
+        const brandVal = brandSelect?.value || 'all';
+        const priceVal = priceSelect?.value || 'all';
+        const sortVal = sortSelect?.value || 'default';
+
+        if (btnClearSearch) {
+          btnClearSearch.classList.toggle('hidden', q.length === 0);
+        }
+
+        const isFiltered = q !== '' || brandVal !== 'all' || priceVal !== 'all' || sortVal !== 'default';
+        if (btnReset) {
+          btnReset.classList.toggle('hidden', !isFiltered);
+        }
+
+        let visibleCards = [];
+        cards.forEach((card) => {
+          const cBrand = card.getAttribute('data-brand') || '';
+          const cPrice = Number(card.getAttribute('data-price') || 0);
+          const cSearch = card.getAttribute('data-search') || '';
+
+          let matchQuery = !q || cSearch.includes(q);
+          let matchBrand = brandVal === 'all' || cBrand === brandVal;
+          let matchPrice = true;
+
+          if (priceVal === 'under-800') {
+            matchPrice = cPrice > 0 && cPrice < 800000000;
+          } else if (priceVal === '800-1200') {
+            matchPrice = cPrice >= 800000000 && cPrice <= 1200000000;
+          } else if (priceVal === '1200-1800') {
+            matchPrice = cPrice > 1200000000 && cPrice <= 1800000000;
+          } else if (priceVal === 'over-1800') {
+            matchPrice = cPrice > 1800000000;
+          } else if (priceVal === 'contact') {
+            matchPrice = cPrice <= 0;
+          }
+
+          if (matchQuery && matchBrand && matchPrice) {
+            card.classList.remove('hidden');
+            visibleCards.push(card);
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        const sortedCards = [...cards].sort((a, b) => {
+          const orderA = Number(a.getAttribute('data-order') || 0);
+          const orderB = Number(b.getAttribute('data-order') || 0);
+          const priceA = Number(a.getAttribute('data-price') || 0);
+          const priceB = Number(b.getAttribute('data-price') || 0);
+          const payA = Number(a.getAttribute('data-payload') || 0);
+          const payB = Number(b.getAttribute('data-payload') || 0);
+          const grossA = Number(a.getAttribute('data-gross') || 0);
+          const grossB = Number(b.getAttribute('data-gross') || 0);
+
+          if (sortVal === 'price-asc') {
+            if (priceA === 0 && priceB === 0) return orderA - orderB;
+            if (priceA === 0) return 1;
+            if (priceB === 0) return -1;
+            return priceA - priceB;
+          }
+          if (sortVal === 'price-desc') {
+            if (priceA === 0 && priceB === 0) return orderA - orderB;
+            if (priceA === 0) return 1;
+            if (priceB === 0) return -1;
+            return priceB - priceA;
+          }
+          if (sortVal === 'payload-desc') {
+            if (payA === 0 && payB === 0) return orderA - orderB;
+            if (payA === 0) return 1;
+            if (payB === 0) return -1;
+            return payB - payA;
+          }
+          if (sortVal === 'payload-asc') {
+            if (payA === 0 && payB === 0) return orderA - orderB;
+            if (payA === 0) return 1;
+            if (payB === 0) return -1;
+            return payA - payB;
+          }
+          if (sortVal === 'gross-desc') {
+            if (grossA === 0 && grossB === 0) return orderA - orderB;
+            if (grossA === 0) return 1;
+            if (grossB === 0) return -1;
+            return grossB - grossA;
+          }
+          if (sortVal === 'gross-asc') {
+            if (grossA === 0 && grossB === 0) return orderA - orderB;
+            if (grossA === 0) return 1;
+            if (grossB === 0) return -1;
+            return grossA - grossB;
+          }
+          return orderA - orderB;
+        });
+
+        sortedCards.forEach((c) => grid.appendChild(c));
+
+        if (countEl) countEl.textContent = String(visibleCards.length);
+        if (emptyNotice) {
+          emptyNotice.classList.toggle('hidden', visibleCards.length > 0);
+        }
+      }
+
+      function resetAll() {
+        if (searchInput) searchInput.value = '';
+        if (brandSelect) brandSelect.value = 'all';
+        if (priceSelect) priceSelect.value = 'all';
+        if (sortSelect) sortSelect.value = 'default';
+        applyFilterAndSort();
+      }
+
+      searchInput?.addEventListener('input', applyFilterAndSort);
+      btnClearSearch?.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        applyFilterAndSort();
+      });
+      brandSelect?.addEventListener('change', applyFilterAndSort);
+      priceSelect?.addEventListener('change', applyFilterAndSort);
+      sortSelect?.addEventListener('change', applyFilterAndSort);
+      btnReset?.addEventListener('click', resetAll);
+      btnResetEmpty?.addEventListener('click', resetAll);
+    })();
+  </script>
 </BaseLayout>
