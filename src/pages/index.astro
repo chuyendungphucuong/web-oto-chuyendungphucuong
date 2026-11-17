@@ -5,7 +5,6 @@ import postsData from '../data/posts.json';
 
 const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
 
-// Danh sách các phân khúc thực tế để đưa vào ô chọn gọn trên tiêu đề
 const productCategories = Array.from(
   new Set(vehicleList.map((v: any) => String(v.subCategory || v.categoryName || "").trim()).filter(Boolean))
 );
@@ -17,26 +16,22 @@ const coreServices = [
   { title: "Đăng Kiểm & Cải Tạo Hồ Sơ", desc: "Trọn gói thủ tục thiết kế hoán cải, đăng kiểm và cấp biển số vàng.", icon: "📄", link: "/dich-vu/cai-tao-ho-so" }
 ];
 
-// Lấy tối đa 24 tin tức để chia cho các Tab chuyên mục
 const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 24) : [];
 
-// === START HAS VIDEO HELPER ===
-function itemHasVideo(item) {
+function itemHasVideo(item: any) {
   if (!item) return false;
   if (item.videoUrl && String(item.videoUrl).trim() !== "") return true;
   if (item.youtubeUrl && String(item.youtubeUrl).trim() !== "") return true;
   const bodyText = String(item.description || item.content || "");
   return /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)[a-zA-Z0-9_-]{11}/i.test(bodyText);
 }
-// === END HAS VIDEO HELPER ===
 
-// === START SPEC BADGE EXTRACTOR ===
-function getCardSpecBadges(p) {
+function getCardSpecBadges(p: any) {
   if (!p) return [];
   if (p.customBadges) {
     const manualList = Array.isArray(p.customBadges)
-      ? p.customBadges.map(s => String(s).trim()).filter(Boolean)
-      : String(p.customBadges).split(/[,|]/).map(s => s.trim()).filter(Boolean);
+      ? p.customBadges.map((s: any) => String(s).trim()).filter(Boolean)
+      : String(p.customBadges).split(/[,|]/).map((s: string) => s.trim()).filter(Boolean);
     if (manualList.length > 0) return manualList.slice(0, 3);
   }
   const badges = [];
@@ -123,10 +118,7 @@ function getCardSpecBadges(p) {
 
   return badges.slice(0, 2);
 }
-// === END SPEC BADGE EXTRACTOR ===
 
-// Phân tách 2 nhóm xe cho 2 hàng băng chuyền trang chủ
-// Hàng 1: Xe bồn chở thức ăn chăn nuôi (Bồn cám) - Ưu tiên xe có tick isFeatured lên đầu
 const feedTrucksRaw = vehicleList.filter((v: any) => {
   const subKey = String(v.subKey || "").toLowerCase();
   const subCat = String(v.subCategory || "").toLowerCase();
@@ -136,7 +128,6 @@ const feedTrucksRaw = vehicleList.filter((v: any) => {
 const featuredFeed = feedTrucksRaw.filter((v: any) => v.isFeatured === true);
 const feedTrucks = featuredFeed.length > 0 ? featuredFeed : feedTrucksRaw;
 
-// Hàng 2: Các dòng xe chuyên dùng & xe khách còn lại - Ưu tiên xe có tick isFeatured lên đầu
 const feedSlugs = new Set(feedTrucks.map((v: any) => v.slug));
 const otherVehiclesRaw = vehicleList.filter((v: any) => !feedSlugs.has(v.slug));
 const featuredOther = otherVehiclesRaw.filter((v: any) => v.isFeatured === true);
@@ -154,39 +145,41 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
     }
   </style>
 
-  <main class="space-y-12 pb-16">
+  <main class="space-y-12 pb-16 bg-white text-slate-900">
 
-    <!-- HERO SECTION -->
-    <section class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white py-12 lg:py-16 px-4">
+    <!-- HERO SECTION (Tone Trắng sáng kết hợp Xanh dương chuẩn mực, điểm nhấn Đỏ nhẹ & Nâu gỗ tinh tế) -->
+    <section class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white py-12 lg:py-16 px-4 shadow-sm">
       <div class="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-7 space-y-6">
-          <span class="bg-red-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider inline-block">
-            Đại Lý Phân Phối &amp; Đóng Mới Độc Quyền
+          <span class="bg-red-600 text-white text-xs font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block shadow-sm border border-red-500">
+            ⭐ Đại Lý Phân Phối &amp; Đóng Mới Độc Quyền
           </span>
-          <h1 class="text-3xl md:text-5xl font-black leading-tight">
-            Ô Tô Chuyên Dùng <span class="text-red-500">Phú Cường</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight text-white">
+            Ô Tô Chuyên Dùng <span class="text-sky-300">Phú Cường</span>
           </h1>
-          <p class="text-white/90 text-base md:text-lg max-w-xl leading-relaxed">
+          <p class="text-blue-100 text-base md:text-lg max-w-xl leading-relaxed font-normal">
             Chuyên cung cấp và đóng mới các dòng xe tải chuyên dùng, xe bồn, xe cẩu, xe cứu hộ và ô tô khách chất lượng cao. Hỗ trợ trả góp lên đến 90%, bảo hành toàn quốc.
           </p>
           <div class="flex flex-wrap gap-4 pt-2">
-            <a href="/san-pham" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-8 py-3.5 rounded-xl transition shadow-lg shadow-red-600/30 text-base">
+            <a href="/san-pham" class="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3.5 rounded-xl transition shadow-md text-base">
               🚗 Khám Phá Kho Xe ({vehicleList.length}+ Mẫu)
             </a>
-            <a href="/tinh-lan-banh" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold px-6 py-3.5 rounded-xl transition text-base">
+            <a href="/tinh-lan-banh" class="bg-white/10 hover:bg-white/20 border border-white/25 text-white font-bold px-6 py-3.5 rounded-xl transition text-base backdrop-blur-sm">
               🧮 Tính Giá Lăn Bánh
             </a>
           </div>
         </div>
         <div class="lg:col-span-5">
-          <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-xl space-y-4">
-            <h3 class="text-xl font-bold border-b border-white/20 pb-2">📍 Hệ Thống Showroom Miền Nam</h3>
-            <div class="space-y-3 text-sm text-white/90">
+          <div class="bg-slate-900/40 backdrop-blur-md p-6 rounded-2xl border border-white/15 shadow-xl space-y-4">
+            <h3 class="text-xl font-bold border-b border-white/15 pb-3 text-white flex items-center gap-2">
+              <span>📍</span> Hệ Thống Showroom Miền Nam
+            </h3>
+            <div class="space-y-3 text-sm text-blue-100">
               <p><strong>Showroom 1:</strong> 2466 Lê Khả Phiêu, Xã Bình Chánh, TP. HCM</p>
               <p><strong>Showroom 2:</strong> 95 Quốc lộ 1A, Nhị Quý, Tiền Giang</p>
               <p><strong>Showroom 3:</strong> 26 Trần Hưng Đạo, Bình Đức, An Giang</p>
             </div>
-            <a href="tel:0922777703" class="block bg-red-600 hover:bg-red-700 text-white font-extrabold py-3 rounded-xl text-center transition shadow">
+            <a href="tel:0922777703" class="block bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-center transition shadow-sm">
               📞 Hotline Tư Vấn: 0922 77 77 03
             </a>
           </div>
@@ -194,16 +187,16 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
       </div>
     </section>
 
-    <!-- KHỐI SẢN PHẨM NỔI BẬT (2 HÀNG BĂNG CHUYỀN ĐỘC LẬP: HÀNG 1 XE BỒN CÁM - HÀNG 2 XE CHUYÊN DÙNG KHÁC) -->
-    <section class="container mx-auto px-4 max-w-7xl space-y-12">
+    <!-- KHỐI SẢN PHẨM NỔI BẬT -->
+    <section class="container mx-auto px-4 max-w-7xl space-y-12 pt-4">
       
-      <!-- HÀNG 1: XE BỒN CHỞ THỨC ĂN CHĂN NUÔI (BỒN CÁM) -->
+      <!-- HÀNG 1: XE BỒN CHỞ THỨC ĂN CHĂN NUÔI -->
       {feedTrucks.length > 0 && (
         <div>
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-5 border-b border-gray-200 pb-3.5 gap-3">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-5 border-b border-slate-200 pb-3.5 gap-3">
             <div>
-              <span class="text-red-600 font-bold text-xs uppercase tracking-wider">Sản Phẩm Thế Mạnh</span>
-              <h2 class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">Xe Bồn Chở Thức Ăn Chăn Nuôi (Bồn Cám)</h2>
+              <span class="text-blue-700 font-bold text-xs uppercase tracking-wider">Sản Phẩm Thế Mạnh</span>
+              <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 mt-0.5">Xe Bồn Chở Thức Ăn Chăn Nuôi (Bồn Cám)</h2>
             </div>
             <div class="flex items-center gap-3 self-end sm:self-auto">
               <div class="flex items-center gap-1.5">
@@ -211,7 +204,7 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
                   type="button"
                   id="btnPrevFeed"
                   aria-label="Xe bồn cám trước"
-                  class="w-9 h-9 rounded-xl border border-gray-300 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 text-gray-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
+                  class="w-9 h-9 rounded-xl border border-slate-300 bg-white hover:bg-blue-700 hover:text-white hover:border-blue-700 text-slate-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
                 >
                   &#10094;
                 </button>
@@ -219,12 +212,12 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
                   type="button"
                   id="btnNextFeed"
                   aria-label="Xe bồn cám tiếp theo"
-                  class="w-9 h-9 rounded-xl border border-gray-300 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 text-gray-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
+                  class="w-9 h-9 rounded-xl border border-slate-300 bg-white hover:bg-blue-700 hover:text-white hover:border-blue-700 text-slate-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
                 >
                   &#10095;
                 </button>
               </div>
-              <a href="/danh-muc/xe-bon-cho-cam" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 ml-1">
+              <a href="/danh-muc/xe-bon-cho-cam" class="text-blue-700 hover:text-blue-800 font-bold text-sm flex items-center gap-1 ml-1">
                 Xem tất cả ({feedTrucks.length}) &rarr;
               </a>
             </div>
@@ -235,51 +228,51 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
             class="flex gap-6 overflow-x-auto no-scrollbar pb-2"
           >
             {feedTrucks.map((vehicle: any) => (
-              <div class="shrink-0 w-[86%] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] min-w-[260px] bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group">
+              <div class="shrink-0 w-[86%] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] min-w-[260px] bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group">
                 <div>
-                  <div class="relative overflow-hidden bg-gray-100 h-48">
-                    <span class="absolute top-3 left-3 bg-red-600/95 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-sm z-10 flex items-center gap-1">⭐ Sản Phẩm Thế Mạnh</span>
+                  <div class="relative overflow-hidden bg-slate-100 h-48">
+                    <span class="absolute top-3 left-3 bg-red-600 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-sm z-10 flex items-center gap-1">⭐ Sản Phẩm Thế Mạnh</span>
                     <a href={`/san-pham/${vehicle.slug}`} class="block w-full h-full">
                       <img src={vehicle.images?.[0] || '/Logo.png'} alt={vehicle.name} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                     </a>
                     {itemHasVideo(vehicle) && (
-                      <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                      <span class="absolute bottom-2 right-2 bg-red-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
                     )}
                   </div>
                   <div class="p-4 space-y-2">
-                    <span class="text-xs font-bold text-gray-500 uppercase">{vehicle.brand}</span>
+                    <span class="text-xs font-bold text-slate-500 uppercase">{vehicle.brand}</span>
                     {getCardSpecBadges(vehicle).length > 0 && (
                       <div class="flex flex-wrap gap-1.5 mb-2">
                         {getCardSpecBadges(vehicle).map((badge: string) => (
-                          <span class="inline-flex items-center bg-slate-100 text-slate-800 border border-slate-200/80 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                          <span class="inline-flex items-center bg-slate-100 text-slate-700 border border-slate-200 text-[11px] font-bold px-2 py-0.5 rounded-md">
                             {badge}
                           </span>
                         ))}
                       </div>
                     )}
-                    <h3 class="font-bold text-base text-gray-900 break-words leading-snug group-hover:text-blue-600 transition">
+                    <h3 class="font-bold text-base text-slate-900 break-words leading-snug group-hover:text-blue-700 transition">
                       <a href={`/san-pham/${vehicle.slug}`}>{vehicle.name}</a>
                     </h3>
-                    <p class="text-xs text-gray-600 font-medium bg-gray-50 p-2 rounded break-words leading-relaxed">
+                    <p class="text-xs text-slate-600 font-medium bg-slate-50 p-2 rounded-xl break-words leading-relaxed border border-slate-200/60">
                       {vehicle.specialSpecs ? Object.values(vehicle.specialSpecs)[0] : 'Đóng mới chuẩn cục Đăng kiểm'}
                     </p>
-                    <div class="pt-1 bg-red-50/75 border border-red-100 rounded-xl p-2.5">
-                      <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
-                        💳 Vốn đối ứng nhận xe :
-                      </p>
-                      <p class="text-red-600 font-black text-base sm:text-lg leading-snug break-words">
-                        {vehicle.price && Number(vehicle.price) > 0
-                          ? `Trả trước chỉ từ ~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu`
-                          : 'Trả trước chỉ từ 20% giá xe'}
-                      </p>
-                      <p class="text-[11px] font-semibold text-blue-700 mt-0.5">
-                        🔒 Báo giá chi tiết: Nhắn Zalo / Email
-                      </p>
                     </div>
-                  </div>
                 </div>
-                <div class="p-4 pt-0">
-                  <a href={`/san-pham/${vehicle.slug}`} class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-center transition text-sm shadow-sm">
+                <div class="p-4 pt-0 mt-auto space-y-3">
+                  <div class="bg-red-50/70 border border-red-100 rounded-xl p-2.5">
+                    <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
+                      💳 Vốn đối ứng nhận xe :
+                    </p>
+                    <p class="text-red-600 font-black text-base sm:text-lg leading-snug break-words">
+                      {vehicle.price && Number(vehicle.price) > 0
+                        ? `Trả trước chỉ từ ~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu`
+                        : 'Trả trước chỉ từ 20% giá xe'}
+                    </p>
+                    <p class="text-[11px] font-semibold text-blue-700 mt-0.5">
+                      🔒 Báo giá chi tiết: Nhắn Zalo / Email
+                    </p>
+                  </div>
+                  <a href={`/san-pham/${vehicle.slug}`} class="block w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 rounded-xl text-center transition text-sm shadow-sm">
                     Xem thông số &amp; Báo giá
                   </a>
                 </div>
@@ -289,13 +282,13 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
         </div>
       )}
 
-      <!-- HÀNG 2: CÁC DÒNG XE CHUYÊN DÙNG KHÁC (CỨU HỘ, GẮN CẨU, MÔI TRƯỜNG, XE KHÁCH...) -->
+      <!-- HÀNG 2: CÁC DÒNG XE CHUYÊN DÙNG KHÁC -->
       {otherVehicles.length > 0 && (
         <div>
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-5 border-b border-gray-200 pb-3.5 gap-3">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-5 border-b border-slate-200 pb-3.5 gap-3">
             <div>
-              <span class="text-red-600 font-bold text-xs uppercase tracking-wider">Sản Phẩm Nổi Bật</span>
-              <h2 class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">Xe Cứu Hộ, Xe Cẩu &amp; Chuyên Dùng Khác</h2>
+              <span class="text-blue-700 font-bold text-xs uppercase tracking-wider">Sản Phẩm Nổi Bật</span>
+              <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 mt-0.5">Xe Cứu Hộ, Xe Cẩu &amp; Chuyên Dùng Khác</h2>
             </div>
             <div class="flex items-center gap-3 self-end sm:self-auto">
               <div class="flex items-center gap-1.5">
@@ -303,7 +296,7 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
                   type="button"
                   id="btnPrevOther"
                   aria-label="Xe chuyên dùng trước"
-                  class="w-9 h-9 rounded-xl border border-gray-300 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 text-gray-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
+                  class="w-9 h-9 rounded-xl border border-slate-300 bg-white hover:bg-blue-700 hover:text-white hover:border-blue-700 text-slate-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
                 >
                   &#10094;
                 </button>
@@ -311,12 +304,12 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
                   type="button"
                   id="btnNextOther"
                   aria-label="Xe chuyên dùng tiếp theo"
-                  class="w-9 h-9 rounded-xl border border-gray-300 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 text-gray-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
+                  class="w-9 h-9 rounded-xl border border-slate-300 bg-white hover:bg-blue-700 hover:text-white hover:border-blue-700 text-slate-700 flex items-center justify-center transition shadow-sm cursor-pointer font-bold text-sm"
                 >
                   &#10095;
                 </button>
               </div>
-              <a href="/san-pham" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 ml-1">
+              <a href="/san-pham" class="text-blue-700 hover:text-blue-800 font-bold text-sm flex items-center gap-1 ml-1">
                 Xem tất cả ({vehicleList.length}) &rarr;
               </a>
             </div>
@@ -327,51 +320,51 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
             class="flex gap-6 overflow-x-auto no-scrollbar pb-2"
           >
             {otherVehicles.map((vehicle: any) => (
-              <div class="shrink-0 w-[86%] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] min-w-[260px] bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group">
+              <div class="shrink-0 w-[86%] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] min-w-[260px] bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group">
                 <div>
-                  <div class="relative overflow-hidden bg-gray-100 h-48">
-                    <span class="absolute top-3 left-3 bg-gradient-to-r from-red-600 to-orange-500 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-sm z-10 flex items-center gap-1">🔥 Sản Phẩm Nổi Bật</span>
+                  <div class="relative overflow-hidden bg-slate-100 h-48">
+                    <span class="absolute top-3 left-3 bg-red-600 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-sm z-10 flex items-center gap-1">🔥 Sản Phẩm Nổi Bật</span>
                     <a href={`/san-pham/${vehicle.slug}`} class="block w-full h-full">
                       <img src={vehicle.images?.[0] || '/Logo.png'} alt={vehicle.name} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                     </a>
                     {itemHasVideo(vehicle) && (
-                      <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                      <span class="absolute bottom-2 right-2 bg-red-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
                     )}
                   </div>
                   <div class="p-4 space-y-2">
-                    <span class="text-xs font-bold text-gray-500 uppercase">{vehicle.brand}</span>
+                    <span class="text-xs font-bold text-slate-500 uppercase">{vehicle.brand}</span>
                     {getCardSpecBadges(vehicle).length > 0 && (
                       <div class="flex flex-wrap gap-1.5 mb-2">
                         {getCardSpecBadges(vehicle).map((badge: string) => (
-                          <span class="inline-flex items-center bg-slate-100 text-slate-800 border border-slate-200/80 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                          <span class="inline-flex items-center bg-slate-100 text-slate-700 border border-slate-200 text-[11px] font-bold px-2 py-0.5 rounded-md">
                             {badge}
                           </span>
                         ))}
                       </div>
                     )}
-                    <h3 class="font-bold text-base text-gray-900 break-words leading-snug group-hover:text-blue-600 transition">
+                    <h3 class="font-bold text-base text-slate-900 break-words leading-snug group-hover:text-blue-700 transition">
                       <a href={`/san-pham/${vehicle.slug}`}>{vehicle.name}</a>
                     </h3>
-                    <p class="text-xs text-gray-600 font-medium bg-gray-50 p-2 rounded break-words leading-relaxed">
+                    <p class="text-xs text-slate-600 font-medium bg-slate-50 p-2 rounded-xl break-words leading-relaxed border border-slate-200/60">
                       {vehicle.specialSpecs ? Object.values(vehicle.specialSpecs)[0] : 'Chính hãng chất lượng cao'}
                     </p>
-                    <div class="pt-1 bg-red-50/75 border border-red-100 rounded-xl p-2.5">
-                      <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
-                        💳 Vốn đối ứng nhận xe :
-                      </p>
-                      <p class="text-red-600 font-black text-base sm:text-lg leading-snug break-words">
-                        {vehicle.price && Number(vehicle.price) > 0
-                          ? `Trả trước chỉ từ ~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu`
-                          : 'Trả trước chỉ từ 20% giá xe'}
-                      </p>
-                      <p class="text-[11px] font-semibold text-blue-700 mt-0.5">
-                        🔒 Báo giá chi tiết: Nhắn Zalo / Email
-                      </p>
                     </div>
-                  </div>
                 </div>
-                <div class="p-4 pt-0">
-                  <a href={`/san-pham/${vehicle.slug}`} class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-center transition text-sm shadow-sm">
+                <div class="p-4 pt-0 mt-auto space-y-3">
+                  <div class="bg-red-50/70 border border-red-100 rounded-xl p-2.5">
+                    <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
+                      💳 Vốn đối ứng nhận xe :
+                    </p>
+                    <p class="text-red-600 font-black text-base sm:text-lg leading-snug break-words">
+                      {vehicle.price && Number(vehicle.price) > 0
+                        ? `Trả trước chỉ từ ~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu`
+                        : 'Trả trước chỉ từ 20% giá xe'}
+                    </p>
+                    <p class="text-[11px] font-semibold text-blue-700 mt-0.5">
+                      🔒 Báo giá chi tiết: Nhắn Zalo / Email
+                    </p>
+                  </div>
+                  <a href={`/san-pham/${vehicle.slug}`} class="block w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 rounded-xl text-center transition text-sm shadow-sm">
                     Xem thông số &amp; Báo giá
                   </a>
                 </div>
@@ -383,25 +376,25 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
 
     </section>
 
-    <!-- KHỐI DỊCH VỤ KỸ THUẬT (KHÔI PHỤC NGUYÊN VẸN 100%) -->
-    <section class="bg-slate-900 text-white py-16 px-4">
+    <!-- KHỐI DỊCH VỤ KỸ THUẬT (Xanh dương sang trọng phối điểm nhấn Nâu gỗ/Hổ phách) -->
+    <section class="bg-gradient-to-r from-blue-900 to-slate-900 text-white py-16 px-4 shadow-inner">
       <div class="container mx-auto max-w-7xl">
         <div class="text-center max-w-2xl mx-auto mb-12 space-y-2">
-          <span class="text-red-500 font-bold text-sm uppercase tracking-wider">Hậu Mãi &amp; Kỹ Thuật Chuyên Sâu</span>
-          <h2 class="text-2xl md:text-3xl font-extrabold">Dịch Vụ Kỹ Thuật &amp; Pháp Lý Hàng Đầu</h2>
-          <p class="text-slate-400 text-sm">Cam kết đồng hành trọn đời cùng xe của quý khách với trạm bảo dưỡng và cứu hộ trực chiến 24/7.</p>
+          <span class="text-amber-400 font-bold text-xs uppercase tracking-widest">Hậu Mãi &amp; Kỹ Thuật Chuyên Sâu</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white">Dịch Vụ Kỹ Thuật &amp; Pháp Lý Hàng Đầu</h2>
+          <p class="text-blue-100 text-sm">Cam kết đồng hành trọn đời cùng xe của quý khách với trạm bảo dưỡng và cứu hộ trực chiến 24/7.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {coreServices.map((service) => (
-            <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl flex flex-col justify-between hover:border-blue-500 transition">
+            <div class="bg-white/10 backdrop-blur-sm border border-white/15 p-6 rounded-2xl flex flex-col justify-between hover:border-amber-400 transition shadow-sm">
               <div class="space-y-3">
-                <div class="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl font-bold">{service.icon}</div>
-                <h3 class="font-bold text-lg text-white">{service.title}</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">{service.desc}</p>
+                <div class="w-12 h-12 bg-white/15 text-amber-300 rounded-xl flex items-center justify-center text-2xl font-bold border border-white/20">{service.icon}</div>
+                <h3 class="font-bold text-base text-white">{service.title}</h3>
+                <p class="text-blue-100 text-xs sm:text-sm leading-relaxed">{service.desc}</p>
               </div>
-              <div class="mt-6 pt-4 border-t border-slate-700">
-                <a href={service.link} class="text-blue-400 hover:text-blue-300 font-bold text-sm flex items-center gap-1">
+              <div class="mt-6 pt-4 border-t border-white/15">
+                <a href={service.link} class="text-amber-300 hover:text-amber-200 font-bold text-xs sm:text-sm flex items-center gap-1 transition">
                   Xem chi tiết dịch vụ &rarr;
                 </a>
               </div>
@@ -411,14 +404,14 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
       </div>
     </section>
 
-    <!-- KHỐI TIN TỨC ĐỘNG TỪ POSTS.JSON (THANH TAB CHUYÊN MỤC + HIỂN THỊ 6 BÀI / TAB CHUẨN SEO AI OVERVIEW) -->
-    <section class="container mx-auto px-4 max-w-7xl">
-      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-6 border-b border-gray-200 pb-4 gap-4">
+    <!-- KHỐI TIN TỨC ĐỘNG -->
+    <section class="container mx-auto px-4 max-w-7xl pt-2">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-6 border-b border-slate-200 pb-4 gap-4">
         <div>
-          <span class="text-blue-600 font-bold text-sm uppercase tracking-wider">Kiến Thức Chuyên Sâu &amp; Cập Nhật</span>
-          <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 mt-1">Tin Tức, Kỹ Thuật &amp; Kinh Nghiệm Đầu Tư Xe</h2>
+          <span class="text-blue-700 font-bold text-xs uppercase tracking-wider">Kiến Thức Chuyên Sâu &amp; Cập Nhật</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1">Tin Tức, Kỹ Thuật &amp; Kinh Nghiệm Đầu Tư Xe</h2>
         </div>
-        <a href="/tin-tuc" class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 shrink-0">
+        <a href="/tin-tuc" class="text-blue-700 hover:text-blue-800 font-bold text-sm flex items-center gap-1 shrink-0">
           Xem toàn bộ kho bài viết &rarr;
         </a>
       </div>
@@ -428,7 +421,7 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
         <button
           type="button"
           data-news-tab="all"
-          class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-blue-600 text-white shadow-sm"
+          class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-blue-700 text-white shadow-sm"
         >
           Tất cả mới nhất
         </button>
@@ -436,44 +429,44 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
           <button
             type="button"
             data-news-tab={String(catName).trim()}
-            class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-gray-700 border border-gray-200"
+            class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-slate-700 border border-slate-200"
           >
             {catName}
           </button>
         ))}
       </div>
 
-      <!-- Lưới 6 bài viết (3 cột x 2 hàng trên Desktop) -->
+      <!-- Lưới 6 bài viết -->
       <div id="homeNewsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {latestPosts.map((post: any, idx: number) => (
           <article
             data-post-cat={String(post.category || "").trim()}
-            class={`home-news-card bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group ${idx >= 6 ? "hidden" : ""}`}
+            class={`home-news-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group ${idx >= 6 ? "hidden" : ""}`}
           >
             <div>
               {post.image && (
-                <a href={`/tin-tuc/${post.slug}`} class="block relative overflow-hidden h-48 border-b bg-gray-100">
+                <a href={`/tin-tuc/${post.slug}`} class="block relative overflow-hidden h-48 border-b bg-slate-100">
                   <img src={post.image} alt={post.title} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                   {itemHasVideo(post) && (
-                    <span class="absolute bottom-2 right-2 bg-red-600/95 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
+                    <span class="absolute bottom-2 right-2 bg-red-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
                   )}
                 </a>
               )}
               <div class="p-5 space-y-2.5">
                 <div class="flex justify-between items-center text-xs">
-                  <span class="bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-md">{post.category || "Tin tức"}</span>
-                  <span class="text-gray-400">{post.date}</span>
+                  <span class="bg-blue-50 text-blue-700 font-bold px-2.5 py-1 rounded-md border border-blue-100">{post.category || "Tin tức"}</span>
+                  <span class="text-slate-400">{post.date}</span>
                 </div>
-                <h3 class="font-bold text-base text-gray-900 leading-snug group-hover:text-blue-600 transition break-words">
+                <h3 class="font-bold text-base text-slate-900 leading-snug group-hover:text-blue-700 transition break-words">
                   <a href={`/tin-tuc/${post.slug}`}>{post.title}</a>
                 </h3>
                 {post.excerpt && (
-                  <p class="text-xs text-gray-600 leading-relaxed break-words">{post.excerpt}</p>
+                  <p class="text-xs text-slate-600 leading-relaxed break-words">{post.excerpt}</p>
                 )}
               </div>
             </div>
-            <div class="px-5 pb-5 pt-2 border-t border-gray-50 flex items-center justify-between">
-              <a href={`/tin-tuc/${post.slug}`} class="text-blue-600 hover:text-blue-700 font-bold text-xs sm:text-sm inline-flex items-center gap-1 group-hover:translate-x-0.5 transition">
+            <div class="px-5 pb-5 pt-2 border-t border-slate-50 flex items-center justify-between">
+              <a href={`/tin-tuc/${post.slug}`} class="text-blue-700 hover:text-blue-800 font-bold text-xs sm:text-sm inline-flex items-center gap-1 group-hover:translate-x-0.5 transition">
                 Đọc chi tiết &rarr;
               </a>
             </div>
@@ -485,7 +478,6 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
   </main>
 
   <script is:inline>
-    // 1. Khởi tạo Băng chuyền vòng tròn vô tận (Seamless Infinite Loop - Không bao giờ khuyết ô) cho 2 hàng sản phẩm
     function setupSeamlessRowCarousel(containerId, prevBtnId, nextBtnId, intervalMs = 3200) {
       const container = document.getElementById(containerId);
       const prevBtn = document.getElementById(prevBtnId);
@@ -493,14 +485,12 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
       if (!container) return;
 
       const items = Array.from(container.children);
-      // Nếu số lượng xe từ 4 chiếc trở xuống thì hiển thị tĩnh 4 cột đẹp mắt, không cần nhân đôi cuộn
       if (items.length <= 4) {
         if (prevBtn) prevBtn.style.display = "none";
         if (nextBtn) nextBtn.style.display = "none";
         return;
       }
 
-      // Nhân đôi danh sách thẻ để tạo đường ray nối đuôi nhau vô tận (không bao giờ bị hụt hàng)
       const originalHTML = container.innerHTML;
       container.innerHTML = originalHTML + originalHTML;
 
@@ -553,7 +543,7 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
       container.addEventListener("mouseenter", pause);
       container.addEventListener("mouseleave", resume);
       prevBtn?.addEventListener("mouseenter", pause);
-      prevBtn?.addEventListener("mouseleave", resume);
+      prevBtn?.addEventListener("mouseenter", resume);
       nextBtn?.addEventListener("mouseenter", pause);
       nextBtn?.addEventListener("mouseleave", resume);
     }
@@ -561,7 +551,6 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
     setupSeamlessRowCarousel("feedTruckCarousel", "btnPrevFeed", "btnNextFeed", 3000);
     setupSeamlessRowCarousel("otherVehicleCarousel", "btnPrevOther", "btnNextOther", 3600);
 
-    // 2. Bộ lọc Tab Tin tức (Hiển thị tối đa 6 bài / Tab)
     (function() {
       const tabBtns = document.querySelectorAll(".news-tab-btn");
       const cards = document.querySelectorAll(".home-news-card");
@@ -573,14 +562,14 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
 
           tabBtns.forEach(b => {
             if (b === btn) {
-              b.className = "news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-blue-600 text-white shadow-sm";
+              b.className = "news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-blue-700 text-white shadow-sm";
             } else {
-              b.className = "news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-gray-700 border border-gray-200";
+              b.className = "news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-slate-700 border border-slate-200";
             }
           });
 
           let shownCount = 0;
-          cards.forEach(card => {
+          cards.forEach((card) => {
             const cardCat = card.getAttribute("data-post-cat") || "";
             const isMatch = (selectedTab === "all") || (cardCat === selectedTab);
             if (isMatch && shownCount < 6) {

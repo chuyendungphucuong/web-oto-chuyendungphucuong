@@ -4,8 +4,8 @@
     "name": "Xe Tải Chở Gia Cầm JAC N900 PLUS E5 (320 Lồng, Tải Trọng 6.85 Tấn)",
     "category": "xe-tai-chuyen-dung",
     "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Đầu kéo gắn cẩu & Chở gia cầm",
-    "subKey": "xe-nang-khac",
+    "subCategory": "Xe chở gia cầm",
+    "subKey": "xe-cho-gia-cam",
     "brand": "JAC",
     "price": 1000000000,
     "promo": "Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm",
@@ -73,15 +73,17 @@
       }
     ],
     "isFeatured": false,
-    "minPrice": 1000000000
+    "minPrice": 1000000000,
+    "customBadges": [],
+    "videoUrl": ""
   },
   {
     "slug": "dau-keo-howo-th7-440hp-gan-cau-palfinger-10-tan",
     "name": "Xe Đầu Kéo Howo TH7 440HP Gắn Cẩu Gập Sany Palfinger 10 Tấn (SPK 23500C)",
     "category": "xe-tai-chuyen-dung",
     "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Đầu kéo gắn cẩu & Chở gia cầm",
-    "subKey": "xe-nang-khac",
+    "subCategory": "Xe đầu kéo gắn cẩu",
+    "subKey": "xe-dau-keo-gan-cau",
     "brand": "Howo",
     "price": 2560000000,
     "promo": "Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm",
@@ -155,15 +157,17 @@
       }
     ],
     "isFeatured": false,
-    "minPrice": 2560000000
+    "minPrice": 2560000000,
+    "customBadges": [],
+    "videoUrl": ""
   },
   {
     "slug": "dau-keo-faw-j6p-gan-cau-palfinger-10-tan",
     "name": "Xe Đầu Kéo FAW J6P 6x4 Gắn Cẩu Gập Sany Palfinger 10 Tấn (SPK23500 C)",
     "category": "xe-tai-chuyen-dung",
     "categoryName": "Xe Tải Chuyên Dùng",
-    "subCategory": "Đầu kéo gắn cẩu & Chở gia cầm",
-    "subKey": "xe-nang-khac",
+    "subCategory": "Xe đầu kéo gắn cẩu",
+    "subKey": "xe-dau-keo-gan-cau",
     "brand": "FAW",
     "price": 2660000000,
     "promo": "Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm",
@@ -238,6 +242,8 @@
       }
     ],
     "isFeatured": false,
-    "minPrice": 2660000000
+    "minPrice": 2660000000,
+    "customBadges": [],
+    "videoUrl": ""
   }
 ]

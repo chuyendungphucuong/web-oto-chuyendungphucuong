@@ -5,7 +5,7 @@
       "url": "/"
     },
     {
-      "title": "Xe Tải Chuyên Dùng",
+      "title": "Xe Chuyên Dùng",
       "url": "/danh-muc/xe-tai-chuyen-dung",
       "children": [
         {
@@ -37,8 +37,12 @@
           "url": "/danh-muc/ep-rac"
         },
         {
-          "title": "Đầu kéo gắn cẩu & Chở gia cầm",
-          "url": "/danh-muc/xe-nang-khac"
+          "title": "Xe đầu kéo gắn cẩu",
+          "url": "/danh-muc/xe-dau-keo-gan-cau"
+        },
+        {
+          "title": "Xe chở gia cầm",
+          "url": "/danh-muc/xe-cho-gia-cam"
         },
         {
           "title": "Xe quét đường hút bụi",
@@ -95,7 +99,7 @@
       ]
     },
     {
-      "title": "Kiến Thức & Tin Tức",
+      "title": "Tin Tức",
       "url": "/tin-tuc",
       "children": [
         {
@@ -121,7 +125,7 @@
       ]
     },
     {
-      "title": "Tính Lăn Bánh",
+      "title": "Giá Lăn Bánh",
       "url": "/tinh-lan-banh"
     },
     {

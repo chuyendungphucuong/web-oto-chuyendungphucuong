@@ -14,6 +14,8 @@ export function getStaticPaths() {
     'bon-nuoc',
     'bon-hut-chat-thai',
     'xe-cau',
+    'xe-dau-keo-gan-cau',
+    'xe-cho-gia-cam',
     'nang-dau',
     'xe-khach',
     'xe-cu'
@@ -45,6 +47,9 @@ export function getStaticPaths() {
 
 const { cat } = Astro.params;
 const rawCat = (cat || '').trim();
+if (rawCat === 'xe-nang-khac') {
+  return Astro.redirect('/danh-muc/xe-dau-keo-gan-cau', 301);
+}
 
 function normalizeStr(str: string) {
   return (str || '')
@@ -94,6 +99,18 @@ const CATEGORY_SEO_META: Record<string, { title: string; h1: string; desc: strin
     h1: 'Xe Phục Vụ Môi Trường: Bồn Hút Chất Thải, Quét Đường & Ép Rác',
     desc: 'Phân phối xe bồn hút chất thải, hút hầm cầu, xe quét đường hút bụi Isuzu/Dongfeng và xe cuốn ép rác chuyên dùng đạt chuẩn Cục Đăng kiểm Việt Nam.',
     intro: 'Giải pháp thiết bị xe môi trường đồng bộ phục vụ công ty công trình đô thị, khu công nghiệp và dịch vụ vệ sinh môi trường trên toàn quốc.'
+  },
+  'xe-dau-keo-gan-cau': {
+    title: 'Xe Đầu Kéo Gắn Cẩu Tự Hành Chính Hãng (Chenglong, Howo, Dongfeng, FAW)',
+    h1: 'Xe Đầu Kéo Gắn Cẩu Tự Hành',
+    desc: 'Báo giá và thông số xe đầu kéo gắn cẩu tự hành cần thẳng & cẩu gập 5 tấn - 15 tấn trên nền xe đầu kéo Chenglong, Howo, FAW, Dongfeng chuẩn Cục Đăng kiểm.',
+    intro: 'Chuyên thiết kế, lắp đặt cẩu tự hành Unic, Tadano, Soosan, XCMG trên nền xe đầu kéo 2 cầu 6x4 sức kéo lớn phục vụ vận chuyển kết cấu thép, máy công trình và hàng siêu trường.'
+  },
+  'xe-cho-gia-cam': {
+    title: 'Xe Tải Chở Gia Cầm (Chở Gà, Vịt Giống & Thịt) Thùng Lồng Chuẩn Đăng Kiểm',
+    h1: 'Xe Tải Chở Gia Cầm Chuyên Dùng',
+    desc: 'Phân phối và đóng mới xe tải chở gia cầm (chở gà, vịt) thùng lồng thông thoáng nhiều tầng trên nền Isuzu, Hino, Hyundai, Chenglong, Dongfeng hỗ trợ vay 80%.',
+    intro: 'Dòng xe tải chuyên dùng chở gia cầm thiết kế thùng khung xương kẽm/Inox 304 chắc chắn, sàn chống trượt dễ vệ sinh khử khuẩn và tối ưu đối lưu không khí.'
   },
   'xe-cau': {
     title: 'Xe Tải Gắn Cẩu Tự Hành 3 Tấn - 15 Tấn (Unic, Tadano, Soosan, XCMG)',
@@ -169,7 +186,9 @@ const filteredVehicles = vehicleList.filter((v: any) => {
     (normCat === 'bon-nuoc' && (vSubCat.includes('bon nuoc') || vSubCat.includes('phun nuoc'))) ||
     (normCat === 'xe-cau' && vSubCat.includes('cau') && !vSubCat.includes('cuu ho')) ||
     ((normCat === 'cuu-ho' || normCat === 'xe-cuu-ho-giao-thong') && vSubCat.includes('cuu ho')) ||
-    (normCat === 'nang-dau' && vSubCat.includes('nang dau'))
+    (normCat === 'nang-dau' && vSubCat.includes('nang dau')) ||
+    (normCat === 'xe-dau-keo-gan-cau' && vSubCat.includes('dau keo')) ||
+    (normCat === 'xe-cho-gia-cam' && vSubCat.includes('gia cam'))
   );
 });
 
