@@ -37,14 +37,27 @@ const postImageUrl = post.image
   ? (post.image.startsWith("http") ? post.image : `https://chuyendungphucuong.vn${post.image}`)
   : "https://chuyendungphucuong.vn/Logo.png";
 
+function toIsoDate(rawDate: any) {
+  if (!rawDate || typeof rawDate !== "string") return new Date().toISOString();
+  // Hỗ trợ định dạng DD/MM/YYYY hoặc YYYY-MM-DD
+  const dmy = rawDate.trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (dmy) {
+    const [_, d, m, y] = dmy;
+    return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}T08:00:00+07:00`;
+  }
+  const parsed = new Date(rawDate);
+  return isNaN(parsed.getTime()) ? "2026-11-17T08:00:00+07:00" : parsed.toISOString();
+}
+const isoPublished = toIsoDate(post.date);
+
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": post.title,
   "description": post.excerpt || post.summary || post.title,
   "image": [postImageUrl],
-  "datePublished": "2026-10-01T08:00:00+07:00",
-  "dateModified": "2026-11-16T08:00:00+07:00",
+  "datePublished": isoPublished,
+  "dateModified": isoPublished,
   "author": {
     "@type": "Person",
     "name": post.author || "Đặng Ngọc Hoàng Vũ - Phú Cường Auto",
