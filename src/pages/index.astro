@@ -43,6 +43,23 @@ const handoverPosts = (Array.isArray(postsData) ? postsData : [])
 
 const latestPosts = Array.isArray(postsData) ? postsData.slice(0, 24) : [];
 
+function normalizeHomeNewsCat(cat: any) {
+  const s = String(cat || "").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d");
+  if (s.includes("so sanh") || s.includes("danh gia") || s.includes("tu van")) return "danh-gia-so-sanh";
+  if (s.includes("phap ly") || s.includes("dang kiem") || s.includes("thu tuc")) return "phap-ly-dang-kiem";
+  if (s.includes("kinh nghiem") || s.includes("dau tu") || s.includes("van tai")) return "kinh-nghiem-van-tai";
+  if (s.includes("ban giao") || s.includes("showroom") || s.includes("tin tuc")) return "tin-tuc-ban-giao";
+  return "khac";
+}
+
+const homeNewsCategories = [
+  { key: "danh-gia-so-sanh", label: "Đánh Giá & So Sánh Xe" },
+  { key: "phap-ly-dang-kiem", label: "Thủ Tục Pháp Lý & Đăng Kiểm" },
+  { key: "kinh-nghiem-van-tai", label: "Kinh Nghiệm Vận Tải & Đầu Tư" },
+  { key: "tin-tuc-ban-giao", label: "Tin Tức & Bàn Giao Xe Showroom" }
+];
+
 function itemHasVideo(item: any) {
   if (!item) return false;
   if (item.videoUrl && String(item.videoUrl).trim() !== "") return true;
@@ -532,8 +549,8 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
         </a>
       </div>
 
-      <!-- Thanh Tab Lọc Nhanh Theo Chuyên Mục -->
-      <div id="homeNewsTabs" class="flex flex-wrap items-center gap-2 pb-3 mb-6">
+      <!-- Thanh Tab Lọc Nhanh Theo Chuyên Mục (Chuẩn hóa 1 hàng duy nhất) -->
+      <div id="homeNewsTabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-6">
         <button
           type="button"
           data-news-tab="all"
@@ -541,53 +558,60 @@ const otherVehicles = featuredOther.length > 0 ? featuredOther : otherVehiclesRa
         >
           Tất cả mới nhất
         </button>
-        {Array.from(new Set(latestPosts.map((p: any) => p.category).filter(Boolean))).map((catName: any) => (
+        {homeNewsCategories.map((cat) => (
           <button
             type="button"
-            data-news-tab={String(catName).trim()}
+            data-news-tab={cat.key}
             class="news-tab-btn shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer bg-white hover:bg-blue-50 text-slate-700 border border-slate-200"
           >
-            {catName}
+            {cat.label}
           </button>
         ))}
       </div>
 
       <!-- Lưới bài viết -->
       <div id="homeNewsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {latestPosts.map((post: any, idx: number) => (
-          <article
-            data-post-cat={String(post.category || "").trim()}
-            class={`home-news-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group ${idx >= 6 ? "hidden" : ""}`}
-          >
-            <div>
-              {post.image && (
-                <a href={`/tin-tuc/${post.slug}`} class="block relative overflow-hidden h-48 border-b bg-slate-100">
-                  <img src={post.image} alt={post.title} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+        {latestPosts.map((post: any, idx: number) => {
+          const catKey = normalizeHomeNewsCat(post.category);
+          const descText = post.summary || post.excerpt || "";
+          return (
+            <article
+              data-post-cat={catKey}
+              class={`home-news-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md hover:border-blue-400 transition group ${idx >= 6 ? "hidden" : ""}`}
+            >
+              <div>
+                <a href={`/tin-tuc/${post.slug}`} class="block relative overflow-hidden h-48 border-b border-slate-100 bg-slate-100">
+                  <img
+                    src={post.image || "/Logo.png"}
+                    alt={post.title}
+                    loading="lazy"
+                    class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                  />
                   {itemHasVideo(post) && (
                     <span class="absolute bottom-2 right-2 bg-red-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">🎬 Có Video</span>
                   )}
                 </a>
-              )}
-              <div class="p-5 space-y-2.5">
-                <div class="flex justify-between items-center text-xs">
-                  <span class="bg-blue-50 text-blue-700 font-bold px-2.5 py-1 rounded-md border border-blue-100">{post.category || "Tin tức"}</span>
-                  <span class="text-slate-400">{post.date}</span>
+                <div class="p-5 space-y-2.5">
+                  <div class="flex justify-between items-center gap-2 text-xs">
+                    <span class="bg-blue-50 text-blue-700 font-bold px-2.5 py-1 rounded-md border border-blue-100 truncate">{post.category || "Tin tức"}</span>
+                    <span class="text-slate-400 shrink-0">{post.date}</span>
+                  </div>
+                  <h3 class="font-bold text-base text-slate-900 leading-snug group-hover:text-blue-700 transition line-clamp-2">
+                    <a href={`/tin-tuc/${post.slug}`}>{post.title}</a>
+                  </h3>
+                  {descText && (
+                    <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">{descText}</p>
+                  )}
                 </div>
-                <h3 class="font-bold text-base text-slate-900 leading-snug group-hover:text-blue-700 transition break-words">
-                  <a href={`/tin-tuc/${post.slug}`}>{post.title}</a>
-                </h3>
-                {post.excerpt && (
-                  <p class="text-xs text-slate-600 leading-relaxed break-words">{post.excerpt}</p>
-                )}
               </div>
-            </div>
-            <div class="px-5 pb-5 pt-2 border-t border-slate-50 flex items-center justify-between">
-              <a href={`/tin-tuc/${post.slug}`} class="text-blue-700 hover:text-blue-800 font-bold text-xs sm:text-sm inline-flex items-center gap-1 group-hover:translate-x-0.5 transition">
-                Đọc chi tiết &rarr;
-              </a>
-            </div>
-          </article>
-        ))}
+              <div class="px-5 pb-5 pt-2 border-t border-slate-50 flex items-center justify-between">
+                <a href={`/tin-tuc/${post.slug}`} class="text-blue-700 hover:text-blue-800 font-bold text-xs sm:text-sm inline-flex items-center gap-1 group-hover:translate-x-0.5 transition">
+                  Đọc chi tiết &rarr;
+                </a>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
 
