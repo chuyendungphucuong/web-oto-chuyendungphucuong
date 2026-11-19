@@ -7,8 +7,8 @@
     "subCategory": "Xe khách 16 chỗ (Solati, Sunray)",
     "subKey": "16-cho",
     "brand": "JAC",
-    "price": 679000000,
-    "promo": "Tặng 100% Bảo hiểm Thân Vỏ & Miễn phí bảo dưỡng định kỳ 2 năm",
+    "price": 669000000,
+    "promo": "Tặng bộ quà tặng cao cấp: cửa điện + đèn trần + camera hành trình + Màn hình Androi",
     "images": [
       "/images/products/xe-khach-16-cho-jac-sunray/xe-khach-16-cho-jac-sunray-1.webp",
       "/images/products/xe-khach-16-cho-jac-sunray/xe-khach-16-cho-jac-sunray-2.webp",
@@ -75,7 +75,9 @@
       }
     ],
     "isFeatured": true,
-    "minPrice": 679000000
+    "minPrice": 669000000,
+    "customBadges": [],
+    "videoUrl": ""
   },
   {
     "slug": "xe-khach-16-cho-hyundai-solati",
