@@ -2,6 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { allVehicles } from '../data/vehicles.js';
 import { FINANCIAL_CONFIG } from '../data/config.js';
+import financialSettings from '../data/financial-settings.json';
+const dkdkRegionsList = Array.isArray(financialSettings?.dkdkRegions) ? financialSettings.dkdkRegions : [];
 import navData from '../data/navigation.json';
 
 const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
@@ -528,22 +530,13 @@ const firstCar = enrichedVehicles[0] || {
             <div class="sm:col-span-8">
               <label class="block text-xs font-bold text-gray-700 mb-1">📍 Khu vực đăng ký biển số &amp; ĐKĐK:</label>
               <select id="selectLocation" class="w-full p-2.5 border border-gray-300 rounded-xl text-xs sm:text-sm bg-white font-semibold text-gray-900">
-                <option value="hcm_1">1. TP.HCM - Nội thành (Q1,3,5,6,10,11,12, Bình Thạnh, Phú Nhuận, Gò Vấp, Tân Bình, Tân Phú, Bình Tân)</option>
-                <option value="hcm_2" selected>2. TP.HCM - Khu vực 2 (Bình Chánh, Hóc Môn, Củ Chi, Nhà Bè, Cần Giờ, Q2, Q4, Q7, Q8, Q9, Thủ Đức)</option>
-                <option value="hcm_bd">3. TP.HCM (Khu vực Bình Dương cũ)</option>
-                <option value="dong_nai">4. Đồng Nai</option>
-                <option value="hcm_vt">5. TP.HCM (Khu vực Vũng Tàu cũ)</option>
-                <option value="tg_la">6. Tiền Giang, Long An</option>
-                <option value="tn_bp_bt_vl">7. Tây Ninh, Bình Phước, Bến Tre, Vĩnh Long</option>
-                <option value="bt_ag_tv_ct_hg_dt">8. Bình Thuận, An Giang, Trà Vinh, Cần Thơ, Hậu Giang, Đồng Tháp</option>
-                <option value="bl_st_kg">9. Bạc Liêu, Sóc Trăng, Kiên Giang</option>
-                <option value="cm_nt_ld_kh">10. Cà Mau, Ninh Thuận, Lâm Đồng, Khánh Hòa</option>
-                <option value="gl_dn_dl">11. Gia Lai, Đắk Nông, Đắk Lắk</option>
-                <option value="kon_tum">12. Kon Tum</option>
-                <option value="phu_yen">13. Phú Yên</option>
-                <option value="binh_dinh">14. Bình Định</option>
-                <option value="quang_ngai">15. Quảng Ngãi</option>
+                {dkdkRegionsList.map((r: any, idx: number) => (
+                  <option value={r.key} selected={r.key === 'hcm_2' || (idx === 0 && !dkdkRegionsList.some((x: any) => x.key === 'hcm_2'))}>
+                    {r.label}
+                  </option>
+                ))}
               </select>
+              <script id="dkdkRegionsJsonData" type="application/json" set:html={JSON.stringify(dkdkRegionsList)} />
             </div>
             <div class="sm:col-span-4">
               <label class="block text-xs font-bold text-gray-700 mb-1">Hình thức ĐKĐK:</label>
@@ -1083,28 +1076,28 @@ const firstCar = enrichedVehicles[0] || {
     // BIỂU GIÁ ĐĂNG KÝ ĐĂNG KIỂM KHÁCH HÀNG (CẬP NHẬT THEO FILE PDF 11/11/2026)
     // =========================================================================
     // Cấu trúc: [ <=2.5T, >2.5T..<=5T (hoặc 16 chỗ), >5T..<=10T, >10T..18T/Đầu kéo ]
-    const DKDK_PRICING_TABLE: Record<string, { plate: number; inspect: number; tiers: [number, number, number, number]; noCar?: number }> = {
-      hcm_1:             { plate: 350000, inspect: 78860, tiers: [3500000, 3800000, 4100000, 4400000] },
-      hcm_2:             { plate: 350000, inspect: 78860, tiers: [3500000, 3800000, 4100000, 4400000] },
-      hcm_bd:            { plate: 350000, inspect: 78860, tiers: [3400000, 3700000, 3900000, 4300000] },
-      dong_nai:          { plate: 100000, inspect: 78860, tiers: [3800000, 4100000, 4300000, 4700000] },
-      hcm_vt:            { plate: 350000, inspect: 78860, tiers: [3700000, 4300000, 5100000, 5500000], noCar: 5300000 },
-      tg_la:             { plate: 100000, inspect: 78860, tiers: [3800000, 4400000, 5200000, 5600000], noCar: 5400000 },
-      tn_bp_bt_vl:       { plate: 100000, inspect: 78860, tiers: [4100000, 4400000, 6200000, 7100000], noCar: 6000000 },
-      bt_ag_tv_ct_hg_dt: { plate: 100000, inspect: 78860, tiers: [4600000, 5400000, 6300000, 7100000], noCar: 7500000 },
-      bl_st_kg:          { plate: 100000, inspect: 78860, tiers: [5100000, 5700000, 6900000, 7600000], noCar: 7500000 },
-      cm_nt_ld_kh:       { plate: 100000, inspect: 78860, tiers: [6000000, 6700000, 7400000, 8200000], noCar: 6500000 },
-      gl_dn_dl:          { plate: 100000, inspect: 78860, tiers: [7100000, 8000000, 8500000, 9100000], noCar: 7600000 },
-      kon_tum:           { plate: 100000, inspect: 78860, tiers: [7500000, 8200000, 9400000, 9600000] },
-      phu_yen:           { plate: 100000, inspect: 78860, tiers: [6900000, 7500000, 8400000, 9300000], noCar: 8600000 },
-      binh_dinh:         { plate: 100000, inspect: 78860, tiers: [7700000, 8300000, 9700000, 10300000], noCar: 8600000 },
-      quang_ngai:        { plate: 100000, inspect: 78860, tiers: [8200000, 8900000, 10200000, 11100000], noCar: 9700000 }
-    };
+    const DKDK_PRICING_TABLE: Record<string, { plate: number; inspect: number; tiers: [number, number, number, number]; noCar?: number }> = {};
+    try {
+      const rawRegions = JSON.parse(document.getElementById('dkdkRegionsJsonData')?.textContent || '[]');
+      rawRegions.forEach((r: any) => {
+        DKDK_PRICING_TABLE[r.key] = {
+          plate: Number(r.plate || 100000),
+          inspect: Number(r.inspect || 78860),
+          tiers: [
+            Number(r.tiers?.[0] || 0),
+            Number(r.tiers?.[1] || 0),
+            Number(r.tiers?.[2] || 0),
+            Number(r.tiers?.[3] || 0)
+          ],
+          noCar: Number(r.noCar || 0) > 0 ? Number(r.noCar) : undefined
+        };
+      });
+    } catch (e) {}
 
     const selectRegMode = document.getElementById('selectRegMode') as HTMLSelectElement | null;
 
     function lookupPdfScheduleFees(locKey: string, payloadKg: number, isBus: boolean, seats: number, regMode: string) {
-      const cfg = DKDK_PRICING_TABLE[locKey] || DKDK_PRICING_TABLE.hcm_2;
+      const cfg = DKDK_PRICING_TABLE[locKey] || DKDK_PRICING_TABLE.hcm_2 || Object.values(DKDK_PRICING_TABLE)[0];
       let tierIdx = 0;
       let bracketLabel = '<= 2.5T';
 

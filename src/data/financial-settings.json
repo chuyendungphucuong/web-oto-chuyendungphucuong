@@ -1,0 +1,247 @@
+{
+  "registrationFeeRate": 0.02,
+  "plateFeeCity": 350000,
+  "plateFeeProvince": 100000,
+  "serviceAndInspectionFee": 4100000,
+  "defaultAnnualInterestRate": 0.095,
+  "roadTaxTruck": {
+    "under4t": 2160000,
+    "from4to8_5t": 3240000,
+    "from8_5to13t": 4680000,
+    "from13to19t": 7080000,
+    "from19to27t": 8640000,
+    "over27t": 12480000
+  },
+  "roadTaxBus": {
+    "under10": 1560000,
+    "from10to24": 3240000,
+    "from25to39": 4680000,
+    "over40": 7080000
+  },
+  "insuranceTruckBase": {
+    "under3t": 853000,
+    "from3to8t": 1660000,
+    "from8to15t": 2746000,
+    "over15t": 3200000,
+    "specializedMultiplier": 1.2,
+    "perSeatFee": 10000
+  },
+  "insuranceBusBase": {
+    "under6": 437000,
+    "from6to11": 794000,
+    "from12to16": 3054000,
+    "from17to24": 4632000,
+    "seat25": 4813000,
+    "extraPerSeatOver25": 30000
+  },
+  "dkdkRegions": [
+    {
+      "key": "hcm_1",
+      "label": "1. TP.HCM - Nội thành (Q1,3,5,6,10,11,12, Bình Thạnh, Phú Nhuận, Gò Vấp, Tân Bình, Tân Phú, Bình Tân)",
+      "plate": 350000,
+      "inspect": 78860,
+      "tiers": [
+        3500000,
+        3800000,
+        4100000,
+        4400000
+      ],
+      "noCar": 0
+    },
+    {
+      "key": "hcm_2",
+      "label": "2. TP.HCM - Khu vực 2 (Bình Chánh, Hóc Môn, Củ Chi, Nhà Bè, Cần Giờ, Q2, Q4, Q7, Q8, Q9, Thủ Đức)",
+      "plate": 350000,
+      "inspect": 78860,
+      "tiers": [
+        3500000,
+        3800000,
+        4100000,
+        4400000
+      ],
+      "noCar": 0
+    },
+    {
+      "key": "hcm_bd",
+      "label": "3. TP.HCM (Khu vực Bình Dương cũ)",
+      "plate": 350000,
+      "inspect": 78860,
+      "tiers": [
+        3400000,
+        3700000,
+        3900000,
+        4300000
+      ],
+      "noCar": 0
+    },
+    {
+      "key": "dong_nai",
+      "label": "4. Đồng Nai",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        3800000,
+        4100000,
+        4300000,
+        4700000
+      ],
+      "noCar": 0
+    },
+    {
+      "key": "hcm_vt",
+      "label": "5. TP.HCM (Khu vực Vũng Tàu cũ)",
+      "plate": 350000,
+      "inspect": 78860,
+      "tiers": [
+        3700000,
+        4300000,
+        5100000,
+        5500000
+      ],
+      "noCar": 5300000
+    },
+    {
+      "key": "tg_la",
+      "label": "6. Tiền Giang, Long An",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        3800000,
+        4400000,
+        5200000,
+        5600000
+      ],
+      "noCar": 5400000
+    },
+    {
+      "key": "tn_bp_bt_vl",
+      "label": "7. Tây Ninh, Bình Phước, Bến Tre, Vĩnh Long",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        4100000,
+        4400000,
+        6200000,
+        7100000
+      ],
+      "noCar": 6000000
+    },
+    {
+      "key": "bt_ag_tv_ct_hg_dt",
+      "label": "8. Bình Thuận, An Giang, Trà Vinh, Cần Thơ, Hậu Giang, Đồng Tháp",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        4600000,
+        5400000,
+        6300000,
+        7100000
+      ],
+      "noCar": 7500000
+    },
+    {
+      "key": "bl_st_kg",
+      "label": "9. Bạc Liêu, Sóc Trăng, Kiên Giang",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        5100000,
+        5700000,
+        6900000,
+        7600000
+      ],
+      "noCar": 7500000
+    },
+    {
+      "key": "cm_nt_ld_kh",
+      "label": "10. Cà Mau, Ninh Thuận, Lâm Đồng, Khánh Hòa",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        6000000,
+        6700000,
+        7400000,
+        8200000
+      ],
+      "noCar": 6500000
+    },
+    {
+      "key": "gl_dn_dl",
+      "label": "11. Gia Lai, Đắk Nông, Đắk Lắk",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        7100000,
+        8000000,
+        8500000,
+        9100000
+      ],
+      "noCar": 7600000
+    },
+    {
+      "key": "kon_tum",
+      "label": "12. Kon Tum",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        7500000,
+        8200000,
+        9400000,
+        9600000
+      ],
+      "noCar": 0
+    },
+    {
+      "key": "phu_yen",
+      "label": "13. Phú Yên",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        6900000,
+        7500000,
+        8400000,
+        9300000
+      ],
+      "noCar": 8600000
+    },
+    {
+      "key": "binh_dinh",
+      "label": "14. Bình Định",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        7700000,
+        8300000,
+        9700000,
+        10300000
+      ],
+      "noCar": 8600000
+    },
+    {
+      "key": "quang_ngai",
+      "label": "15. Quảng Ngãi",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        8200000,
+        8900000,
+        10200000,
+        11100000
+      ],
+      "noCar": 9700000
+    },
+    {
+      "key": "kv_1795252083590",
+      "label": "16. Tỉnh thành khác",
+      "plate": 100000,
+      "inspect": 78860,
+      "tiers": [
+        5000000,
+        5500000,
+        6500000,
+        7500000
+      ],
+      "noCar": 0
+    }
+  ]
+}

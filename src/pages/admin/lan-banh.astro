@@ -1,0 +1,353 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+const financialData = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'src/data/financial-settings.json'), 'utf8'));
+---
+
+<AdminLayout title="Cấu Hình Biểu Phí Lăn Bánh & Bảo Hiểm" activeTab="lan-banh">
+  <div class="max-w-6xl mx-auto space-y-8 pb-12">
+    <form id="financialConfigForm" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-blue-700">Đồng Bộ Toàn Hệ Thống Tính Giá Lăn Bánh</span>
+          <h2 class="text-xl font-extrabold text-slate-900 mt-0.5">🧮 Cấu Hình Biểu Phí Đăng Ký, Đăng Kiểm &amp; Bảo Hiểm Mặc Định</h2>
+          <p class="text-xs text-slate-500 mt-1">Các thông số dưới đây áp dụng tự động cho trang <strong>/tinh-lan-banh</strong> và bảng dự toán trên từng trang sản phẩm.</p>
+        </div>
+        <button type="submit" id="btnSaveFinancial" class="shrink-0 bg-blue-700 hover:bg-blue-800 text-white font-extrabold px-6 py-3 rounded-xl transition shadow-sm cursor-pointer text-sm">
+          💾 Lưu Biểu Phí Mới
+        </button>
+      </div>
+
+      <div id="finStatusAlert" class="hidden p-3.5 rounded-xl text-xs font-bold"></div>
+
+      <div class="space-y-4">
+        <h3 class="text-sm font-extrabold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+          <span class="w-2 h-5 bg-blue-700 rounded-full inline-block"></span>
+          1. Lệ Phí Trước Bạ, Biển Số, Dịch Vụ ĐKĐK &amp; Lãi Suất Vay
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-sm">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">Lệ phí trước bạ (%):</label>
+            <input type="number" step="0.1" id="regRatePct" value={(financialData.registrationFeeRate * 100).toFixed(1)} class="w-full p-2.5 bg-white border border-slate-300 rounded-lg font-bold text-slate-900" required />
+            <span class="text-[11px] text-slate-400 mt-1 block">Mặc định xe tải/chuyên dùng: 2%</span>
+          </div>
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">Biển số TP.HCM / HN (VNĐ):</label>
+            <input type="number" step="1000" id="plateCity" value={financialData.plateFeeCity} class="w-full p-2.5 bg-white border border-slate-300 rounded-lg font-bold text-slate-900" required />
+            <span class="text-[11px] text-slate-400 mt-1 block">Hiện hành: 350.000 đ</span>
+          </div>
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">Biển số Tỉnh khác (VNĐ):</label>
+            <input type="number" step="1000" id="plateProvince" value={financialData.plateFeeProvince} class="w-full p-2.5 bg-white border border-slate-300 rounded-lg font-bold text-slate-900" required />
+            <span class="text-[11px] text-slate-400 mt-1 block">Hiện hành: 100.000 đ</span>
+          </div>
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">Dịch vụ ĐKĐK &amp; Lưu hành (VNĐ):</label>
+            <input type="number" step="10000" id="serviceFee" value={financialData.serviceAndInspectionFee} class="w-full p-2.5 bg-white border border-slate-300 rounded-lg font-bold text-slate-900" required />
+            <span class="text-[11px] text-slate-400 mt-1 block">Cà số, khám lưu hành, hồ sơ</span>
+          </div>
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">Lãi suất vay mặc định (%/năm):</label>
+            <input type="number" step="0.1" id="interestRatePct" value={(financialData.defaultAnnualInterestRate * 100).toFixed(1)} class="w-full p-2.5 bg-white border border-slate-300 rounded-lg font-bold text-slate-900" required />
+            <span class="text-[11px] text-slate-400 mt-1 block">Dùng tính trả góp tham khảo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4 pt-2 border-t border-slate-100">
+        <h3 class="text-sm font-extrabold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+          <span class="w-2 h-5 bg-emerald-600 rounded-full inline-block"></span>
+          2. Phí Sử Dụng Đường Bộ (1 Năm — VNĐ)
+        </h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+            <h4 class="text-xs font-extrabold text-blue-800 uppercase">A. Xe Tải &amp; Xe Chuyên Dùng (Theo Tổng Tải Trọng)</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Dưới 4 tấn:</label>
+                <input type="number" step="1000" id="rt_under4t" value={financialData.roadTaxTruck.under4t} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 4 đến dưới 8.5 tấn:</label>
+                <input type="number" step="1000" id="rt_from4to8_5t" value={financialData.roadTaxTruck.from4to8_5t} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 8.5 đến dưới 13 tấn:</label>
+                <input type="number" step="1000" id="rt_from8_5to13t" value={financialData.roadTaxTruck.from8_5to13t} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 13 đến dưới 19 tấn:</label>
+                <input type="number" step="1000" id="rt_from13to19t" value={financialData.roadTaxTruck.from13to19t} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 19 đến dưới 27 tấn:</label>
+                <input type="number" step="1000" id="rt_from19to27t" value={financialData.roadTaxTruck.from19to27t} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 27 tấn trở lên:</label>
+                <input type="number" step="1000" id="rt_over27t" value={financialData.roadTaxTruck.over27t} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+            <h4 class="text-xs font-extrabold text-blue-800 uppercase">B. Xe Ô Tô Khách (Theo Số Chỗ Ngồi)</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Dưới 10 chỗ ngồi:</label>
+                <input type="number" step="1000" id="rt_bus_under10" value={financialData.roadTaxBus.under10} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 10 đến 24 chỗ (16 chỗ):</label>
+                <input type="number" step="1000" id="rt_bus_10_24" value={financialData.roadTaxBus.from10to24} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 25 đến 39 chỗ (29-34 chỗ):</label>
+                <input type="number" step="1000" id="rt_bus_25_39" value={financialData.roadTaxBus.from25to39} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 40 chỗ trở lên (47 chỗ):</label>
+                <input type="number" step="1000" id="rt_bus_over40" value={financialData.roadTaxBus.over40} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4 pt-2 border-t border-slate-100">
+        <h3 class="text-sm font-extrabold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+          <span class="w-2 h-5 bg-red-600 rounded-full inline-block"></span>
+          3. Bảo Hiểm Trách Nhiệm Dân Sự Bắt Buộc (Giá Gốc Chưa VAT — VNĐ/Năm)
+        </h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+            <h4 class="text-xs font-extrabold text-blue-800 uppercase">A. Xe Tải &amp; Hệ Số Xe Chuyên Dùng</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Dưới 3 tấn (gốc):</label>
+                <input type="number" step="1000" id="ins_under3t" value={financialData.insuranceTruckBase.under3t} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 3 đến 8 tấn (gốc):</label>
+                <input type="number" step="1000" id="ins_3to8t" value={financialData.insuranceTruckBase.from3to8t} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Trên 8 đến 15 tấn (gốc):</label>
+                <input type="number" step="1000" id="ins_8to15t" value={financialData.insuranceTruckBase.from8to15t} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Trên 15 tấn (gốc):</label>
+                <input type="number" step="1000" id="ins_over15t" value={financialData.insuranceTruckBase.over15t} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Hệ số nhân xe chuyên dùng:</label>
+                <input type="number" step="0.05" id="ins_spec_mult" value={financialData.insuranceTruckBase.specializedMultiplier} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Phí bảo hiểm phụ xe / chỗ (VNĐ):</label>
+                <input type="number" step="1000" id="ins_per_seat" value={financialData.insuranceTruckBase.perSeatFee} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+            <h4 class="text-xs font-extrabold text-blue-800 uppercase">B. Xe Ô Tô Khách Kinh Doanh Vận Tải</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Dưới 6 chỗ:</label>
+                <input type="number" step="1000" id="ins_bus_u6" value={financialData.insuranceBusBase.under6} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 6 đến 11 chỗ:</label>
+                <input type="number" step="1000" id="ins_bus_6_11" value={financialData.insuranceBusBase.from6to11} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 12 đến 16 chỗ:</label>
+                <input type="number" step="1000" id="ins_bus_12_16" value={financialData.insuranceBusBase.from12to16} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Từ 17 đến 24 chỗ:</label>
+                <input type="number" step="1000" id="ins_bus_17_24" value={financialData.insuranceBusBase.from17to24} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Xe 25 chỗ:</label>
+                <input type="number" step="1000" id="ins_bus_25" value={financialData.insuranceBusBase.seat25} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+              <div>
+                <label class="font-bold text-slate-700 block mb-1">Cộng thêm mỗi chỗ &gt; 25:</label>
+                <input type="number" step="1000" id="ins_bus_extra" value={financialData.insuranceBusBase.extraPerSeatOver25} class="w-full p-2 bg-white border rounded-lg font-semibold" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="space-y-4 pt-2 border-t border-slate-100">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-sm font-extrabold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+            <span class="w-2 h-5 bg-amber-500 rounded-full inline-block"></span>
+            4. Biểu Phí Dịch Vụ ĐKĐK &amp; Biển Số Theo Khu Vực / Tỉnh Thành (Tự Thêm / Sửa / Xóa)
+          </h3>
+          <button type="button" id="btnAddRegionRow" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl transition cursor-pointer shadow-xs">
+            + Thêm Tỉnh / Khu Vực Mới
+          </button>
+        </div>
+        <p class="text-xs text-slate-500">Mỗi dòng tương ứng 1 lựa chọn trong ô <strong>Khu vực đăng ký biển số &amp; ĐKĐK</strong> ngoài trang <code>/tinh-lan-banh</code>. Để <strong>0</strong> ở cột <em>ĐK không xe</em> nếu khu vực đó không áp dụng.</p>
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-xs text-left border-collapse min-w-[980px]">
+            <thead>
+              <tr class="bg-slate-800 text-white">
+                <th class="p-2.5 border border-slate-700 w-[260px]">Tên Khu Vực / Tỉnh Thành</th>
+                <th class="p-2.5 border border-slate-700 w-[95px]">Biển số</th>
+                <th class="p-2.5 border border-slate-700 w-[85px]">Phí ĐK</th>
+                <th class="p-2.5 border border-slate-700 w-[100px]">&le; 2.5T</th>
+                <th class="p-2.5 border border-slate-700 w-[105px]">2.5T–5T / 16C</th>
+                <th class="p-2.5 border border-slate-700 w-[100px]">5T–10T</th>
+                <th class="p-2.5 border border-slate-700 w-[105px]">&gt; 10T / Đ.Kéo</th>
+                <th class="p-2.5 border border-slate-700 w-[100px]">ĐK không xe</th>
+                <th class="p-2.5 border border-slate-700 w-[45px] text-center">Xóa</th>
+              </tr>
+            </thead>
+            <tbody id="regionsTableBody" class="divide-y divide-slate-200 bg-white">
+              {(financialData.dkdkRegions || []).map((r) => (
+                <tr class="region-row hover:bg-slate-50" data-key={r.key}>
+                  <td class="p-1.5 border border-slate-200"><input type="text" class="reg-label w-full p-1.5 border rounded font-semibold text-slate-900" value={r.label} required /></td>
+                  <td class="p-1.5 border border-slate-200"><input type="number" step="10000" class="reg-plate w-full p-1.5 border rounded font-bold text-right" value={r.plate} /></td>
+                  <td class="p-1.5 border border-slate-200"><input type="number" step="100" class="reg-inspect w-full p-1.5 border rounded text-right" value={r.inspect} /></td>
+                  <td class="p-1.5 border border-slate-200"><input type="number" step="100000" class="reg-t0 w-full p-1.5 border rounded font-bold text-blue-800 text-right" value={r.tiers[0]} /></td>
+                  <td class="p-1.5 border border-slate-200"><input type="number" step="100000" class="reg-t1 w-full p-1.5 border rounded font-bold text-blue-800 text-right" value={r.tiers[1]} /></td>
+                  <td class="p-1.5 border border-slate-200"><input type="number" step="100000" class="reg-t2 w-full p-1.5 border rounded font-bold text-blue-800 text-right" value={r.tiers[2]} /></td>
+                  <td class="p-1.5 border border-slate-200"><input type="number" step="100000" class="reg-t3 w-full p-1.5 border rounded font-bold text-blue-800 text-right" value={r.tiers[3]} /></td>
+                  <td class="p-1.5 border border-slate-200"><input type="number" step="100000" class="reg-nocar w-full p-1.5 border rounded font-semibold text-emerald-700 text-right" value={r.noCar || 0} /></td>
+                  <td class="p-1.5 border border-slate-200 text-center"><button type="button" class="btn-del-region text-red-600 hover:text-red-800 font-black px-2 py-1 cursor-pointer">✕</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 flex justify-end">
+        <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-extrabold px-8 py-3.5 rounded-xl transition shadow-sm cursor-pointer text-sm">
+          💾 Lưu Toàn Bộ Biểu Phí Lăn Bánh
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script is:inline>
+    
+    const regionsTbody = document.getElementById('regionsTableBody');
+    function bindDeleteRegionButtons() {
+      regionsTbody?.querySelectorAll('.btn-del-region').forEach((btn) => {
+        btn.onclick = () => {
+          if (regionsTbody.querySelectorAll('.region-row').length <= 1) {
+            alert('Cần giữ lại ít nhất 1 khu vực!');
+            return;
+          }
+          btn.closest('.region-row')?.remove();
+        };
+      });
+    }
+    bindDeleteRegionButtons();
+
+    document.getElementById('btnAddRegionRow')?.addEventListener('click', () => {
+      const tr = document.createElement('tr');
+      tr.className = 'region-row hover:bg-slate-50';
+      tr.setAttribute('data-key', 'kv_' + Date.now());
+      tr.innerHTML = `
+        <td class="p-1.5 border border-slate-200"><input type="text" class="reg-label w-full p-1.5 border rounded font-semibold text-slate-900" placeholder="VD: 16. Đà Nẵng, Quảng Nam..." required /></td>
+        <td class="p-1.5 border border-slate-200"><input type="number" step="10000" class="reg-plate w-full p-1.5 border rounded font-bold text-right" value="100000" /></td>
+        <td class="p-1.5 border border-slate-200"><input type="number" step="100" class="reg-inspect w-full p-1.5 border rounded text-right" value="78860" /></td>
+        <td class="p-1.5 border border-slate-200"><input type="number" step="100000" class="reg-t0 w-full p-1.5 border rounded font-bold text-blue-800 text-right" value="5000000" /></td>
+        <td class="p-1.5 border border-slate-200"><input type="number" step="100000" class="reg-t1 w-full p-1.5 border rounded font-bold text-blue-800 text-right" value="5500000" /></td>
+        <td class="p-1.5 border border-slate-200"><input type="number" step="100000" class="reg-t2 w-full p-1.5 border rounded font-bold text-blue-800 text-right" value="6500000" /></td>
+        <td class="p-1.5 border border-slate-200"><input type="number" step="100000" class="reg-t3 w-full p-1.5 border rounded font-bold text-blue-800 text-right" value="7500000" /></td>
+        <td class="p-1.5 border border-slate-200"><input type="number" step="100000" class="reg-nocar w-full p-1.5 border rounded font-semibold text-emerald-700 text-right" value="0" /></td>
+        <td class="p-1.5 border border-slate-200 text-center"><button type="button" class="btn-del-region text-red-600 hover:text-red-800 font-black px-2 py-1 cursor-pointer">✕</button></td>
+      `;
+      regionsTbody?.appendChild(tr);
+      bindDeleteRegionButtons();
+      tr.querySelector('.reg-label')?.focus();
+    });
+
+    document.getElementById('financialConfigForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const alertBox = document.getElementById('finStatusAlert');
+      const payload = {
+        registrationFeeRate: parseFloat(document.getElementById('regRatePct').value) / 100,
+        plateFeeCity: Number(document.getElementById('plateCity').value),
+        plateFeeProvince: Number(document.getElementById('plateProvince').value),
+        serviceAndInspectionFee: Number(document.getElementById('serviceFee').value),
+        defaultAnnualInterestRate: parseFloat(document.getElementById('interestRatePct').value) / 100,
+        roadTaxTruck: {
+          under4t: Number(document.getElementById('rt_under4t').value),
+          from4to8_5t: Number(document.getElementById('rt_from4to8_5t').value),
+          from8_5to13t: Number(document.getElementById('rt_from8_5to13t').value),
+          from13to19t: Number(document.getElementById('rt_from13to19t').value),
+          from19to27t: Number(document.getElementById('rt_from19to27t').value),
+          over27t: Number(document.getElementById('rt_over27t').value)
+        },
+        roadTaxBus: {
+          under10: Number(document.getElementById('rt_bus_under10').value),
+          from10to24: Number(document.getElementById('rt_bus_10_24').value),
+          from25to39: Number(document.getElementById('rt_bus_25_39').value),
+          over40: Number(document.getElementById('rt_bus_over40').value)
+        },
+        insuranceTruckBase: {
+          under3t: Number(document.getElementById('ins_under3t').value),
+          from3to8t: Number(document.getElementById('ins_3to8t').value),
+          from8to15t: Number(document.getElementById('ins_8to15t').value),
+          over15t: Number(document.getElementById('ins_over15t').value),
+          specializedMultiplier: parseFloat(document.getElementById('ins_spec_mult').value),
+          perSeatFee: Number(document.getElementById('ins_per_seat').value)
+        },
+        insuranceBusBase: {
+          under6: Number(document.getElementById('ins_bus_u6').value),
+          from6to11: Number(document.getElementById('ins_bus_6_11').value),
+          from12to16: Number(document.getElementById('ins_bus_12_16').value),
+          from17to24: Number(document.getElementById('ins_bus_17_24').value),
+          seat25: Number(document.getElementById('ins_bus_25').value),
+          extraPerSeatOver25: Number(document.getElementById('ins_bus_extra').value)
+        },
+        dkdkRegions: Array.from(document.querySelectorAll('#regionsTableBody .region-row')).map((row, idx) => ({
+          key: row.getAttribute('data-key') || ('kv_' + (idx + 1)),
+          label: row.querySelector('.reg-label')?.value?.trim() || ('Khu vực ' + (idx + 1)),
+          plate: Number(row.querySelector('.reg-plate')?.value || 100000),
+          inspect: Number(row.querySelector('.reg-inspect')?.value || 78860),
+          tiers: [
+            Number(row.querySelector('.reg-t0')?.value || 0),
+            Number(row.querySelector('.reg-t1')?.value || 0),
+            Number(row.querySelector('.reg-t2')?.value || 0),
+            Number(row.querySelector('.reg-t3')?.value || 0)
+          ],
+          noCar: Number(row.querySelector('.reg-nocar')?.value || 0)
+        }))
+      };
+
+      try {
+        const res = await fetch('/api/update-financial', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        alertBox.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'bg-emerald-50', 'text-emerald-700');
+        if (data.success) {
+          alertBox.innerText = '✅ ' + data.message + ' (Dữ liệu đã lưu vào src/data/financial-settings.json)';
+          alertBox.classList.add('bg-emerald-50', 'text-emerald-700', 'border', 'border-emerald-200');
+          alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          alertBox.innerText = '❌ Lỗi lưu dữ liệu: ' + (data.error || 'Không xác định');
+          alertBox.classList.add('bg-red-50', 'text-red-700', 'border', 'border-red-200');
+        }
+      } catch (err) {
+        alertBox.classList.remove('hidden');
+        alertBox.innerText = '❌ Lỗi kết nối máy chủ cục bộ: ' + err.message;
+        alertBox.classList.add('bg-red-50', 'text-red-700');
+      }
+    });
+  </script>
+</AdminLayout>
