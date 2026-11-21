@@ -3,7 +3,14 @@ import AdminLayout from "../../../layouts/AdminLayout.astro";
 import postsData from "../../../data/posts.json";
 
 const posts = Array.isArray(postsData) ? postsData : [];
-const categories = Array.from(new Set(posts.map((p: any) => String(p.category || "").trim()).filter(Boolean)));
+const catMap = new Map();
+posts.forEach((p: any) => {
+  const raw = String(p.category || "").trim();
+  if (!raw) return;
+  const k = raw.toLowerCase();
+  if (!catMap.has(k)) catMap.set(k, raw);
+});
+const categories = Array.from(catMap.values());
 ---
 
 <AdminLayout title="Quản Lý Tin Tức & Bài Viết" activeTab="posts">
@@ -185,7 +192,7 @@ const categories = Array.from(new Set(posts.map((p: any) => String(p.category ||
           const isHidden = row.getAttribute("data-hidden") === "true";
 
           const matchText = !q || title.includes(q) || slug.includes(q);
-          const matchCat = cat === "all" || rowCat === cat;
+          const matchCat = cat === "all" || rowCat.toLowerCase() === cat.toLowerCase();
           const matchVis = vis === "all" || (vis === "visible" && !isHidden) || (vis === "hidden" && isHidden);
 
           const ok = matchText && matchCat && matchVis;
