@@ -1,6 +1,6 @@
 ---
 import AdminLayout from '../../../layouts/AdminLayout.astro';
-import { allVehicles } from '../../../data/vehicles.js';
+import { allVehiclesAdmin as allVehicles } from '../../../data/vehicles.js';
 import navData from '../../../data/navigation.json';
 
 const vehicleList = Array.isArray(allVehicles) ? allVehicles : [];
@@ -27,95 +27,136 @@ mainMenu.forEach((menu: any) => {
 ---
 
 <AdminLayout title="Quản Lý Kho Xe Chuyên Dùng & Ô Tô Khách" activeTab="products">
-  <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6 flex flex-col lg:flex-row gap-4 justify-between items-center">
-    <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto flex-1">
+  <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-5 flex flex-col sm:flex-row gap-3 justify-between items-center">
+    <div class="flex items-center gap-2.5 w-full flex-1">
       <input 
         type="text" 
         id="searchInput" 
         placeholder="🔍 Tìm nhanh theo tên xe, mã slug, hãng xe..." 
-        class="p-2.5 border border-slate-300 rounded-xl text-sm flex-1 outline-none focus:ring-2 focus:ring-blue-600"
+        class="p-2.5 border border-slate-300 rounded-xl text-sm w-full flex-1 outline-none focus:ring-2 focus:ring-blue-600"
       />
-      <select id="filterCategory" class="p-2.5 border border-slate-300 rounded-xl text-sm bg-white outline-none font-semibold text-slate-700">
-        <option value="all">Tất cả danh mục ({vehicleList.length} xe)</option>
-        {menuCategories.map((cat) => (
-          <option value={cat.subKey || cat.title} data-title={cat.title}>
-            {cat.title}
-          </option>
-        ))}
-      </select>
+      <span class="text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200 px-3 py-2.5 rounded-xl whitespace-nowrap shrink-0">
+        Hiện: <strong id="visibleCountLabel" class="text-blue-700">{vehicleList.length}</strong>/{vehicleList.length} xe
+      </span>
     </div>
-
-    <a href="/admin/products/edit" class="w-full lg:w-auto text-center bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-sm transition shadow-md">
+    <a href="/admin/products/edit" class="w-full sm:w-auto text-center bg-red-600 hover:bg-red-700 text-white font-extrabold px-5 py-2.5 rounded-xl text-sm transition shadow-md shrink-0">
       + Thêm Xe Mới
     </a>
   </div>
 
   <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse text-sm">
+      <table class="w-full text-left border-collapse text-xs sm:text-sm">
         <thead>
-          <tr class="bg-slate-800 text-white text-xs uppercase">
-            <th class="p-4">Hình ảnh</th>
-            <th class="p-4">Tên sản phẩm & Hãng</th>
-            <th class="p-4">Danh mục</th>
-            <th class="p-4">Giá Công Bố &amp; Giá Tối Thiểu (VNĐ)</th>
-            <th class="p-4 text-center">Hiện Trang Chủ</th>
-            <th class="p-4 text-right">Thao tác</th>
+          <tr class="bg-slate-800 text-white text-[11px] uppercase align-middle">
+            <th class="px-3 py-3">Sản phẩm &amp; Hãng</th>
+            <th class="px-2.5 py-3 w-36">
+              <div class="flex flex-col gap-1">
+                <span>Danh mục</span>
+                <select id="filterCategory" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold normal-case px-1.5 py-1 rounded-md border border-slate-600 outline-none cursor-pointer w-full">
+                  <option value="all">Tất cả ({vehicleList.length})</option>
+                  {menuCategories.map((cat) => (
+                    <option value={cat.subKey || cat.title} data-title={cat.title}>
+                      {cat.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </th>
+            <th class="px-2.5 py-3 w-52">
+              <div class="flex flex-col gap-1">
+                <span>Giá (VNĐ)</span>
+                <select id="sortPrice" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold normal-case px-1.5 py-1 rounded-md border border-slate-600 outline-none cursor-pointer w-36">
+                  <option value="default">↕ Mặc định</option>
+                  <option value="price-asc">↑ Thấp → Cao</option>
+                  <option value="price-desc">↓ Cao → Thấp</option>
+                </select>
+              </div>
+            </th>
+            <th class="px-2 py-3 w-24 text-center">
+              <div class="flex flex-col items-center gap-1">
+                <span>Trang chủ</span>
+                <select id="filterFeatured" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold normal-case px-1.5 py-1 rounded-md border border-slate-600 outline-none cursor-pointer w-20">
+                  <option value="all">Tất cả</option>
+                  <option value="featured">⭐ Hiện</option>
+                  <option value="normal">Ẩn TC</option>
+                </select>
+              </div>
+            </th>
+            <th class="px-3 py-3 w-36 text-right">
+              <div class="flex flex-col items-end gap-1">
+                <span>Trạng thái &amp; Thao tác</span>
+                <select id="filterVisibility" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold normal-case px-1.5 py-1 rounded-md border border-slate-600 outline-none cursor-pointer w-28">
+                  <option value="all">Tất cả</option>
+                  <option value="visible">🟢 Đang hiện</option>
+                  <option value="hidden">🟡 Đang ẩn</option>
+                </select>
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody id="productTableBody" class="divide-y divide-slate-200">
           {vehicleList.map((v: any, idx: number) => {
             const isChecked = hasAnyExplicitFeatured ? Boolean(v.isFeatured) : idx < 4;
+            const isHidden = Boolean(v.isHidden);
             return (
               <tr 
-                class="hover:bg-slate-50 transition product-row" 
+                class={`hover:bg-slate-50 transition product-row ${isHidden ? 'opacity-60' : ''}`}
+                data-index={idx}
                 data-name={`${v.name || ''} ${v.slug || ''} ${v.brand || ''}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d")} 
                 data-cat={v.subCategory || ''}
                 data-subkey={v.subKey || ''}
+                data-price={Number(v.price || 0)}
+                data-featured={isChecked ? 'true' : 'false'}
+                data-hidden={isHidden ? 'true' : 'false'}
               >
-                <td class="p-4 w-20">
-                  <img src={v.images?.[0] || '/Logo.png'} alt={v.name} class="w-16 h-12 object-cover rounded-lg border" />
+                <td class="px-3 py-3">
+                  <div class="flex items-start gap-2.5 min-w-[200px]">
+                    <img src={v.images?.[0] || '/Logo.png'} alt={v.name} class="w-16 h-12 object-cover rounded-lg border border-slate-200 shrink-0 bg-slate-100" />
+                    <div class="min-w-0">
+                      <span class="text-[10px] font-extrabold text-blue-600 uppercase tracking-wide">{v.brand}</span>
+                      <p class="font-bold text-slate-900 text-xs sm:text-[13px] line-clamp-2 leading-snug">{v.name}</p>
+                      <span class="text-[10px] text-slate-400 font-mono block truncate max-w-[210px]" title={v.slug}>{v.slug}</span>
+                    </div>
+                  </div>
                 </td>
-                <td class="p-4 max-w-xs">
-                  <span class="text-xs font-bold text-blue-600 uppercase">{v.brand}</span>
-                  <p class="font-bold text-slate-900 line-clamp-2">{v.name}</p>
-                  <span class="text-[10px] text-slate-400 font-mono">slug: {v.slug}</span>
+                <td class="px-2.5 py-3">
+                  <span class="inline-block bg-slate-100 text-slate-700 text-[11px] font-semibold px-2 py-1 rounded-md leading-snug">
+                    {v.subCategory || 'Chuyên dùng'}
+                  </span>
                 </td>
-                <td class="p-4">
-                  <span class="bg-slate-100 text-slate-700 text-xs font-semibold px-2.5 py-1 rounded-md">{v.subCategory || 'Chuyên dùng'}</span>
-                </td>
-                <td class="p-4">
-                  <div class="flex flex-col gap-1.5 min-w-[240px]">
-                    <div class="flex items-center gap-1.5">
-                      <span class="text-[10px] font-bold text-slate-500 w-16 shrink-0">Công bố:</span>
+                <td class="px-2.5 py-3">
+                  <div class="flex flex-col gap-1">
+                    <div class="flex items-center gap-1">
+                      <span class="text-[10px] font-bold text-slate-500 w-12 shrink-0">Công bố:</span>
                       <input 
                         type="number" 
                         step="1000000"
                         value={v.price ?? 0} 
                         data-slug={v.slug}
-                        class="price-input p-1.5 border border-slate-300 rounded-lg w-36 text-xs font-extrabold text-red-600 focus:ring-2 focus:ring-blue-600 outline-none"
+                        class="price-input px-2 py-1 border border-slate-300 rounded-md w-28 text-xs font-extrabold text-red-600 focus:ring-2 focus:ring-blue-600 outline-none"
                       />
                     </div>
-                    <div class="flex items-center gap-1.5">
-                      <span class="text-[10px] font-bold text-emerald-700 w-16 shrink-0">Tối thiểu:</span>
+                    <div class="flex items-center gap-1">
+                      <span class="text-[10px] font-bold text-emerald-700 w-12 shrink-0">Tối thiểu:</span>
                       <input 
                         type="number" 
                         step="1000000"
                         value={v.minPrice ?? v.price ?? 0} 
                         data-slug={v.slug}
-                        class="minprice-input p-1.5 border border-emerald-400 bg-emerald-50/30 rounded-lg w-36 text-xs font-extrabold text-emerald-700 focus:ring-2 focus:ring-emerald-600 outline-none"
+                        class="minprice-input px-2 py-1 border border-emerald-400 bg-emerald-50/30 rounded-md w-28 text-xs font-extrabold text-emerald-700 focus:ring-2 focus:ring-emerald-600 outline-none"
                       />
                       <button 
                         type="button"
                         data-slug={v.slug}
-                        class="btn-save-price bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg cursor-pointer transition shrink-0"
+                        class="btn-save-price bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold px-2 py-1 rounded-md cursor-pointer transition shrink-0"
                       >
                         Lưu
                       </button>
                     </div>
                   </div>
                 </td>
-                <td class="p-4 text-center">
+                <td class="px-2 py-3 text-center">
                   <input 
                     type="checkbox" 
                     data-slug={v.slug}
@@ -124,21 +165,37 @@ mainMenu.forEach((menu: any) => {
                     title="Tick chọn để trưng bày xe này ngoài Trang Chủ" 
                   />
                 </td>
-                <td class="p-4 text-right space-x-1.5 whitespace-nowrap">
-                  <a href={`/san-pham/${v.slug}`} target="_blank" class="inline-block bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 font-bold px-3 py-1.5 rounded-lg text-xs transition">
-                    👁️ Xem
-                  </a>
-                  <a href={`/admin/products/edit?slug=${v.slug}`} class="inline-block bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 font-bold px-3 py-1.5 rounded-lg text-xs transition">
-                    ✏️ Sửa
-                  </a>
-                  <button 
-                    type="button"
-                    data-slug={v.slug}
-                    data-name={v.name}
-                    class="btn-delete-vehicle bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold px-3 py-1.5 rounded-lg text-xs transition cursor-pointer"
-                  >
-                    🗑️ Xóa
-                  </button>
+                <td class="px-3 py-3 text-right">
+                  <div class="flex flex-col items-end gap-1.5">
+                    <button
+                      type="button"
+                      data-slug={v.slug}
+                      class={`btn-toggle-vis text-[11px] font-bold px-2.5 py-1 rounded-md border transition cursor-pointer w-28 text-center ${
+                        isHidden
+                          ? 'border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100'
+                          : 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                      }`}
+                    >
+                      {isHidden ? '🟡 Đang ẩn' : '🟢 Đang hiện'}
+                    </button>
+                    <div class="flex items-center justify-end gap-1">
+                      <a href={`/san-pham/${v.slug}`} target="_blank" class="bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 font-bold px-2 py-1 rounded-md text-[11px] transition" title="Xem ngoài web">
+                        👁️
+                      </a>
+                      <a href={`/admin/products/edit?slug=${v.slug}`} class="bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 font-bold px-2.5 py-1 rounded-md text-[11px] transition">
+                        ✏️ Sửa
+                      </a>
+                      <button 
+                        type="button"
+                        data-slug={v.slug}
+                        data-name={v.name}
+                        class="btn-delete-vehicle bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold px-2 py-1 rounded-md text-[11px] transition cursor-pointer"
+                        title="Xóa sản phẩm"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </div>
                 </td>
               </tr>
             );
@@ -149,226 +206,181 @@ mainMenu.forEach((menu: any) => {
   </div>
 
   <script is:inline>
-    document.querySelectorAll('.btn-save-price').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        const target = e.currentTarget;
-        const slug = target.getAttribute('data-slug');
-        const row = target.closest('tr');
-        const newPrice = row.querySelector('.price-input').value;
-        const minInput = row.querySelector('.minprice-input');
-        const newMinPrice = minInput ? minInput.value : newPrice;
+    (function () {
+      const tbody = document.getElementById('productTableBody');
+      const searchInput = document.getElementById('searchInput');
+      const filterCat = document.getElementById('filterCategory');
+      const filterVis = document.getElementById('filterVisibility');
+      const filterFeat = document.getElementById('filterFeatured');
+      const sortPrice = document.getElementById('sortPrice');
+      const countLabel = document.getElementById('visibleCountLabel');
 
-        try {
-          const res = await fetch('/api/update-vehicle', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slug, price: newPrice, minPrice: newMinPrice })
-          });
-          const result = await res.json();
-          if (result.success) {
-            alert('🎉 Đã lưu giá mới thành công!');
-            location.reload();
-          } else {
-            alert('❌ Lỗi: ' + result.message);
+      function normalizeStr(s) {
+        return (s || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d");
+      }
+
+      function applyFiltersAndSort() {
+        const rows = Array.from(tbody.querySelectorAll('.product-row'));
+        const q = normalizeStr(searchInput.value).trim();
+        const selectedVal = filterCat.value;
+        const selectedOpt = filterCat.options[filterCat.selectedIndex];
+        const selectedTitle = normalizeStr(selectedOpt ? selectedOpt.getAttribute('data-title') || '' : '');
+        const visVal = filterVis.value;
+        const featVal = filterFeat.value;
+        const sortVal = sortPrice.value;
+
+        rows.sort((a, b) => {
+          if (sortVal === 'price-asc') return Number(a.getAttribute('data-price') || 0) - Number(b.getAttribute('data-price') || 0);
+          if (sortVal === 'price-desc') return Number(b.getAttribute('data-price') || 0) - Number(a.getAttribute('data-price') || 0);
+          return Number(a.getAttribute('data-index') || 0) - Number(b.getAttribute('data-index') || 0);
+        });
+        rows.forEach(r => tbody.appendChild(r));
+
+        let shown = 0;
+        rows.forEach(row => {
+          const matchName = !q || (row.getAttribute('data-name') || '').includes(q);
+          const rowCat = normalizeStr(row.getAttribute('data-cat') || '');
+          const rowSubKey = normalizeStr(row.getAttribute('data-subkey') || '');
+
+          const matchCat = selectedVal === 'all'
+            || rowSubKey === normalizeStr(selectedVal)
+            || rowCat === selectedTitle
+            || (selectedVal === 'bon-thuc-pham' && rowCat.includes('bon cam'))
+            || (selectedVal === 'bon-hut-chat-thai' && (rowCat.includes('hut chat thai') || rowCat.includes('bon chuyen dung')))
+            || (selectedVal === 'bon-nuoc' && (rowCat.includes('bon nuoc') || rowCat.includes('bon chuyen dung')))
+            || (selectedVal === 'xe-cau' && rowCat.includes('cau'))
+            || (selectedVal === 'cuu-ho' && rowCat.includes('cuu ho'))
+            || (selectedVal === 'nang-dau' && rowCat.includes('nang dau'));
+
+          const isHidden = row.getAttribute('data-hidden') === 'true';
+          const matchVis = visVal === 'all' || (visVal === 'visible' && !isHidden) || (visVal === 'hidden' && isHidden);
+
+          const isFeatured = row.getAttribute('data-featured') === 'true';
+          const matchFeat = featVal === 'all' || (featVal === 'featured' && isFeatured) || (featVal === 'normal' && !isFeatured);
+
+          const ok = matchName && matchCat && matchVis && matchFeat;
+          row.style.display = ok ? '' : 'none';
+          if (ok) shown++;
+        });
+
+        if (countLabel) countLabel.innerText = String(shown);
+      }
+
+      searchInput?.addEventListener('input', applyFiltersAndSort);
+      [filterCat, filterVis, filterFeat, sortPrice].forEach(el => el?.addEventListener('change', applyFiltersAndSort));
+
+      document.querySelectorAll('.btn-save-price').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const target = e.currentTarget;
+          const slug = target.getAttribute('data-slug');
+          const row = target.closest('tr');
+          const newPrice = row.querySelector('.price-input').value;
+          const minInput = row.querySelector('.minprice-input');
+          const newMinPrice = minInput ? minInput.value : newPrice;
+          try {
+            const res = await fetch('/api/update-vehicle', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ slug, price: newPrice, minPrice: newMinPrice })
+            });
+            const result = await res.json();
+            if (result.success) {
+              row.setAttribute('data-price', String(Number(newPrice || 0)));
+              alert('🎉 Đã lưu giá mới thành công!');
+              applyFiltersAndSort();
+            } else {
+              alert('❌ Lỗi: ' + result.message);
+            }
+          } catch (err) {
+            alert('❌ Lỗi kết nối đến máy chủ!');
           }
-        } catch (err) {
-          alert('❌ Lỗi kết nối đến máy chủ!');
-        }
+        });
       });
-    });
 
-    document.querySelectorAll('.toggle-featured').forEach(chk => {
-      chk.addEventListener('change', async (e) => {
-        const target = e.currentTarget;
-        const slug = target.getAttribute('data-slug');
-        const isFeatured = target.checked;
-
-        try {
-          const res = await fetch('/api/update-vehicle', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slug, isFeatured })
-          });
-          const result = await res.json();
-          if (!result.success) {
-            alert('❌ Lỗi: ' + result.message);
+      document.querySelectorAll('.toggle-featured').forEach(chk => {
+        chk.addEventListener('change', async (e) => {
+          const target = e.currentTarget;
+          const slug = target.getAttribute('data-slug');
+          const isFeatured = target.checked;
+          const row = target.closest('tr');
+          try {
+            const res = await fetch('/api/update-vehicle', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ slug, isFeatured })
+            });
+            const result = await res.json();
+            if (result.success) {
+              row.setAttribute('data-featured', isFeatured ? 'true' : 'false');
+              applyFiltersAndSort();
+            } else {
+              alert('❌ Lỗi: ' + result.message);
+              target.checked = !isFeatured;
+            }
+          } catch (err) {
+            alert('❌ Không thể cập nhật trạng thái hiển thị trang chủ!');
             target.checked = !isFeatured;
           }
-        } catch (err) {
-          alert('❌ Không thể cập nhật trạng thái hiển thị trang chủ!');
-          target.checked = !isFeatured;
-        }
-      });
-    });
-
-    document.querySelectorAll('.btn-delete-vehicle').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        const target = e.currentTarget;
-        const slug = target.getAttribute('data-slug');
-        const name = target.getAttribute('data-name');
-
-        if (!confirm(`⚠️ Bạn có chắc chắn muốn xóa sản phẩm:\n"${name}"?\nToàn bộ dữ liệu của xe này sẽ bị xóa khỏi hệ thống!`)) {
-          return;
-        }
-
-        try {
-          const res = await fetch('/api/delete-vehicle', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slug })
-          });
-          const result = await res.json();
-          if (result.success) {
-            alert('🎉 ' + result.message);
-            location.reload();
-          } else {
-            alert('❌ Lỗi: ' + result.message);
-          }
-        } catch (err) {
-          alert('❌ Lỗi kết nối đến máy chủ!');
-        }
-      });
-    });
-
-    const searchInput = document.getElementById('searchInput');
-    const filterCat = document.getElementById('filterCategory');
-    const rows = document.querySelectorAll('.product-row');
-
-    function filterTable() {
-      const q = searchInput.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d").trim();
-      const selectedVal = filterCat.value;
-      const selectedOpt = filterCat.options[filterCat.selectedIndex];
-      const selectedTitle = (selectedOpt ? selectedOpt.getAttribute('data-title') || '' : '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d");
-
-      rows.forEach(row => {
-        const matchName = row.getAttribute('data-name').includes(q);
-        const rowCat = (row.getAttribute('data-cat') || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d");
-        const rowSubKey = (row.getAttribute('data-subkey') || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d");
-
-        const matchCat = selectedVal === 'all' 
-          || rowSubKey === selectedVal.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d") 
-          || rowCat === selectedTitle
-          || (selectedVal === 'bon-thuc-pham' && rowCat.includes('bồn cám'))
-          || (selectedVal === 'bon-hut-chat-thai' && (rowCat.includes('hút chất thải') || rowCat.includes('bồn chuyên dùng')))
-          || (selectedVal === 'bon-nuoc' && (rowCat.includes('bồn nước') || rowCat.includes('bồn chuyên dùng')))
-          || (selectedVal === 'xe-cau' && rowCat.includes('cẩu'))
-          || (selectedVal === 'cuu-ho' && rowCat.includes('cứu hộ'))
-          || (selectedVal === 'nang-dau' && rowCat.includes('nâng đầu'));
-
-        row.style.display = (matchName && matchCat) ? '' : 'none';
-      });
-    }
-
-    searchInput.addEventListener('input', filterTable);
-    filterCat.addEventListener('change', filterTable);
-  
-
-  // === START ADMIN YOUTUBE FIELD ===
-  function injectYouTubeAdminField() {
-    if (document.getElementById("videoUrl")) return;
-
-    // Tìm form hoặc một trong các ô chuẩn của trang sản phẩm
-    const anchorInput =
-      document.querySelector("[name=\"promo\"]") ||
-      document.querySelector("#promo") ||
-      document.querySelector("[name=\"priceText\"]") ||
-      document.querySelector("#priceText") ||
-      document.querySelector("[name=\"summary\"]") ||
-      document.querySelector("#summary") ||
-      document.querySelector("[name=\"slug\"]") ||
-      document.querySelector("#slug") ||
-      document.querySelector("[name=\"name\"]") ||
-      document.querySelector("#name");
-
-    if (!anchorInput) return;
-
-    // Tìm khối bao ngoài của ô input đó để chèn ngay phía sau
-    const wrapper = anchorInput.closest("div") || anchorInput.parentElement;
-    if (!wrapper || !wrapper.parentElement) return;
-
-    const videoBox = document.createElement("div");
-    videoBox.className = "col-span-1 md:col-span-2 my-3 bg-red-50/80 p-4 rounded-xl border-2 border-red-200 shadow-sm";
-    videoBox.innerHTML = `
-      <label for="videoUrl" class="block text-sm font-bold text-red-700 mb-1.5 flex items-center gap-2">
-        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-600 text-white text-xs">▶</span>
-        🎬 Link Video YouTube / YouTube Shorts Thực Tế (Tùy chọn)
-      </label>
-      <input
-        type="url"
-        id="videoUrl"
-        name="videoUrl"
-        placeholder="Dán link YouTube vào đây (VD: https://www.youtube.com/watch?v=... hoặc https://youtube.com/shorts/...)"
-        class="w-full px-3.5 py-2.5 bg-white border border-red-300 rounded-lg text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-red-500"
-      />
-      <p class="text-xs text-slate-600 mt-1.5">
-        💡 Mẹo: Khi dán mã JSON 1-Click có trường <code>"videoUrl"</code> hoặc dán trực tiếp link YouTube vào ô này, trang sản phẩm sẽ tự động hiển thị khung phát Video HD.
-      </p>
-    `;
-
-    wrapper.parentNode.insertBefore(videoBox, wrapper.nextSibling);
-
-    // Tự động bắt sự kiện когда người dùng dán JSON 1-Click vào bất kỳ ô textarea nào
-    const allTextareas = document.querySelectorAll("textarea");
-    allTextareas.forEach(ta => {
-      ta.addEventListener("input", () => {
-        try {
-          const val = ta.value.trim();
-          if (val.startsWith("{") && val.endsWith("}")) {
-            const parsed = JSON.parse(val);
-            if (parsed.videoUrl || parsed.youtubeUrl) {
-              const vInput = document.getElementById("videoUrl");
-              if (vInput) vInput.value = parsed.videoUrl || parsed.youtubeUrl;
-            }
-          }
-        } catch (e) {}
-      });
-    });
-
-    // Bắt sự kiện click vào nút 1-Click để tự điền videoUrl nếu có trong JSON
-    document.addEventListener("click", () => {
-      setTimeout(() => {
-        allTextareas.forEach(ta => {
-          try {
-            const val = ta.value.trim();
-            if (val.startsWith("{") && val.endsWith("}")) {
-              const parsed = JSON.parse(val);
-              const vInput = document.getElementById("videoUrl");
-              if (vInput && (parsed.videoUrl || parsed.youtubeUrl) && !vInput.value) {
-                vInput.value = parsed.videoUrl || parsed.youtubeUrl;
-              }
-            }
-          } catch (e) {}
         });
-      }, 80);
-    });
+      });
 
-    // Can thiệp tự động vào window.fetch để đảm bảo khi bấm Lưu sản phẩm, trường videoUrl luôn được gửi kèm trong JSON payload
-    if (!window.__patchedFetchForVideo) {
-      window.__patchedFetchForVideo = true;
-      const origFetch = window.fetch;
-      window.fetch = async function(input, init) {
-        try {
-          if (init && init.method && init.method.toUpperCase() === "POST" && typeof init.body === "string") {
-            const vInput = document.getElementById("videoUrl");
-            if (vInput && init.body.trim().startsWith("{")) {
-              const bodyObj = JSON.parse(init.body);
-              bodyObj.videoUrl = vInput.value.trim();
-              init.body = JSON.stringify(bodyObj);
+      document.querySelectorAll('.btn-toggle-vis').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const slug = btn.getAttribute('data-slug');
+          const row = btn.closest('tr');
+          btn.disabled = true;
+          btn.innerText = '⏳...';
+          try {
+            const res = await fetch('/api/toggle-visibility', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ type: 'vehicle', slug })
+            });
+            const data = await res.json();
+            if (data.success) {
+              const hidden = Boolean(data.isHidden);
+              row.setAttribute('data-hidden', hidden ? 'true' : 'false');
+              row.classList.toggle('opacity-60', hidden);
+              btn.innerText = hidden ? '🟡 Đang ẩn' : '🟢 Đang hiện';
+              btn.className = hidden
+                ? 'btn-toggle-vis text-[11px] font-bold px-2.5 py-1 rounded-md border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 transition cursor-pointer w-28 text-center'
+                : 'btn-toggle-vis text-[11px] font-bold px-2.5 py-1 rounded-md border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition cursor-pointer w-28 text-center';
+              applyFiltersAndSort();
+            } else {
+              alert('Lỗi: ' + (data.error || 'Không thể cập nhật'));
             }
+          } catch (e) {
+            alert('Lỗi kết nối máy chủ cục bộ');
+          } finally {
+            btn.disabled = false;
           }
-        } catch (e) {}
-        return origFetch.apply(this, arguments);
-      };
-    }
-  }
+        });
+      });
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", injectYouTubeAdminField);
-  } else {
-    injectYouTubeAdminField();
-  }
-  document.addEventListener("astro:page-load", injectYouTubeAdminField);
-  // === END ADMIN YOUTUBE FIELD ===
-
-</script>
+      document.querySelectorAll('.btn-delete-vehicle').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const target = e.currentTarget;
+          const slug = target.getAttribute('data-slug');
+          const name = target.getAttribute('data-name');
+          if (!confirm(`⚠️ Bạn có chắc chắn muốn xóa sản phẩm:\n"${name}"?\nToàn bộ dữ liệu của xe này sẽ bị xóa khỏi hệ thống!`)) return;
+          try {
+            const res = await fetch('/api/delete-vehicle', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ slug })
+            });
+            const result = await res.json();
+            if (result.success) {
+              alert('🎉 ' + result.message);
+              location.reload();
+            } else {
+              alert('❌ Lỗi: ' + result.message);
+            }
+          } catch (err) {
+            alert('❌ Lỗi kết nối đến máy chủ!');
+          }
+        });
+      });
+    })();
+  </script>
 </AdminLayout>

@@ -33,7 +33,7 @@ const factoryCapabilities = [
   }
 ];
 
-const handoverPosts = (Array.isArray(postsData) ? postsData : [])
+const handoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) => !p?.isHidden) : []))
   .filter((p: any) => {
     const t = String(p.title || "").toLowerCase();
     const c = String(p.category || "").toLowerCase();

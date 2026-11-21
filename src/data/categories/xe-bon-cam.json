@@ -59,7 +59,8 @@
         "answer": "Ô Tô Chuyên Dùng Phú Cường hỗ trợ khách hàng cá nhân và doanh nghiệp vay mua xe trả góp từ 75% đến 85% giá trị xe với thời hạn 1 - 7 năm, thủ tục hồ sơ nhanh gọn, tặng kèm 100% Bảo hiểm Thân Vỏ và giao xe tận nơi toàn quốc."
       }
     ],
-    "isFeatured": false
+    "isFeatured": false,
+    "isHidden": false
   },
   {
     "slug": "xe-cuu-ho-giao-thong-3-chuc-nang-foton-gan-cau-shimei-5-tan",
@@ -133,7 +134,8 @@
     ],
     "isFeatured": true,
     "customBadges": [],
-    "minPrice": 1740000000
+    "minPrice": 1740000000,
+    "isHidden": false
   },
   {
     "slug": "xe-nang-dau-cho-may-cong-trinh-howo-ket-hop-cang-keo",

@@ -52,7 +52,7 @@ const safeArray = (arr) => (Array.isArray(arr) ? arr : [
     description: "<h2>Xe Bồn Cám Trục Vít FAW JH6 4 Chân: Giải Pháp Vận Chuyển Thức Ăn Chăn Nuôi Toàn Diện</h2><p>Trong ngành công nghiệp chăn nuôi công nghiệp hiện đại, việc vận chuyển thức ăn chăn nuôi (cám xá) từ nhà máy đến các trang trại lớn đòi hỏi phương tiện phải có độ bền bỉ cao, khối lượng chuyên chở lớn và đặc biệt là hệ thống xả hàng kín khít, an toàn vệ sinh. <strong>Xe bồn cám trục vít FAW JH6 4 chân</strong> chính là lời giải toàn diện, mang lại hiệu quả kinh tế vượt trội cho các doanh nghiệp vận tải và tập đoàn chăn nuôi.</p><h3>1. Tổng Quan Về Xe Bồn Cám Trục Vít FAW JH6 4 Chân</h3><p>Được phát triển trên nền xe chassis tải nặng FAW JH6 nhập khẩu nguyên chiếc, mẫu xe chuyên dùng này nổi bật với thiết kế hiện đại, khả năng chịu tải siêu hạng và động cơ mạnh mẽ. Hệ thống bồn chứa kết hợp trục vít cơ khí giúp quá trình nạp và xả cám diễn ra hoàn toàn khép kín, chống ẩm mốc, hạn chế tối đa thất thoát và đảm bảo tiêu chuẩn vệ sinh an toàn thực phẩm tuyệt đối.</p><h3>2. Ưu Điểm Vượt Trội Của Xe Bồn Cám FAW JH6</h3><ul><li><strong>Hiệu suất vận hành kinh tế:</strong> Động cơ 370HP mạnh mẽ nhưng cực kỳ tiết kiệm nhiên liệu, giúp tối ưu chi phí vận chuyển đường dài.</li><li><strong>Bảo quản cám nguyên vẹn:</strong> Quá trình vận chuyển và bơm xả khép kín hoàn toàn giúp cám không bị ẩm ướt, không nhiễm khuẩn, không lẫn tạp chất hay bụi bẩn từ môi trường bên ngoài.</li><li><strong>Tải trọng cao, mau thu hồi vốn:</strong> Khung gầm chassis khỏe khoắn cho phép xe chuyên chở khối lượng hàng hóa lớn, giảm thiểu số chuyến đi và tiết kiệm nhân công.</li></ul>"
   },]);
 
-export const allVehicles = [
+export const allVehiclesAdmin = [
   ...safeArray(xeBonCam),
   ...safeArray(xeBonChuyenDung),
   ...safeArray(xeCau),
@@ -62,3 +62,5 @@ export const allVehicles = [
   ...safeArray(xeMoiTruongNang),
   ...safeArray(xeNangDau)
 ];
+
+export const allVehicles = allVehiclesAdmin.filter((v) => !v?.isHidden);

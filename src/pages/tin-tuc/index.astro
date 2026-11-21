@@ -2,7 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import postsData from "../../data/posts.json";
 
-const rawPosts = Array.isArray(postsData) ? postsData : [];
+const rawPosts = (Array.isArray(postsData) ? postsData.filter((p) => !p?.isHidden) : []);
 
 // Làm sạch văn bản khỏi mã HTML để phục vụ tìm kiếm sâu trong nội dung bài viết
 function stripHtml(html) {

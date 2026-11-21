@@ -8,128 +8,137 @@ const categories = Array.from(new Set(posts.map((p: any) => String(p.category ||
 
 <AdminLayout title="Quản Lý Tin Tức & Bài Viết" activeTab="posts">
   <div class="space-y-6">
-    <!-- Thanh tiêu đề & Nút thêm bài viết mới -->
     <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
         <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">📝 Quản Lý Tin Tức &amp; Nhật Ký Bàn Giao</h1>
         <p class="text-xs sm:text-sm text-slate-500 mt-1">
-          Tổng cộng <strong class="text-blue-700">{posts.length}</strong> bài viết đang hiển thị trên hệ thống.
+          Quản lý toàn bộ bài viết SEO, hướng dẫn kỹ thuật và nhật ký bàn giao xe thực tế.
         </p>
       </div>
       <div class="flex items-center gap-3">
-        <a
-          href="/tin-tuc"
-          target="_blank"
-          class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition"
-        >
+        <a href="/tin-tuc" target="_blank" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition">
           👁️ Xem trang Tin tức
         </a>
-        <a
-          href="/admin/posts/edit"
-          class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5"
-        >
+        <a href="/admin/posts/edit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5">
           <span>➕</span> Viết Bài Mới
         </a>
       </div>
     </div>
 
-    <!-- Bộ lọc tìm kiếm & Chuyên mục -->
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-3">
-      <div class="flex-1">
-        <input
-          type="text"
-          id="adminPostSearch"
-          placeholder="🔍 Tìm nhanh theo tiêu đề bài viết hoặc slug..."
-          class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-blue-600"
-        />
-      </div>
-      <div class="sm:w-64">
-        <select
-          id="adminPostCatFilter"
-          class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-slate-700 bg-white outline-none focus:border-blue-600"
-        >
-          <option value="all">Tất cả chuyên mục ({posts.length})</option>
-          {categories.map((cat) => (
-            <option value={cat}>{cat}</option>
-          ))}
-        </select>
-      </div>
+    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center gap-3">
+      <input
+        type="text"
+        id="adminPostSearch"
+        placeholder="🔍 Tìm nhanh theo tiêu đề bài viết hoặc slug..."
+        class="w-full flex-1 px-4 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-blue-600"
+      />
+      <span class="text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200 px-3.5 py-2.5 rounded-xl whitespace-nowrap shrink-0">
+        Đang hiện: <strong id="postVisibleCount" class="text-blue-700">{posts.length}</strong> / {posts.length} bài viết
+      </span>
     </div>
 
-    <!-- Bảng danh sách bài viết -->
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-sm">
           <thead>
-            <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-600 font-extrabold">
-              <th class="p-4 w-20">Ảnh</th>
-              <th class="p-4">Tiêu đề bài viết</th>
-              <th class="p-4 w-48">Chuyên mục</th>
-              <th class="p-4 w-32">Ngày đăng</th>
-              <th class="p-4 w-44 text-right">Thao tác</th>
+            <tr class="bg-slate-800 text-white text-xs uppercase align-middle">
+              <th class="p-3.5 w-20">Ảnh</th>
+              <th class="p-3.5">Tiêu đề bài viết</th>
+              <th class="p-3.5 w-52">
+                <div class="flex flex-col gap-1">
+                  <span>Chuyên mục</span>
+                  <select id="adminPostCatFilter" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold normal-case px-2 py-1 rounded-lg border border-slate-600 outline-none cursor-pointer max-w-[185px]">
+                    <option value="all">Tất cả ({posts.length})</option>
+                    {categories.map((cat) => (
+                      <option value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+              </th>
+              <th class="p-3.5 w-40">
+                <div class="flex flex-col gap-1">
+                  <span>Ngày đăng</span>
+                  <select id="adminPostDateSort" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold normal-case px-2 py-1 rounded-lg border border-slate-600 outline-none cursor-pointer">
+                    <option value="default">↕ Mặc định</option>
+                    <option value="newest">↓ Mới nhất</option>
+                    <option value="oldest">↑ Cũ nhất</option>
+                  </select>
+                </div>
+              </th>
+              <th class="p-3.5 w-64 text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <span>Thao tác</span>
+                  <select id="adminPostVisFilter" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold normal-case px-2 py-1 rounded-lg border border-slate-600 outline-none cursor-pointer">
+                    <option value="all">Tất cả</option>
+                    <option value="visible">🟢 Đang hiện</option>
+                    <option value="hidden">🟡 Đang ẩn</option>
+                  </select>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody id="adminPostsTableBody" class="divide-y divide-slate-200">
-            {posts.map((post: any) => (
-              <tr
-                class="admin-post-row hover:bg-slate-50/80 transition"
-                data-title={String(post.title || "").toLowerCase()}
-                data-slug={String(post.slug || "").toLowerCase()}
-                data-cat={String(post.category || "").trim()}
-              >
-                <td class="p-3.5">
-                  <div class="w-16 h-12 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden">
-                    <img
-                      src={post.image || "/Logo.png"}
-                      alt={post.title}
-                      loading="lazy"
-                      class="w-full h-full object-cover"
-                    />
-                  </div>
-                </td>
-                <td class="p-3.5">
-                  <a
-                    href={`/admin/posts/edit?slug=${encodeURIComponent(post.slug)}`}
-                    class="font-bold text-slate-900 hover:text-blue-700 line-clamp-2 leading-snug"
-                  >
-                    {post.title}
-                  </a>
-                  <span class="text-[11px] text-slate-400 font-mono block mt-0.5">/{post.slug}</span>
-                </td>
-                <td class="p-3.5">
-                  <span class="inline-block bg-blue-50 text-blue-700 border border-blue-100 text-xs font-bold px-2.5 py-1 rounded-lg">
-                    {post.category || "Tin tức"}
-                  </span>
-                </td>
-                <td class="p-3.5 text-xs text-slate-600 font-medium">
-                  {post.date || "—"}
-                </td>
-                <td class="p-3.5 text-right whitespace-nowrap space-x-1.5">
-                  <a
-                    href={`/tin-tuc/${post.slug}`}
-                    target="_blank"
-                    title="Xem bài viết ngoài web"
-                    class="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
-                  >
-                    👁️
-                  </a>
-                  <a
-                    href={`/admin/posts/edit?slug=${encodeURIComponent(post.slug)}`}
-                    class="inline-flex items-center px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold transition"
-                  >
-                    ✏️ Sửa
-                  </a>
-                  <button
-                    type="button"
-                    data-delete-slug={post.slug}
-                    data-delete-title={post.title}
-                    class="btn-delete-post inline-flex items-center px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 text-xs font-bold transition cursor-pointer"
-                  >
-                    🗑️ Xóa
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {posts.map((post: any, idx: number) => {
+              const isHidden = Boolean(post.isHidden);
+              return (
+                <tr
+                  class={`admin-post-row hover:bg-slate-50/80 transition ${isHidden ? 'opacity-60' : ''}`}
+                  data-index={idx}
+                  data-title={String(post.title || "").toLowerCase()}
+                  data-slug={String(post.slug || "").toLowerCase()}
+                  data-cat={String(post.category || "").trim()}
+                  data-date={String(post.date || "")}
+                  data-hidden={isHidden ? "true" : "false"}
+                >
+                  <td class="p-3.5">
+                    <div class="w-16 h-12 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden">
+                      <img src={post.image || "/Logo.png"} alt={post.title} loading="lazy" class="w-full h-full object-cover" />
+                    </div>
+                  </td>
+                  <td class="p-3.5">
+                    <a href={`/admin/posts/edit?slug=${encodeURIComponent(post.slug)}`} class="font-bold text-slate-900 hover:text-blue-700 line-clamp-2 leading-snug">
+                      {post.title}
+                    </a>
+                    <span class="text-[11px] text-slate-400 font-mono block mt-0.5">/{post.slug}</span>
+                  </td>
+                  <td class="p-3.5">
+                    <span class="inline-block bg-blue-50 text-blue-700 border border-blue-100 text-xs font-bold px-2.5 py-1 rounded-lg">
+                      {post.category || "Tin tức"}
+                    </span>
+                  </td>
+                  <td class="p-3.5 text-xs text-slate-600 font-medium">
+                    {post.date || "—"}
+                  </td>
+                  <td class="p-3.5 text-right whitespace-nowrap space-x-1.5">
+                    <a href={`/tin-tuc/${post.slug}`} target="_blank" title="Xem bài viết ngoài web" class="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+                      👁️
+                    </a>
+                    <button
+                      type="button"
+                      data-slug={post.slug}
+                      class={`btn-toggle-vis inline-flex items-center px-2.5 py-1.5 rounded-lg border text-xs font-bold transition cursor-pointer ${
+                        isHidden
+                          ? "border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100"
+                          : "border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                      }`}
+                    >
+                      {isHidden ? "🟡 Đang ẩn" : "🟢 Đang hiện"}
+                    </button>
+                    <a href={`/admin/posts/edit?slug=${encodeURIComponent(post.slug)}`} class="inline-flex items-center px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold transition">
+                      ✏️ Sửa
+                    </a>
+                    <button
+                      type="button"
+                      data-delete-slug={post.slug}
+                      data-delete-title={post.title}
+                      class="btn-delete-post inline-flex items-center px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 text-xs font-bold transition cursor-pointer"
+                    >
+                      🗑️ Xóa
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -138,28 +147,91 @@ const categories = Array.from(new Set(posts.map((p: any) => String(p.category ||
 
   <script is:inline>
     (function () {
+      const tbody = document.getElementById("adminPostsTableBody");
       const searchInput = document.getElementById("adminPostSearch");
       const catSelect = document.getElementById("adminPostCatFilter");
-      const rows = document.querySelectorAll(".admin-post-row");
+      const visSelect = document.getElementById("adminPostVisFilter");
+      const dateSort = document.getElementById("adminPostDateSort");
+      const countEl = document.getElementById("postVisibleCount");
 
-      function filterPosts() {
+      function parsePostDate(str) {
+        if (!str) return 0;
+        const iso = Date.parse(str);
+        if (!isNaN(iso)) return iso;
+        const m = str.match(/(\d{1,2})\s*tháng\s*(\d{1,2}),?\s*(\d{4})/i);
+        if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1])).getTime();
+        return 0;
+      }
+
+      function filterAndSortPosts() {
+        const rows = Array.from(tbody.querySelectorAll(".admin-post-row"));
         const q = (searchInput?.value || "").toLowerCase().trim();
         const cat = catSelect?.value || "all";
+        const vis = visSelect?.value || "all";
+        const sort = dateSort?.value || "default";
 
+        rows.sort((a, b) => {
+          if (sort === "newest") return parsePostDate(b.getAttribute("data-date")) - parsePostDate(a.getAttribute("data-date"));
+          if (sort === "oldest") return parsePostDate(a.getAttribute("data-date")) - parsePostDate(b.getAttribute("data-date"));
+          return Number(a.getAttribute("data-index") || 0) - Number(b.getAttribute("data-index") || 0);
+        });
+        rows.forEach((r) => tbody.appendChild(r));
+
+        let shown = 0;
         rows.forEach((row) => {
           const title = row.getAttribute("data-title") || "";
           const slug = row.getAttribute("data-slug") || "";
           const rowCat = row.getAttribute("data-cat") || "";
+          const isHidden = row.getAttribute("data-hidden") === "true";
+
           const matchText = !q || title.includes(q) || slug.includes(q);
           const matchCat = cat === "all" || rowCat === cat;
-          row.classList.toggle("hidden", !(matchText && matchCat));
+          const matchVis = vis === "all" || (vis === "visible" && !isHidden) || (vis === "hidden" && isHidden);
+
+          const ok = matchText && matchCat && matchVis;
+          row.classList.toggle("hidden", !ok);
+          if (ok) shown++;
         });
+
+        if (countEl) countEl.textContent = String(shown);
       }
 
-      searchInput?.addEventListener("input", filterPosts);
-      catSelect?.addEventListener("change", filterPosts);
+      searchInput?.addEventListener("input", filterAndSortPosts);
+      [catSelect, visSelect, dateSort].forEach((el) => el?.addEventListener("change", filterAndSortPosts));
 
-      // Xử lý xóa bài viết gọi API /api/delete-post
+      document.querySelectorAll(".btn-toggle-vis").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const slug = btn.getAttribute("data-slug");
+          const row = btn.closest("tr");
+          btn.disabled = true;
+          btn.textContent = "⏳...";
+          try {
+            const res = await fetch("/api/toggle-visibility", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ type: "post", slug })
+            });
+            const data = await res.json();
+            if (data.success) {
+              const hidden = Boolean(data.isHidden);
+              row.setAttribute("data-hidden", hidden ? "true" : "false");
+              row.classList.toggle("opacity-60", hidden);
+              btn.textContent = hidden ? "🟡 Đang ẩn" : "🟢 Đang hiện";
+              btn.className = hidden
+                ? "btn-toggle-vis inline-flex items-center px-2.5 py-1.5 rounded-lg border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 text-xs font-bold transition cursor-pointer"
+                : "btn-toggle-vis inline-flex items-center px-2.5 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 text-xs font-bold transition cursor-pointer";
+              filterAndSortPosts();
+            } else {
+              alert("Lỗi: " + (data.error || "Không thể cập nhật"));
+            }
+          } catch (e) {
+            alert("Lỗi kết nối máy chủ cục bộ");
+          } finally {
+            btn.disabled = false;
+          }
+        });
+      });
+
       document.querySelectorAll(".btn-delete-post").forEach((btn) => {
         btn.addEventListener("click", async () => {
           const slug = btn.getAttribute("data-delete-slug");

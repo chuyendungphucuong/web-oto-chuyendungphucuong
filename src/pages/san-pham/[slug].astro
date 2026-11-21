@@ -327,7 +327,7 @@ function buildSpecializedAdvisorProfile(v, specsObj, specialObj) {
 
 const advisorProfile = buildSpecializedAdvisorProfile(vehicle, specs, specialSpecs);
 
-const relatedHandoverPosts = (Array.isArray(postsData) ? postsData : [])
+const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) => !p?.isHidden) : []))
   .filter((p) => {
     const title = String(p.title || "").toLowerCase();
     const cat = String(p.category || "").toLowerCase();
