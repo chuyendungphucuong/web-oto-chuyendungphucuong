@@ -53,6 +53,7 @@ const specialSpecs = vehicle?.specialSpecs || vehicle?.special_specs || {
 };
 const images = Array.isArray(vehicle?.images) && vehicle.images.length > 0 ? vehicle.images : [];
 const faqs = Array.isArray(vehicle?.faqs) ? vehicle.faqs : [];
+const upgradeOptions = Array.isArray(vehicle?.upgradeOptions) ? vehicle.upgradeOptions : [];
 
 const rawDesc = (vehicle?.description || vehicle?.summary || '')
   .replace(/&lt;/g, '<')
@@ -346,9 +347,43 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
         ))}
       </div>
     </div>
+
+    <!-- KHỐI 7: TÙY CHỌN NÂNG CẤP CẤU HÌNH (ẨN GIÁ NÂNG CẤP NGOÀI WEB) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-emerald-700 text-white p-3.5 rounded-xl">
+        <div>
+          <h2 class="text-base font-bold">7. Tùy Chọn Nâng Cấp Cấu Hình (Bồn Inox, Cẩu, Tời...)</h2>
+          <p class="text-[11px] text-emerald-100">Giá cộng thêm được ẩn ngoài web — khách tick chọn sẽ tự nhảy tiền trả trước 20% &amp; đổi bảng thông số.</p>
+        </div>
+        <button type="button" id="btnAddUpgradeOpt" class="bg-white text-emerald-800 font-extrabold px-3.5 py-1.5 rounded-lg text-xs cursor-pointer shrink-0">+ Thêm gói nâng cấp</button>
+      </div>
+      <div id="upgradeOptionsContainer" class="space-y-4 pt-2 text-sm">
+        {upgradeOptions.map((opt: any) => (
+          <div class="upgrade-row bg-emerald-50/40 p-4 rounded-xl border border-emerald-200 space-y-2.5">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-extrabold text-emerald-800 uppercase">Gói nâng cấp cấu hình</span>
+              <button type="button" onclick="this.closest('.upgrade-row').remove()" class="text-red-500 font-bold text-xs cursor-pointer">🗑️ Xóa gói này</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+              <div class="sm:col-span-8">
+                <label class="block text-xs font-bold text-slate-700 mb-1">Tên gói nâng cấp hiển thị cho khách:</label>
+                <input type="text" value={opt.name || ''} class="upg-name w-full p-2.5 border bg-white rounded-lg font-bold text-slate-900 text-sm" placeholder="VD: Nâng cấp Bồn Inox SUS304 (Dày 3–4mm)" />
+              </div>
+              <div class="sm:col-span-4">
+                <label class="block text-xs font-bold text-red-700 mb-1">Chi phí cộng thêm (VNĐ - Ẩn):</label>
+                <input type="number" step="1000000" value={opt.extraPrice ?? 0} class="upg-price w-full p-2.5 border border-red-300 bg-white rounded-lg font-extrabold text-red-600 text-sm" placeholder="VD: 150000000" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Thông số kỹ thuật thay đổi (Mỗi dòng 1 thông số theo dạng <code>Tên thông số: Giá trị mới</code>):</label>
+              <textarea rows="2" class="upg-specs w-full p-2.5 border bg-white rounded-lg text-slate-700 text-xs font-mono" placeholder="VD:&#10;Vật liệu đóng bồn: Inox SUS304 dày 3 - 4 mm&#10;Tải trọng chuyên chở: 19.500 kg">{Object.entries(opt.specChanges || {}).map(([k, v]) => k + ': ' + v).join('\n')}</textarea>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 
-  
   <script is:inline>
     const inputName = document.getElementById('inputName');
     const inputSlug = document.getElementById('inputSlug');
@@ -817,6 +852,34 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
       container.appendChild(div);
     });
 
+    
+    document.getElementById('btnAddUpgradeOpt')?.addEventListener('click', () => {
+      const container = document.getElementById('upgradeOptionsContainer');
+      const div = document.createElement('div');
+      div.className = 'upgrade-row bg-emerald-50/40 p-4 rounded-xl border border-emerald-200 space-y-2.5';
+      div.innerHTML = `
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-extrabold text-emerald-800 uppercase">Gói nâng cấp cấu hình mới</span>
+          <button type="button" onclick="this.closest('.upgrade-row').remove()" class="text-red-500 font-bold text-xs cursor-pointer">🗑️ Xóa gói này</button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+          <div class="sm:col-span-8">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tên gói nâng cấp hiển thị cho khách:</label>
+            <input type="text" class="upg-name w-full p-2.5 border bg-white rounded-lg font-bold text-slate-900 text-sm" placeholder="VD: Nâng cấp Bồn Inox SUS304 (Dày 3–4mm)" />
+          </div>
+          <div class="sm:col-span-4">
+            <label class="block text-xs font-bold text-red-700 mb-1">Chi phí cộng thêm (VNĐ - Ẩn):</label>
+            <input type="number" step="1000000" value="0" class="upg-price w-full p-2.5 border border-red-300 bg-white rounded-lg font-extrabold text-red-600 text-sm" placeholder="VD: 150000000" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Thông số kỹ thuật thay đổi (Mỗi dòng: <code>Tên thông số: Giá trị mới</code>):</label>
+          <textarea rows="2" class="upg-specs w-full p-2.5 border bg-white rounded-lg text-slate-700 text-xs font-mono" placeholder="Vật liệu đóng bồn: Inox SUS304 dày 3 - 4 mm"></textarea>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
     document.getElementById('btnSaveAll')?.addEventListener('click', async () => {
       const slug = inputSlug.value.trim();
       const name = inputName.value.trim();
@@ -868,7 +931,26 @@ const rawDesc = (vehicle?.description || vehicle?.summary || '')
         }
       });
 
-      const payload = { slug, name, customBadges, brand, price, minPrice, promo, videoUrl, summary, description, images, chassisSpecs, specialSpecs, subCategory, subKey, category, isFeatured, faqs };
+      const upgradeOptions = [];
+      document.querySelectorAll('.upgrade-row').forEach(row => {
+        const upgName = row.querySelector('.upg-name')?.value?.trim() || '';
+        const upgPrice = Number(row.querySelector('.upg-price')?.value || 0);
+        const rawSpecs = row.querySelector('.upg-specs')?.value || '';
+        const specChanges = {};
+        rawSpecs.split(/\r?\n/).forEach(line => {
+          const idx = line.indexOf(':');
+          if (idx > 0) {
+            const k = line.slice(0, idx).trim();
+            const v = line.slice(idx + 1).trim();
+            if (k && v) specChanges[k] = v;
+          }
+        });
+        if (upgName) {
+          upgradeOptions.push({ name: upgName, extraPrice: upgPrice, specChanges });
+        }
+      });
+
+      const payload = { slug, name, customBadges, brand, price, minPrice, promo, videoUrl, summary, description, images, chassisSpecs, specialSpecs, subCategory, subKey, category, isFeatured, faqs, upgradeOptions };
 
       try {
         const res = await fetch('/api/update-vehicle', {

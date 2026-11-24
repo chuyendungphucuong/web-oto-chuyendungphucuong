@@ -40,7 +40,7 @@
       "Tải trọng chuyên chở": "19.000 – 20.000 kg (Tối ưu tự trọng bồn)",
       "Hệ thống xả cám": "Xả thổi khí nén áp suất cao (Trích công suất PTO dẫn động máy nén khí)",
       "Máy thổi khí nén": "Quạt thổi khí Roots Blower / ShinMaywa ARS080 (Lưu lượng ~6 m³/phút, áp suất 1 – 1.2 kg/cm²)",
-      "Vật liệu đóng bồn": "Thép tấm chịu lực SS400 hoặc Inox SUS304 dày 3 – 5 mm, sơn Epoxy chống gỉ bên trong",
+      "Vật liệu đóng bồn": "Thép tấm chịu lực SS400 dày 3 – 5 mm",
       "Kết cấu khoang nạp": "Chia 5 – 6 khoang độc lập, nắp nạp Ø500 mm có gioăng cao su kín hơi",
       "Hệ thống van & Ống xả": "Van xả đáy đóng mở bằng xi-lanh khí nén, ống xả Ø114 mm + ống mềm nối silo dài 15 m",
       "Hồ sơ pháp lý": "Thiết kế, nghiệm thu & đăng kiểm trọn gói đúng quy chuẩn Cục Đăng Kiểm VN"
@@ -59,7 +59,23 @@
         "answer": "Có. Ô Tô Phú Cường hỗ trợ khách hàng doanh nghiệp và cá nhân vay vốn ngân hàng từ 65% đến 85% giá trị xe, thủ tục nhanh gọn, chỉ cần chuẩn bị vốn đối ứng ban đầu khoảng 20%."
       }
     ],
-    "isFeatured": true
+    "isFeatured": true,
+    "upgradeOptions": [
+      {
+        "name": "Nâng cấp vật liệu bồn Inox",
+        "extraPrice": 230000000,
+        "specChanges": {
+          "Vật liệu đóng bồn": "thân bồn Inox SUS304, chân đế bồn Inox 430, 201 dày 3 - 5mm"
+        }
+      },
+      {
+        "name": "Hệ thống xả cám điện 3 pha",
+        "extraPrice": 70000000,
+        "specChanges": {
+          "Hệ thống xả cám": "sử dụng đồng thời bộ trích công suất động cơ PTO và động cơ điện 3 pha"
+        }
+      }
+    ]
   },
   {
     "slug": "xe-o-to-xi-tec-phun-nuoc-rua-duong-dongfeng-7-khoi-yzz5120gptv",

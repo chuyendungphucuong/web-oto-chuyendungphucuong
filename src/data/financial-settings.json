@@ -3,7 +3,7 @@
   "plateFeeCity": 350000,
   "plateFeeProvince": 100000,
   "serviceAndInspectionFee": 4100000,
-  "defaultAnnualInterestRate": 0.095,
+  "defaultAnnualInterestRate": 0.10099999999999999,
   "roadTaxTruck": {
     "under4t": 2160000,
     "from4to8_5t": 3240000,

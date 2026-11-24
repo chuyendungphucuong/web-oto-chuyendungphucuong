@@ -23,6 +23,7 @@ if (!vehicle) {
 const specs = vehicle.chassisSpecs || vehicle.chassis_specs || {};
 const specialSpecs = vehicle.specialSpecs || vehicle.special_specs || {};
 const faqs = Array.isArray(vehicle.faqs) ? vehicle.faqs : [];
+const upgradeOptions = Array.isArray(vehicle.upgradeOptions) ? vehicle.upgradeOptions : [];
 const images = Array.isArray(vehicle.images) && vehicle.images.length > 0 
   ? vehicle.images 
   : ['/Logo.png'];
@@ -460,9 +461,9 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
           <table class="w-full border-collapse">
             <tbody class="divide-y divide-slate-200">
               {advisorProfile.items.map((spec) => (
-                <tr>
+                <tr class="advisor-pdf-row" data-advisor-label={spec.label}>
                   <td class="py-1 pr-3 font-bold text-slate-700 w-1/3 bg-slate-50 px-2">{spec.label}</td>
-                  <td class="py-1 pl-3 font-semibold text-slate-900 px-2">{spec.value}</td>
+                  <td class="advisor-pdf-val py-1 pl-3 font-semibold text-slate-900 px-2" data-orig-val={spec.value}>{spec.value}</td>
                 </tr>
               ))}
             </tbody>
@@ -566,7 +567,7 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
           <div class="space-y-2.5 text-sm">
             <div class="flex justify-between items-center border-b border-gray-200/80 pb-2">
               <span class="text-gray-600">Vốn đối ứng nhận xe:</span>
-              <span class="font-extrabold text-red-600 text-base">
+              <span id="rolloutDownPaymentText" class="font-extrabold text-red-600 text-base">
                 {Number(vehicle.price || 0) > 0
                   ? `~${Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu đ`
                   : 'Chỉ từ 20% giá trị xe'}
@@ -665,51 +666,88 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
           <span class="inline-block bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">{vehicle.subCategory || vehicle.categoryName || 'Xe Chuyên Dùng'}</span>
           <h1 class="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-4 leading-snug">{vehicle.name}</h1>
           
-          <div class="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white p-5 rounded-2xl mb-6 border border-blue-800 shadow-lg space-y-3.5">
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/15 pb-2.5">
-              <span class="text-xs font-extrabold text-amber-400 uppercase tracking-wider">💳 Vốn đối ứng nhận xe:</span>
-              <span class="text-[11px] font-bold text-emerald-300 bg-emerald-950/90 border border-emerald-500/40 px-2.5 py-0.5 rounded-full">Hỗ trợ vay 80% – Lãi suất ưu đãi</span>
+          <div class="bg-gradient-to-br from-blue-50 via-white to-blue-50/70 text-slate-900 p-5 rounded-2xl mb-6 border-2 border-blue-200 shadow-sm space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-blue-200/80 pb-2.5">
+              <span class="text-xs font-extrabold text-blue-900 uppercase tracking-wider">💳 Vốn đối ứng nhận xe:</span>
+              <span class="text-[11px] font-bold text-blue-800 bg-blue-100 border border-blue-200 px-2.5 py-0.5 rounded-full">Hỗ trợ vay 80% – Lãi suất ưu đãi</span>
             </div>
 
             {Number(vehicle.price || 0) > 0 ? (
               <div>
-                <p class="text-2xl lg:text-3xl font-black text-amber-400 leading-tight">
+                <p id="heroDownPaymentText" class="text-2xl lg:text-3xl font-black text-red-600 leading-tight">
                   Trả trước chỉ từ: ~{Math.round((Number(vehicle.price) * 0.2) / 1000000).toLocaleString('vi-VN')} Triệu đồng
                 </p>
-                <p class="text-xs text-blue-200 mt-1">
+                <p class="text-xs text-slate-600 mt-1">
                   (Giá xuất xưởng chính xác &amp; chương trình chiết khấu được gửi riêng qua Zalo / Email theo cấu hình thực tế)
                 </p>
               </div>
             ) : (
               <div>
-                <p class="text-2xl lg:text-3xl font-black text-amber-400 leading-tight">
+                <p class="text-2xl lg:text-3xl font-black text-red-600 leading-tight">
                   Trả trước chỉ từ 20% giá trị xe
                 </p>
-                <p class="text-xs text-blue-200 mt-1">
+                <p class="text-xs text-slate-600 mt-1">
                   (Hỗ trợ vay ngân hàng 75% – 85%, thủ tục nhanh gọn, giao xe tận nơi toàn quốc)
                 </p>
               </div>
             )}
 
-            <div class="bg-white/10 backdrop-blur-xs border border-white/15 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-              <div class="text-xs text-slate-200">
-                <span class="font-bold text-white">🔒 Bảng báo giá chi tiết &amp; Lịch trả góp:</span> Cung cấp SĐT Zalo &amp; Email để nhận file PDF chính xác.
+            <div class="bg-white border border-blue-200 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-xs">
+              <div class="text-xs text-slate-700">
+                <span class="font-bold text-blue-900">🔒 Bảng báo giá chi tiết &amp; Lịch trả góp:</span> Cung cấp SĐT Zalo &amp; Email để nhận file PDF chính xác.
               </div>
               <button
                 type="button"
                 onclick="document.getElementById('btnOpenQuickQuote')?.click()"
-                class="shrink-0 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-black px-3.5 py-2.5 rounded-lg transition cursor-pointer shadow-md"
+                class="shrink-0 bg-blue-700 hover:bg-blue-800 text-white text-xs font-extrabold px-3.5 py-2.5 rounded-lg transition cursor-pointer shadow-sm"
               >
                 🔓 Nhận Báo Giá Chi Tiết &rarr;
               </button>
             </div>
 
             {vehicle.promo && (
-              <div class="bg-red-600/95 text-white p-3 text-xs sm:text-sm rounded-xl border border-red-400/30">
+              <div class="bg-red-50 text-red-800 p-3 text-xs sm:text-sm rounded-xl border border-red-200">
                 <span class="font-bold">🎁 Ưu đãi đặc biệt:</span> {vehicle.promo}
               </div>
             )}
           </div>
+
+          
+          {upgradeOptions.length > 0 && (
+            <div id="upgradeOptionsBox" class="mb-6 bg-emerald-50/80 border-2 border-emerald-300 rounded-2xl p-4 shadow-xs space-y-3">
+              <div class="flex items-center justify-between gap-2 border-b border-emerald-200 pb-2">
+                <div class="flex items-center gap-2">
+                  <span class="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">⚙️ Tùy Chọn Nâng Cấp</span>
+                  <h3 class="text-xs sm:text-sm font-extrabold text-emerald-950">Nâng cấp cấu hình thùng / bồn theo yêu cầu:</h3>
+                </div>
+              </div>
+              <div class="space-y-2">
+                {upgradeOptions.map((opt: any, idx: number) => (
+                  <label class="flex items-start gap-3 bg-white p-3 rounded-xl border border-emerald-200 hover:border-emerald-500 transition cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      class="chk-upgrade-opt mt-0.5 w-5 h-5 accent-emerald-600 rounded cursor-pointer shrink-0"
+                      data-idx={idx}
+                      data-name={opt.name}
+                      data-extra={Number(opt.extraPrice || 0)}
+                      data-specs={JSON.stringify(opt.specChanges || {})}
+                    />
+                    <div class="flex-1 min-w-0">
+                      <span class="block text-xs sm:text-sm font-extrabold text-slate-900">{opt.name}</span>
+                      {opt.specChanges && Object.keys(opt.specChanges).length > 0 && (
+                        <span class="block text-[11px] text-emerald-700 font-semibold mt-0.5">
+                          Thay đổi: {Object.entries(opt.specChanges).map(([k, v]) => k + ' → ' + v).join(' • ')}
+                        </span>
+                      )}
+                    </div>
+                  </label>
+                ))}
+              </div>
+              <p class="text-[11px] text-slate-600 italic">
+                * Khi chọn nâng cấp, mức trả trước dự kiến (20%) và bảng thông số kỹ thuật bên dưới sẽ tự động cập nhật.
+              </p>
+            </div>
+          )}
 
           <div class="mb-6">
             <h3 class="font-bold text-gray-800 mb-2">Tổng quan sản phẩm:</h3>
@@ -721,7 +759,7 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
               <span class="bg-amber-400 text-slate-950 text-[11px] font-black px-2 py-0.5 rounded uppercase">⚡ Điểm Chính Cho Chủ Đầu Tư</span>
               <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wide">Tóm tắt cấu hình &amp; Pháp lý</h3>
             </div>
-            <ul class="space-y-1.5 text-xs sm:text-sm text-slate-800">
+            <ul id="keyTakeawaysList" class="space-y-1.5 text-xs sm:text-sm text-slate-800">
               {keyTakeaways.payload && (
                 <li class="flex items-start gap-2">
                   <span class="text-emerald-600 font-bold">✔</span>
@@ -775,7 +813,7 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
           <button 
             type="button" 
             id="btnOpenQuickQuote"
-            class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-5 rounded-xl text-center transition text-sm cursor-pointer shadow-sm"
+            class="w-full bg-blue-900 hover:bg-blue-800 text-white font-extrabold py-3.5 px-5 rounded-xl text-center transition text-sm cursor-pointer shadow-md"
           >
             📩 Yêu Cầu Gửi Bảng Tính Trả Góp Qua Zalo / Điện Thoại
           </button>
@@ -883,9 +921,9 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
               <table class="w-full text-sm text-left text-gray-600">
                 <tbody>
                   {Object.entries(specs).map(([key, value]) => (
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <tr class="border-b border-gray-100 hover:bg-gray-50 spec-data-row transition-colors" data-spec-key={key} data-orig-val={String(value)}>
                       <td class="py-3 px-3 font-medium text-gray-900 w-2/5">{key}</td>
-                      <td class="py-3 px-3 text-gray-700 w-3/5">{String(value)}</td>
+                      <td class="py-3 px-3 text-gray-700 w-3/5 spec-val-cell">{String(value)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -900,10 +938,10 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
                 <table class="w-full text-sm text-left text-gray-600">
                   <tbody>
                     {Object.entries(specialSpecs).map(([key, value]) => (
-                      <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="py-3 px-3 font-medium text-gray-900 w-2/5">{key}</td>
-                        <td class="py-3 px-3 text-gray-700 w-3/5">{String(value)}</td>
-                      </tr>
+                      <tr class="border-b border-gray-100 hover:bg-gray-50 spec-data-row transition-colors" data-spec-key={key} data-orig-val={String(value)}>
+                      <td class="py-3 px-3 font-medium text-gray-900 w-2/5">{key}</td>
+                      <td class="py-3 px-3 text-gray-700 w-3/5 spec-val-cell">{String(value)}</td>
+                    </tr>
                     ))}
                   </tbody>
                 </table>
@@ -1169,19 +1207,19 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
           <button
             type="button"
             id="btnOpenTechPdfModal"
-            class="shrink-0 inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-blue-800 text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition shadow-sm cursor-pointer"
+            class="shrink-0 inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition shadow-sm cursor-pointer"
           >
-            Xem &amp; In Biểu Mẫu Kỹ Thuật Trình Sếp (PDF)
+            📄 Xem &amp; In Hồ Sơ Thông Số Kỹ Thuật (PDF)
           </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {advisorProfile.items.map((specItem) => (
-            <div class="bg-slate-50/90 border border-slate-200/90 rounded-xl p-4 space-y-1">
+            <div class="advisor-spec-card bg-slate-50/90 border border-slate-200/90 rounded-xl p-4 space-y-1 transition-colors" data-advisor-label={specItem.label}>
               <span class="text-xs font-bold text-slate-500 uppercase tracking-wide block">
                 {specItem.label}
               </span>
-              <p class="text-sm font-extrabold text-slate-900 leading-snug">
+              <p class="advisor-spec-val text-sm font-extrabold text-slate-900 leading-snug" data-orig-val={specItem.value}>
                 {specItem.value}
               </p>
             </div>
@@ -1241,9 +1279,10 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
     <!-- MODAL XEM TRƯỚC BIỂU MẪU KỸ THUẬT TRÌNH SẾP -->
     <div id="techProposalModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 overflow-y-auto no-print">
       <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto flex flex-col shadow-2xl border border-slate-300">
-        <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between sticky top-0 z-10">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-extrabold uppercase tracking-wider text-sky-300">Biểu Mẫu Kỹ Thuật Trình Sếp (Không Hiển Thị Giá)</span>
+        <div class="bg-blue-900 text-white px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sticky top-0 z-10">
+          <div class="space-y-0.5">
+            <span class="block text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white">Hồ Sơ Thông Số Kỹ Thuật (Chưa Bao Gồm Báo Giá)</span>
+            <span class="block text-[11px] text-blue-100">Biểu mẫu chỉ thể hiện thông số kỹ thuật, chưa thể hiện giá. Để nhận báo giá chi tiết, vui lòng liên hệ trực tiếp: <strong class="text-amber-300">0922 77 77 03 (Mr. Hoàng Vũ)</strong></span>
           </div>
           <div class="flex items-center gap-2">
             <button
@@ -1265,7 +1304,7 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
 
         <div class="p-4 sm:p-8 space-y-4 bg-slate-100 flex-1">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Tên Đơn vị / Khách hàng trình sếp (Tùy chọn hiển thị trên biểu mẫu in):</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tên Doanh nghiệp / Đơn vị nhận hồ sơ (Tùy chọn hiển thị trên biểu mẫu in):</label>
             <input type="text" id="inputTechCustomerName" placeholder="VD: Công ty TNHH Vận Tải XYZ..." class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm font-bold text-blue-900 outline-none focus:border-blue-600" />
           </div>
 
@@ -1312,9 +1351,9 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
             <table class="w-full border-collapse text-[11px]">
               <tbody class="divide-y divide-slate-200">
                 {advisorProfile.items.map((spec) => (
-                  <tr>
+                  <tr class="advisor-pdf-row" data-advisor-label={spec.label}>
                     <td class="py-1.5 pr-3 font-bold text-slate-700 w-1/3 bg-slate-50 px-3">{spec.label}</td>
-                    <td class="py-1.5 pl-3 font-semibold text-slate-900 px-3">{spec.value}</td>
+                    <td class="advisor-pdf-val py-1.5 pl-3 font-semibold text-slate-900 px-3" data-orig-val={spec.value}>{spec.value}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1377,7 +1416,7 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
   
   </main>
 
-  <script is:inline define:vars={{ rawImages: images, basePrice: vehicle.price || 0, roadTax: dynamicRoadTax, insurance: dynamicInsuranceTNDS, otherFixed: fixedServiceAndPlate }}>
+  <script is:inline define:vars={{ rawImages: images, basePrice: vehicle.price || 0, roadTax: dynamicRoadTax, insurance: dynamicInsuranceTNDS, otherFixed: fixedServiceAndPlate, defaultInterestRate: Number(FINANCIAL_CONFIG.defaultInterestRate || FINANCIAL_CONFIG.interestRate || 9.5) }}>
     let currentImgIdx = 0;
     const imagesList = Array.isArray(rawImages) ? rawImages : [];
 
@@ -1433,7 +1472,7 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
       const loanAmount = Math.round(basePrice * ratio);
       const downPayment = total - loanAmount;
 
-      const monthlyInterestRate = 0.095 / 12;
+      const monthlyInterestRate = (Number(defaultInterestRate || 9.5) / 100) / 12;
       const monthlyPrincipal = loanAmount / months;
       const monthlyInterest = loanAmount * monthlyInterestRate;
       const monthlyPayment = monthlyPrincipal + monthlyInterest;
@@ -1473,7 +1512,9 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
       if (!inlineMsgInput) return;
       const ratioTxt = selectRatioEl ? (selectRatioEl.options[selectRatioEl.selectedIndex]?.text || selectRatioEl.value) : 'Vay 80%';
       const termTxt = selectTermEl ? (selectTermEl.options[selectTermEl.selectedIndex]?.text || selectTermEl.value) : '5 Năm';
-      inlineMsgInput.value = `Yêu cầu gửi Bảng Báo Giá Chi Tiết & Lịch Trả Góp mẫu xe: ${pageCarTitle} | Phương án chọn: ${ratioTxt} - Thời hạn: ${termTxt}`;
+      const upgList = typeof getSelectedUpgradeSummary === "function" ? getSelectedUpgradeSummary() : [];
+      const upgSuffix = upgList.length > 0 ? ` | Nâng cấp chọn: ${upgList.join(", ")}` : "";
+      inlineMsgInput.value = `Yêu cầu gửi Bảng Báo Giá Chi Tiết & Lịch Trả Góp mẫu xe: ${pageCarTitle}${upgSuffix} | Phương án chọn: ${ratioTxt} - Thời hạn: ${termTxt}`;
     }
     selectRatioEl?.addEventListener('change', updateInlineMessageField);
     selectTermEl?.addEventListener('change', updateInlineMessageField);
@@ -1507,6 +1548,210 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
     });
 
     // 2. Xử lý gửi Form Popup Báo Giá Nhanh (#quickQuoteForm)
+    
+    // XỬ LÝ TÙY CHỌN NÂNG CẤP CẤU HÌNH (ẨN GIÁ NÂNG CẤP - TỰ NHẢY TRẢ TRƯỚC 20% & ĐỔI THÔNG SỐ)
+    
+    function getSelectedUpgradeSummary() {
+      const names = [];
+      document.querySelectorAll('.chk-upgrade-opt').forEach((chk) => {
+        if (chk.checked) names.push(chk.getAttribute('data-name') || '');
+      });
+      return names.filter(Boolean);
+    }
+
+    function applyUpgradeSelection() {
+      let totalExtra = 0;
+      const mergedSpecs = {};
+      const selectedUpgradeNames = [];
+      document.querySelectorAll('.chk-upgrade-opt').forEach((chk) => {
+        if (chk.checked) {
+          totalExtra += Number(chk.getAttribute('data-extra') || 0);
+          const uName = (chk.getAttribute('data-name') || '').trim();
+          if (uName) selectedUpgradeNames.push(uName);
+          try {
+            const sc = JSON.parse(chk.getAttribute('data-specs') || '{}');
+            Object.assign(mergedSpecs, sc);
+          } catch (e) {}
+        }
+      });
+
+      // 1. Cập nhật mức trả trước 20% (Ẩn giá gốc & giá nâng cấp)
+      const effectivePrice = Number(basePrice || 0) + totalExtra;
+      if (effectivePrice > 0) {
+        const dpTrieu = Math.round((effectivePrice * 0.2) / 1000000).toLocaleString('vi-VN');
+        const heroDp = document.getElementById('heroDownPaymentText');
+        const rolloutDp = document.getElementById('rolloutDownPaymentText');
+        if (heroDp) heroDp.innerText = 'Trả trước chỉ từ: ~' + dpTrieu + ' Triệu đồng';
+        if (rolloutDp) rolloutDp.innerText = '~' + dpTrieu + ' Triệu đ';
+      }
+
+      // Hàm so khớp CHÍNH XÁC tên thông số (chỉ bỏ khoảng trắng thừa, dấu : ở cuối và không phân biệt hoa/thường)
+      const normExact = (s) => String(s || '').trim().replace(/:+$/, '').replace(/\s+/g, ' ').toLowerCase();
+      const isExactMatch = (rowK, targetK) => {
+        const a = normExact(rowK);
+        const b = normExact(targetK);
+        return Boolean(a && b && a === b);
+      };
+
+      const matchedTargetKeys = new Set();
+
+      // 2. Cập nhật Bảng Thông số kỹ thuật chi tiết (Exact Match)
+      document.querySelectorAll('.dynamic-upgrade-row').forEach((el) => el.remove());
+      document.querySelectorAll('.spec-data-row').forEach((tr) => {
+        const rowKey = (tr.getAttribute('data-spec-key') || '').trim();
+        const origVal = tr.getAttribute('data-orig-val') || '';
+        const valCell = tr.querySelector('.spec-val-cell');
+        if (!valCell) return;
+
+        let matchedNewVal = null;
+        for (const [k, v] of Object.entries(mergedSpecs)) {
+          if (isExactMatch(rowKey, k)) {
+            matchedNewVal = v;
+            matchedTargetKeys.add(k);
+            break;
+          }
+        }
+
+        if (matchedNewVal !== null) {
+          tr.classList.add('bg-emerald-50');
+          valCell.innerHTML = '<strong class="text-emerald-800">' + matchedNewVal + '</strong> <span class="inline-block ml-1 bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Đã nâng cấp</span>';
+        } else {
+          tr.classList.remove('bg-emerald-50');
+          valCell.textContent = origVal;
+        }
+      });
+
+      // Nếu tên thông số nâng cấp chưa có trong bảng gốc -> tự thêm 1 dòng mới vào cuối bảng
+      const allSpecRows = document.querySelectorAll('.spec-data-row');
+      const lastSpecRow = allSpecRows.length > 0 ? allSpecRows[allSpecRows.length - 1] : null;
+      const targetTbody = lastSpecRow ? lastSpecRow.parentElement : null;
+      if (targetTbody) {
+        for (const [k, v] of Object.entries(mergedSpecs)) {
+          if (!matchedTargetKeys.has(k)) {
+            const newTr = document.createElement('tr');
+            newTr.className = 'border-b border-emerald-200 bg-emerald-50 dynamic-upgrade-row';
+            newTr.innerHTML = '<td class="py-3 px-3 font-bold text-emerald-900 w-2/5">' + k + '</td><td class="py-3 px-3 w-3/5"><strong class="text-emerald-800">' + v + '</strong> <span class="inline-block ml-1 bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Đã nâng cấp</span></td>';
+            targetTbody.appendChild(newTr);
+          }
+        }
+      }
+
+      // 3. Đồng bộ khối "Điểm Chính Cho Chủ Đầu Tư" (Key Takeaways)
+      const ktList = document.getElementById('keyTakeawaysList');
+      if (ktList) {
+        ktList.querySelectorAll('.dynamic-kt-upgrade').forEach((el) => el.remove());
+        const updatedKtKeys = new Set();
+
+        ktList.querySelectorAll('li').forEach((li) => {
+          const textSpan = li.querySelectorAll('span')[1];
+          if (!textSpan) return;
+          if (!textSpan.hasAttribute('data-orig-html')) {
+            textSpan.setAttribute('data-orig-html', textSpan.innerHTML);
+          }
+          const origHtml = textSpan.getAttribute('data-orig-html') || '';
+          const strongEl = textSpan.querySelector('strong');
+          const prefixLabel = strongEl ? strongEl.textContent : '';
+          const fullText = textSpan.textContent || '';
+          const restText = prefixLabel ? fullText.slice(prefixLabel.length).trim() : fullText.trim();
+          const colonIdx = restText.indexOf(':');
+
+          let replacedHtml = null;
+          if (colonIdx > 0) {
+            const extractedKey = restText.slice(0, colonIdx).trim();
+            for (const [k, v] of Object.entries(mergedSpecs)) {
+              if (isExactMatch(extractedKey, k)) {
+                updatedKtKeys.add(k);
+                replacedHtml = '<strong>' + prefixLabel + '</strong> ' + extractedKey + ': <strong class="text-emerald-800">' + v + '</strong> <span class="inline-block ml-1 bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Đã nâng cấp</span>';
+                break;
+              }
+            }
+          }
+          textSpan.innerHTML = replacedHtml !== null ? replacedHtml : origHtml;
+        });
+
+        // Các thông số nâng cấp chưa nằm trong các gạch đầu dòng sẵn có -> hiển thị rõ ngay trong Điểm Chính
+        const extraKtParts = [];
+        for (const [k, v] of Object.entries(mergedSpecs)) {
+          if (!updatedKtKeys.has(k)) {
+            extraKtParts.push(k + ': ' + v);
+          }
+        }
+        if (extraKtParts.length > 0 || (selectedUpgradeNames.length > 0 && updatedKtKeys.size === 0)) {
+          const liNew = document.createElement('li');
+          liNew.className = 'flex items-start gap-2 dynamic-kt-upgrade bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1 mt-1';
+          const detailTxt = extraKtParts.length > 0 ? extraKtParts.join(' • ') : selectedUpgradeNames.join(', ');
+          liNew.innerHTML = '<span class="text-emerald-600 font-bold">✔</span><span><strong class="text-emerald-900">Nâng cấp đã chọn:</strong> <strong class="text-emerald-800">' + detailTxt + '</strong></span>';
+          ktList.appendChild(liNew);
+        }
+      }
+
+      // 4. Đồng bộ Bản in PDF Kỹ Thuật & Modal Xem Trước Trình Sếp (Exact Match)
+      document.querySelectorAll('#printTechContainer .flex.justify-between, #techProposalModal .flex.justify-between').forEach((row) => {
+        const labelEl = row.querySelector('span');
+        const valEl = row.querySelector('strong');
+        if (!labelEl || !valEl) return;
+        if (!valEl.hasAttribute('data-orig')) valEl.setAttribute('data-orig', valEl.textContent || '');
+        const labelTxt = labelEl.textContent || '';
+        let matchedVal = null;
+        for (const [k, v] of Object.entries(mergedSpecs)) {
+          if (isExactMatch(labelTxt, k)) { matchedVal = v; break; }
+        }
+        valEl.textContent = matchedVal !== null ? String(matchedVal) : (valEl.getAttribute('data-orig') || '');
+      });
+
+
+      // 5. Đồng bộ Khối "Hồ Sơ Kỹ Thuật Chuyên Sâu" & Bảng tiêu chuẩn trong PDF
+      const normNoAccent = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').trim();
+      function matchAdvisorCardValue(cardLabel, specsMap) {
+        const lbl = normNoAccent(cardLabel);
+        for (const [k, v] of Object.entries(specsMap)) {
+          if (isExactMatch(cardLabel, k)) return v;
+        }
+        for (const [k, v] of Object.entries(specsMap)) {
+          const kn = normNoAccent(k);
+          if (lbl.includes('vat lieu') && (kn.includes('vat lieu') || kn.includes('thanh bon') || kn.includes('than bon'))) return v;
+          if (lbl.includes('co che xa') && (kn.includes('xa cam') || kn.includes('he thong xa') || kn.includes('co che xa'))) return v;
+          if (lbl.includes('the tich') && (kn.includes('the tich') || kn.includes('dung tich') || kn.includes('khoang'))) return v;
+          if (lbl.includes('tai trong') && kn.includes('tai trong') && !kn.includes('tong tai')) return v;
+          if (lbl.includes('thuy luc') && (kn.includes('thuy luc') || kn.includes('pto'))) return v;
+          if (lbl.includes('san truot') && kn.includes('san')) return v;
+          if (lbl.includes('toi keo') && kn.includes('toi')) return v;
+          if (lbl.includes('cang keo') && (kn.includes('cang keo') || kn.includes('cau'))) return v;
+        }
+        return null;
+      }
+
+      document.querySelectorAll('.advisor-spec-card').forEach((card) => {
+        const lbl = card.getAttribute('data-advisor-label') || '';
+        const valEl = card.querySelector('.advisor-spec-val');
+        if (!valEl) return;
+        const origVal = valEl.getAttribute('data-orig-val') || '';
+        const newVal = matchAdvisorCardValue(lbl, mergedSpecs);
+        if (newVal !== null) {
+          card.classList.add('bg-emerald-50', 'border-emerald-300');
+          card.classList.remove('bg-slate-50/90', 'border-slate-200/90');
+          valEl.innerHTML = '<span class="text-emerald-800">' + newVal + '</span> <span class="inline-block ml-1 bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Đã nâng cấp</span>';
+        } else {
+          card.classList.remove('bg-emerald-50', 'border-emerald-300');
+          card.classList.add('bg-slate-50/90', 'border-slate-200/90');
+          valEl.textContent = origVal;
+        }
+      });
+
+      document.querySelectorAll('.advisor-pdf-row').forEach((row) => {
+        const lbl = row.getAttribute('data-advisor-label') || '';
+        const valEl = row.querySelector('.advisor-pdf-val');
+        if (!valEl) return;
+        const origVal = valEl.getAttribute('data-orig-val') || '';
+        const newVal = matchAdvisorCardValue(lbl, mergedSpecs);
+        valEl.textContent = newVal !== null ? String(newVal) : origVal;
+      });
+
+      updateInlineMessageField();
+    }
+
+    document.querySelectorAll('.chk-upgrade-opt').forEach((chk) => chk.addEventListener('change', applyUpgradeSelection));
+  
     const quickForm = document.getElementById('quickQuoteForm');
     const btnQuickSubmit = document.getElementById('btnSubmitQuickQuote');
     quickForm?.addEventListener('submit', async (e) => {

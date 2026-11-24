@@ -41,7 +41,8 @@ export async function POST({ request }) {
       subKey,
       category,
       isFeatured,
-      faqs
+      faqs,
+      upgradeOptions
     } = data;
 
     if (!slug) {
@@ -86,6 +87,7 @@ export async function POST({ request }) {
         if (chassisSpecs !== undefined) vehicles[index].chassisSpecs = chassisSpecs;
         if (specialSpecs !== undefined) vehicles[index].specialSpecs = specialSpecs;
         if (faqs !== undefined) vehicles[index].faqs = faqs;
+        if (upgradeOptions !== undefined) vehicles[index].upgradeOptions = Array.isArray(upgradeOptions) ? upgradeOptions : [];
         if (isFeatured !== undefined) vehicles[index].isFeatured = Boolean(isFeatured);
 
         fs.writeFileSync(filePath, JSON.stringify(vehicles, null, 2), 'utf-8');
@@ -128,6 +130,7 @@ export async function POST({ request }) {
         chassisSpecs: chassisSpecs || {},
         specialSpecs: specialSpecs || {},
         faqs: Array.isArray(faqs) ? faqs : [],
+        upgradeOptions: Array.isArray(upgradeOptions) ? upgradeOptions : [],
         isFeatured: Boolean(isFeatured)
       };
 
