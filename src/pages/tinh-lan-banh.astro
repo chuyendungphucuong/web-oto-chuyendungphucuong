@@ -1,4 +1,7 @@
 ---
+import __finSettings from '../data/financial-settings.json';
+const __rawRate = Number((__finSettings as any)?.defaultAnnualInterestRate ?? 0.095);
+const __adminDefaultRate = __rawRate <= 1 ? Math.round(__rawRate * 10000) / 100 : __rawRate;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { allVehicles } from '../data/vehicles.js';
 import { FINANCIAL_CONFIG } from '../data/config.js';
@@ -568,14 +571,14 @@ const firstCar = enrichedVehicles[0] || {
                 <label class="block text-xs font-semibold text-gray-700 mb-1">Tỷ lệ vay:</label>
                 <select id="selectLoanRatio" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm bg-white font-semibold">
             <option value="0">Trả thẳng 100% (Nhận chiết khấu)</option>
-                  <option value="0.5">Vay 50%</option>
-                  <option value="0.6">Vay 60%</option>
-                  <option value="0.65">Vay 65%</option>
-                  <option value="0.7">Vay 70%</option>
+                  <option value="0.5">Vay 50% (Trả trước 50%)</option>
+                  <option value="0.6">Vay 60% (Trả trước 40%)</option>
+                  <option value="0.65">Vay 65% (Trả trước 35%)</option>
+                  <option value="0.7">Vay 70% (Trả trước 30%)</option>
                   <option value="0.75">Vay 75% (Trả trước 25%)</option>
                   <option value="0.8" selected>Vay 80% (Trả trước 20%)</option>
-                  <option value="0.85">Vay 85%</option>
-                  <option value="0.9">Vay 90%</option>
+                  <option value="0.85">Vay 85% (Trả trước 15%)</option>
+                  <option value="0.9">Vay 90% (Trả trước 10%)</option>
                 </select>
               </div>
               <div>
@@ -592,7 +595,7 @@ const firstCar = enrichedVehicles[0] || {
               </div>
               <div>
                 <label class="block text-xs font-semibold text-gray-700 mb-1">Lãi suất (%):</label>
-                <input type="number" id="inputInterestRate" value={FINANCIAL_CONFIG.defaultInterestRate ?? FINANCIAL_CONFIG.interestRate ?? 9.5} step="0.1" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm font-bold text-red-600 bg-white" />
+                <input type="number" id="inputInterestRate" value={__adminDefaultRate} step="0.1" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm font-bold text-red-600 bg-white" />
               </div>
             </div>
           </div>

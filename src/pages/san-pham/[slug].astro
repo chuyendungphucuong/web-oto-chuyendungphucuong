@@ -743,9 +743,6 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
                   </label>
                 ))}
               </div>
-              <p class="text-[11px] text-slate-600 italic">
-                * Khi chọn nâng cấp, mức trả trước dự kiến (20%) và bảng thông số kỹ thuật bên dưới sẽ tự động cập nhật.
-              </p>
             </div>
           )}
 
@@ -1416,7 +1413,7 @@ const relatedHandoverPosts = ((Array.isArray(postsData) ? postsData.filter((p) =
   
   </main>
 
-  <script is:inline define:vars={{ rawImages: images, basePrice: vehicle.price || 0, roadTax: dynamicRoadTax, insurance: dynamicInsuranceTNDS, otherFixed: fixedServiceAndPlate, defaultInterestRate: Number(FINANCIAL_CONFIG.defaultInterestRate || FINANCIAL_CONFIG.interestRate || 9.5) }}>
+  <script is:inline define:vars={{ rawImages: images, basePrice: vehicle.price || 0, roadTax: dynamicRoadTax, insurance: dynamicInsuranceTNDS, otherFixed: fixedServiceAndPlate, defaultInterestRate: (Number(FINANCIAL_CONFIG.defaultAnnualInterestRate || 0.095) <= 1 ? Math.round(Number(FINANCIAL_CONFIG.defaultAnnualInterestRate || 0.095) * 10000) / 100 : Number(FINANCIAL_CONFIG.defaultAnnualInterestRate || 9.5)) }}>
     let currentImgIdx = 0;
     const imagesList = Array.isArray(rawImages) ? rawImages : [];
 
