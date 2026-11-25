@@ -69,10 +69,10 @@
         }
       },
       {
-        "name": "Hệ thống xả cám điện 3 pha",
+        "name": "Nâng cấp hệ thống xả cám điện 3 pha 380V (Kết hợp PTO)",
         "extraPrice": 70000000,
         "specChanges": {
-          "Hệ thống xả cám": "sử dụng đồng thời bộ trích công suất động cơ PTO và động cơ điện 3 pha"
+          "Hệ thống xả cám": "Xả thổi khí nén dẫn động kép: Trích công suất PTO + Động cơ điện 3 pha 380V của trang trại"
         }
       }
     ]
@@ -542,7 +542,7 @@
     "chassisSpecs": {
       "Nhãn hiệu & Model": "CHENGLONG 4 Chân Cabin H7 - Loại Bồn Trục Vít",
       "Thể tích bồn chứa": "28 Khối đến 30 Khối (28m3 - 30m3)",
-      "Vật liệu chế tạo bồn": "Thép SS400 chịu lực cao hoặc tùy chọn nâng cấp Inox SUS304 / Hợp kim nhôm",
+      "Vật liệu chế tạo bồn": "Inox 304-201-430 chuyên dụng chống ăn mòn",
       "Hệ thống xả hàng": "Trục vít cánh xoắn liên tục (Cơ chế xả cơ học chuyên dụng)",
       "Tải trọng bản thân": "13.915 kg",
       "Tải trọng cho phép chở": "15.950 kg",
@@ -585,7 +585,16 @@
       "⚙️Bơm trục vít"
     ],
     "videoUrl": "",
-    "minPrice": 2156000000
+    "minPrice": 2156000000,
+    "upgradeOptions": [
+      {
+        "name": "Nâng cấp Bồn Full Inox 304",
+        "extraPrice": 255000000,
+        "specChanges": {
+          "Vật liệu chế tạo bồn": "Full Inox 304 cao cấp chống ăn mòn tuyệt đối"
+        }
+      }
+    ]
   },
   {
     "slug": "xe-tai-dongfeng-3-chan-6x4-gan-cau-kanglim-8-tan-ks2056ts",
@@ -1915,7 +1924,7 @@
     },
     "specialSpecs": {
       "Thể tích bồn xi-téc chứa cám": "29 - 30 Khối (m3) (Dung tích thiết kế tối ưu ~29.25 m3)",
-      "Vật liệu chế tạo thân bồn": "Inox chuyên dụng chống mài mòn, độ dày thân bồn 4 - 5 mm",
+      "Vật liệu chế tạo thân bồn": "Inox 304-201-430 chuyên dụng chống mài mòn, độ dày 4 - 5 mm",
       "Số khoang / ngăn chứa": "Chia thành 5 ngăn độc lập, có cửa nạp và van xả đáy riêng biệt",
       "Hệ thống xả cám chuyên dùng": "Hệ thống xả khí nén (Bồn thổi)",
       "Nguồn dẫn động hệ thống bồn": "Trích công suất trực tiếp từ động cơ chính qua hộp số trích lực (PTO)",
@@ -1942,7 +1951,16 @@
       "💨 Bơm khí nén"
     ],
     "videoUrl": "",
-    "minPrice": 2190000000
+    "minPrice": 2190000000,
+    "upgradeOptions": [
+      {
+        "name": "Nâng cấp hệ thống xả cám điện 3 pha 380V (Kết hợp PTO)",
+        "extraPrice": 70000000,
+        "specChanges": {
+          "Nguồn dẫn động hệ thống bồn": "Dẫn động kép: Trích công suất PTO từ động cơ xe + Động cơ điện 3 pha 380V của trang trại"
+        }
+      }
+    ]
   },
   {
     "slug": "xe-nang-dau-dongfeng-captain-c-cho-xe-may-cong-trinh-tai-trong-8-tan",
@@ -2206,14 +2224,14 @@
   },
   {
     "slug": "xe-bon-cam-thoi-chenglong-4-chan",
-    "name": "Xe Bồn Cám Thổi Chenglong 4 Chân (Dung Tích 30 Khối, Động Cơ Yuchai 330HP)",
+    "name": "Xe Bồn Chở Cám Thổi Khí Nén Chenglong H7 4 Chân 28 Khối (16 Tấn) Đời 2026",
     "category": "xe-tai-chuyen-dung",
     "categoryName": "Xe Tải Chuyên Dùng",
     "subCategory": "Xe bồn cám thức ăn chăn nuôi",
     "subKey": "bon-thuc-pham",
     "brand": "Chenglong",
-    "price": 2310000000,
-    "promo": "Hỗ trợ 100% phí trước bạ (2%) + Tặng bộ ống thổi cám chuyên dụng & Định vị GPS",
+    "price": 2122000000,
+    "promo": "Hỗ trợ vay ngân hàng 65% – 85%, tùy chọn bồn Thép SS400 hoặc nâng cấp Inox 304-201-430, bảo hành chính hãng",
     "isFeatured": true,
     "images": [
       "/images/products/xe-bon-cam-thoi-chenglong-4-chan/xe-bon-cam-thoi-chenglong-4-chan-16.webp",
@@ -2232,8 +2250,8 @@
       "/images/products/xe-bon-cam-thoi-chenglong-4-chan/xe-bon-cam-thoi-chenglong-4-chan-15.webp",
       "/images/products/xe-bon-cam-thoi-chenglong-4-chan/xe-bon-cam-thoi-chenglong-4-chan-1.webp"
     ],
-    "summary": "Xe bồn cám thổi Chenglong 4 chân (30 Khối) là giải pháp vận chuyển và bơm rót thức ăn chăn nuôi công nghệ cao hàng đầu, sử dụng động cơ Yuchai 330HP bền bỉ, tiết kiệm nhiên liệu, hỗ trợ vay mua xe trả góp đến 80%.",
-    "description": "<p>I. Tổng quan về Xe Bồn Cám Thổi Chenglong 4 Chân 30 Khối\n\nXe bồn cám thổi Chenglong 4 chân dung tích 30 khối là dòng xe tải chuyên dụng phân khúc nặng (8x4) được thiết kế chuyên biệt để vận chuyển và bơm rót thức ăn chăn nuôi (cám bột, cám viên) trực tiếp vào các si-lô của trang trại khép kín. Việc ứng dụng phương thức vận chuyển rời giúp các nhà máy và trang trại cắt giảm hoàn toàn chi phí bao bì, chống ẩm mốc và hạn chế tối đa hao hụt trong quá trình logistics.\n\nII. Ưu điểm nổi bật của xe nền Chenglong H7 4 Chân\n\n- Động cơ Yuchai YC6L330-50 dung tích 8.400 cc, sản sinh công suất 330 mã lực mạnh mẽ, đạt chuẩn khí thải Euro 5 thân thiện với môi trường.\n- Hộp số Fast Gear 9 số tiến, 1 số lùi vận hành mượt mà, tỷ số truyền tối ưu giúp xe vượt dốc và chuyên chở quá tải tốt trên các cung đường miền Tây và Tây Nguyên.\n- Cabin H7 nóc cao hiện đại, trang bị 2 giường nằm rộng rãi, ghế hơi tự cân bằng giúp tài xế thoải mái trong các chuyến hành trình dài.\n\nIII. Hệ thống bồn chứa và công nghệ thổi khí nén áp lực cao\n\n- Thể tích bồn chứa lớn lên đến 30 m³, được chế tạo từ thép cường lực cao cấp (hoặc tùy chọn Inox) có kết cấu chống dồn tải và chia thành nhiều khoang độc lập linh hoạt.\n- Hệ thống máy nén khí và quạt thổi áp lực cao giúp đẩy luồng cám di chuyển qua hệ thống ống dẫn lên các si-lô cao từ 12 đến 18 mét một cách nhanh chóng, sạch sẽ và khép kín hoàn toàn.</p>",
+    "summary": "Xe bồn chở cám thổi khí nén Chenglong H7 4 chân (LZ1310H7FBT/PMA-TACN-KN) đời 2026 đạt chuẩn QCVN 09:2024/BGTVT, tải trọng cho phép chở 16.000 kg, tổng tải 30.000 kg, thể tích xi-téc 28,07 m³. Trang bị động cơ Yuchai YC6L330-50 (330HP, 8.424 cm³) bền bỉ, hỗ trợ vay trả góp đến 85% tại Ô Tô Chuyên Dùng Phú Cường.",
+    "description": "<h2>Xe Bồn Chở Cám Thổi Khí Nén Chenglong H7 4 Chân 28,07 Khối (16 Tấn) Đời 2026</h2><p>Đối với các nhà máy sản xuất thức ăn chăn nuôi và trang trại công nghiệp quy mô lớn, bài toán giảm chi phí bao bì, rút ngắn thời gian xả hàng và bảo toàn chất lượng cám xá luôn là ưu tiên hàng đầu. <strong>Xe bồn chở cám thổi khí nén Chenglong H7 4 chân (mã kiểu loại LZ1310H7FBT/PMA-TACN-KN) đời 2026</strong> được sản xuất trên nền xe sát-xi nhập khẩu, đạt quy chuẩn kỹ thuật quốc gia <strong>QCVN 09:2024/BGTVT</strong> (GCN số <strong>11055/VAQ09-01/25-00</strong>), mang lại giải pháp vận tải 16 tấn ổn định và thu hồi vốn nhanh.</p><h2>1. Ưu Điểm Của Hệ Thống Xi-Téc 28,07 m³ &amp; Công Nghệ Xả Khí Nén</h2><p>Khác với dòng <a href=\"/danh-muc/bon-thuc-pham\"><strong>xe bồn cám trục vít</strong></a> cần không gian trống phía trên để xoay cần, cấu hình <strong>bồn thổi khí nén Chenglong 4 chân</strong> sử dụng máy bơm khí chuyên dụng đẩy cám qua đường ống dẫn kín trực tiếp vào silo:</p><ul><li><strong>Thể tích thực 28,07 m³ — Tải trọng 16.000 kg:</strong> Kích thước bao ngoài xi-téc <strong>8.650/8.060 x 2.180 x 2.180 mm</strong> được tính toán chuẩn theo khối lượng riêng cám <strong>570 kg/m³</strong>, giúp tối ưu tải trọng hợp pháp đúng quy định đăng kiểm.</li><li><strong>Linh hoạt mọi địa hình trang trại:</strong> Dễ dàng kết nối ống mềm luồn lách vào các chuồng trại có mái che thấp, đường hẹp hoặc vướng dây điện.</li><li><strong>Tùy chọn vật liệu đóng bồn linh hoạt:</strong> Khách hàng có thể chọn phiên bản tiêu chuẩn <strong>Thép SS400 dày 3 – 5 mm</strong> để tối ưu ngân sách, hoặc chọn gói nâng cấp <strong>Inox 304-201-430</strong> chống ăn mòn tuyệt đối trước độ ẩm và khoáng chất trong thức ăn chăn nuôi.</li></ul><h2>2. Đánh Giá Xe Nền Chenglong H7 4 Chân (8x4) Động Cơ Yuchai 330HP</h2><p>Nền xe sát-xi <strong>Chenglong H7 8x4</strong> nhập khẩu sở hữu kết cấu khung gầm vững chắc, đáp ứng cường độ khai thác liên tục trên các tuyến đường dài:</p><ul><li><strong>Động cơ Yuchai YC6L330-50 (330 HP):</strong> Dung tích làm việc <strong>8.424 cm³</strong>, công suất cực đại <strong>243 kW</strong>, vận hành bền bỉ và tiết kiệm nhiên liệu khi kéo đủ tổng tải trọng <strong>30.000 kg</strong>.</li><li><strong>Phân bổ tải trọng trục chuẩn xác:</strong> Với chiều dài cơ sở <strong>1.950 + 4.900 + 1.350 mm</strong> và kích thước tổng thể <strong>12.115 x 2.500 x 3.780 mm</strong>, tải trọng toàn bộ được phân bổ đều lên 4 trục (<strong>6.140 / 6.140 / 8.860 / 8.860 kg</strong>), giúp xe đầm chắc khi ôm cua và leo dốc.</li><li><strong>An toàn vận hành tối đa:</strong> Trang bị đồng bộ 12 lốp <strong>11.00R20</strong> chịu tải cao, hệ thống lái trục vít – ê cu bi trợ lực thủy lực và phanh khí nén toàn phần 4 trục kết hợp phanh đỗ lốc-kê trục 3, 4.</li></ul><h2>3. Chính Sách Hỗ Trợ Đầu Tư &amp; Dự Toán Lăn Bánh Tại Ô Tô Phú Cường</h2><p>Quý doanh nghiệp và chủ trang trại đầu tư <strong>xe bồn chở cám thổi khí nén Chenglong 4 chân 2026</strong> tại <strong>Ô Tô Chuyên Dùng Phú Cường</strong> được hỗ trợ gói tài chính vay ngân hàng từ <strong>65% – 85%</strong>, chỉ cần chuẩn bị vốn đối ứng khoảng <strong>20%</strong> để nhận xe ngay. Hỗ trợ trọn gói hồ sơ thiết kế, đăng ký biển số và đăng kiểm lưu hành toàn quốc theo quy định hiện hành.</p><ul><li><strong>Hotline / Zalo nhận báo giá xuất xưởng &amp; lịch trả góp:</strong> <strong>0922 77 77 03 (Mr. Hoàng Vũ)</strong></li><li><strong>Showroom &amp; Xưởng đóng thùng:</strong> 2466 Lê Khả Phiêu, Bình Chánh, TP.HCM | Chi nhánh Tiền Giang &amp; An Giang.</li><li>Ước tính nhanh chi phí ra biển số theo từng tỉnh thành tại công cụ <a href=\"/tinh-lan-banh\"><strong>Dự toán giá lăn bánh &amp; trả góp</strong></a>.</li></ul>",
     "showrooms": [
       "TP. Hồ Chí Minh",
       "Tiền Giang",
@@ -2242,41 +2260,67 @@
     "roadTaxPerYear": 12480000,
     "insuranceTNDS": 4330000,
     "chassisSpecs": {
-      "Model xe cơ sở": "Chenglong H7 nhập khẩu nguyên chiếc (8x4)",
-      "Kích thước tổng thể (DxRxC)": "12.100 x 2.500 x 3.950 mm",
-      "Tải trọng cho phép chở": "16.000 kg",
-      "Khối lượng toàn bộ": "30.000 kg",
-      "Dung tích xi-lanh": "8.400 cc",
-      "Động cơ": "YC6L330-50 (330 Mã lực, Euro 5)",
-      "Hộp số": "Fast Gear (9 tiến, 1 lùi)",
-      "Cỡ lốp": "12.00R22.5 bố thép"
+      "Nhãn hiệu / Mã kiểu loại": "CHENGLONG / LZ1310H7FBT/PMA-TACN-KN (Đời 2026)",
+      "Số giấy chứng nhận kiểu loại": "11055/VAQ09-01/25-00 (Cấp ngày 02/12/2025)",
+      "Quy chuẩn kỹ thuật áp dụng": "QCVN 09:2024/BGTVT (Lắp ráp từ xe sát xi tải nhập khẩu)",
+      "Công thức bánh xe": "8 x 4 (4 trục)",
+      "Khối lượng bản thân": "13.870 kg (Phân bố trục: 3.620 / 3.620 / 3.315 / 3.315 kg)",
+      "Tải trọng cho phép chở": "16.000 kg (Thiết kế: 16.000 kg)",
+      "Tổng tải trọng cho phép": "30.000 kg (Phân bố trục: 6.140 / 6.140 / 8.860 / 8.860 kg)",
+      "Số người cho phép chở": "02 người (01 người lái + 01 người ngồi)",
+      "Kích thước tổng thể (D x R x C)": "12.115 x 2.500 x 3.780 mm",
+      "Động cơ": "Yuchai YC6L330-50, Diesel 4 kỳ, 6 xi-lanh thẳng hàng, tăng áp",
+      "Dung tích xi-lanh": "8.424 cm³",
+      "Công suất cực đại": "243 kW (~330 HP)",
+      "Cỡ lốp": "11.00R20 đồng bộ (Trục 1: 02 lốp; Trục 2: 02 lốp; Trục 3: 04 lốp; Trục 4: 04 lốp)",
+      "Hệ thống phanh chính": "Tang trống 4 trục; Dẫn động khí nén toàn phần",
+      "Hệ thống phanh đỗ": "Tang trống trục 3, 4; Khí nén + Lò xo tích năng tại bầu phanh"
     },
     "specialSpecs": {
-      "Dung tích bồn chứa": "30 Khối (30 m³) chia nhiều khoang độc lập",
-      "Kích thước lòng thùng/bồn": "8.600 x 2.200 x 2.200 mm",
-      "Vật liệu chế tạo bồn": "Thép cường lực chuyên dụng chống mài mòn",
-      "Hệ thống chuyên dùng": "Công nghệ thổi khí nén áp lực cao bơm vào si-lô",
-      "Chiều cao thổi hiệu quả": "Lên đến 12 - 18 mét"
+      "Loại thiết bị chuyên dùng": "Xi téc chứa thức ăn chăn nuôi và máy bơm khí xả thức ăn chăn nuôi",
+      "Thể tích bồn chứa": "28,07 m³ (Khối lượng riêng cám tính toán 570 kg/m³)",
+      "Kích thước bao ngoài xi-téc": "8.650/8.060 x 2.180 x 2.180 mm",
+      "Vật liệu chế tạo bồn": "Thép tấm chịu lực SS400 chuyên dụng dày 3 – 5 mm",
+      "Cơ chế xả cám": "Hệ thống thổi khí nén áp lực cao bơm trực tiếp vào silo trang trại",
+      "Hồ sơ pháp lý": "Đạt chuẩn QCVN 09:2024/BGTVT, trọn gói nghiệm thu & đăng kiểm toàn quốc"
     },
     "faqs": [
       {
-        "question": "Xe bồn cám thổi Chenglong 4 chân có dung tích chính xác là bao nhiêu?",
-        "answer": "Xe có dung tích thùng bồn lớn đạt 30 khối (30 m³), chia thành nhiều khoang độc lập giúp vận chuyển đa dạng các loại thức ăn chăn nuôi trong cùng một chuyến đi."
+        "question": "Xe bồn cám thổi khí nén Chenglong 4 chân 2026 có tải trọng và thể tích bồn chính xác là bao nhiêu?",
+        "answer": "Theo Phiếu kiểm tra chất lượng xuất xưởng (GCN số 11055/VAQ09-01/25-00), xe có tải trọng hàng chuyên chở cho phép đạt 16.000 kg, khối lượng bản thân 13.870 kg, tổng tải trọng 30.000 kg và thể tích xi-téc đạt 28,07 m³ (tính theo khối lượng riêng cám 570 kg/m³)."
       },
       {
-        "question": "Động cơ xe bồn cám Chenglong 4 chân sử dụng loại nào?",
-        "answer": "Xe sử dụng khối động cơ Yuchai YC6L330-50 dung tích 8.400 cc, công suất 330 mã lực, mạnh mẽ và cực kỳ tiết kiệm nhiên liệu."
+        "question": "Xe bồn thổi Chenglong 4 chân có tùy chọn đóng bồn bằng Inox chống gỉ không?",
+        "answer": "Có. Ngoài phiên bản tiêu chuẩn sử dụng thép tấm chịu lực SS400 tối ưu chi phí đầu tư, Ô Tô Chuyên Dùng Phú Cường cung cấp gói nâng cấp bồn Inox 304-201-430 chống ăn mòn cao, phù hợp với các nhà máy và trang trại yêu cầu khắt khe về an toàn sinh học."
       },
       {
-        "question": "Phú Cường Auto có hỗ trợ mua xe bồn cám trả góp qua ngân hàng không?",
-        "answer": "Có. Chúng tôi hỗ trợ vay vốn mua xe lên đến 75% - 80% giá trị xe, thủ tục chứng minh thu nhập nhanh gọn, giải ngân trong 24h tại TP.HCM, Tiền Giang và An Giang."
+        "question": "Đầu tư xe bồn cám Chenglong 4 chân 28 khối cần chuẩn bị trước bao nhiêu vốn?",
+        "answer": "Ô Tô Chuyên Dùng Phú Cường hỗ trợ doanh nghiệp và chủ trang trại vay vốn ngân hàng từ 65% đến 85% giá trị xe. Quý khách chỉ cần chuẩn bị vốn đối ứng khoảng 20% là có thể nhận xe, kèm dịch vụ đăng ký – đăng kiểm trọn gói toàn quốc."
       }
     ],
     "customBadges": [
-      "🛢️Bồn 29 - 30 khối",
-      "💨 Bơm khí nén"
+      "🛢️ Bồn 28",
+      "07 Khối",
+      "⚖️ Tải 16 Tấn",
+      "💨 Xả Khí Nén"
     ],
     "videoUrl": "",
-    "minPrice": 2260000000
+    "minPrice": 2072000000,
+    "upgradeOptions": [
+      {
+        "name": "Nâng cấp Bồn Inox 304-201-430",
+        "extraPrice": 188000000,
+        "specChanges": {
+          "Vật liệu chế tạo bồn": "Inox 304-201-430 chuyên dụng chống ăn mòn"
+        }
+      },
+      {
+        "name": "Nâng cấp hệ thống xả cám điện 3 pha 380V (Kết hợp PTO)",
+        "extraPrice": 70000000,
+        "specChanges": {
+          "Cơ chế xả cám": "Hệ thống thổi khí nén dẫn động kép: Trích công suất PTO + Động cơ điện 3 pha 380V của trang trại"
+        }
+      }
+    ]
   }
 ]
