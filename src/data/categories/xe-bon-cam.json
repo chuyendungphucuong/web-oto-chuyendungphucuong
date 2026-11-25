@@ -75,7 +75,8 @@
           "Hệ thống xả cám": "Xả thổi khí nén dẫn động kép: Trích công suất PTO + Động cơ điện 3 pha 380V của trang trại"
         }
       }
-    ]
+    ],
+    "isHidden": false
   },
   {
     "slug": "xe-o-to-xi-tec-phun-nuoc-rua-duong-dongfeng-7-khoi-yzz5120gptv",
